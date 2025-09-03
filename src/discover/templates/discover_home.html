@@ -1,0 +1,202 @@
+{% extends "core/layout.html" %}
+
+{% block content %}
+
+<!-- Discover View -->
+<div
+        id="discover-view"
+        class="bg-black h-full overflow-y-auto pb-16"
+>
+    <div class="p-4">
+        <!-- Search Bar -->
+        <div class="relative mb-4">
+            <input
+                    type="text"
+                    placeholder="Search videos, users, or sounds"
+                    class="w-full bg-gray-800 rounded-full py-3 pl-10 pr-4 text-white border-none focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <div
+                    class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 flex items-center justify-center"
+            >
+                <i class="ri-search-line"></i>
+            </div>
+        </div>
+
+        <!-- Trending Categories -->
+        <div class="mb-6 overflow-x-auto whitespace-nowrap pb-2">
+            <div class="inline-flex gap-3">
+                <div
+                        class="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium"
+                >
+                    For You
+                </div>
+                <div
+                        class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-medium"
+                >
+                    Trending
+                </div>
+                <div
+                        class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-medium"
+                >
+                    Dance
+                </div>
+                <div
+                        class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-medium"
+                >
+                    Comedy
+                </div>
+                <div
+                        class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-medium"
+                >
+                    Fashion
+                </div>
+                <div
+                        class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-medium"
+                >
+                    Sports
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Challenges -->
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-3">Trending Challenges</h3>
+            <div class="flex gap-4 overflow-x-auto pb-2">
+                <div class="flex-shrink-0 w-32">
+                    <div class="relative rounded-lg overflow-hidden h-44 mb-2">
+                        <img
+                                src="https://readdy.ai/api/search-image?query=group%2520of%2520young%2520people%2520dancing%2520to%2520a%2520viral%2520challenge%2C%2520energetic%2C%2520colorful%2520clothing%2C%2520urban%2520setting%2C%2520high%2520quality%2C%2520trendy%2520dance%2520moves&width=300&height=500&seq=challenge1&orientation=portrait"
+                                alt="Challenge"
+                                class="w-full h-full object-cover"
+                        />
+                        <div
+                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2"
+                        >
+                            <span class="text-xs font-medium">#DanceOff</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-300">24.5M videos</p>
+                </div>
+                <div class="flex-shrink-0 w-32">
+                    <div class="relative rounded-lg overflow-hidden h-44 mb-2">
+                        <img
+                                src="https://readdy.ai/api/search-image?query=person%2520doing%2520a%2520lip%2520sync%2520challenge%2C%2520expressive%2520face%2C%2520dramatic%2520lighting%2C%2520trendy%2520outfit%2C%2520high%2520quality%2C%2520viral%2520content&width=300&height=500&seq=challenge2&orientation=portrait"
+                                alt="Challenge"
+                                class="w-full h-full object-cover"
+                        />
+                        <div
+                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2"
+                        >
+                            <span class="text-xs font-medium">#LipSync</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-300">18.2M videos</p>
+                </div>
+                <div class="flex-shrink-0 w-32">
+                    <div class="relative rounded-lg overflow-hidden h-44 mb-2">
+                        <img
+                                src="https://readdy.ai/api/search-image?query=person%2520doing%2520a%2520transition%2520challenge%2C%2520before%2520and%2520after%2520transformation%2C%2520creative%2520effects%2C%2520trendy%2520style%2C%2520high%2520quality&width=300&height=500&seq=challenge3&orientation=portrait"
+                                alt="Challenge"
+                                class="w-full h-full object-cover"
+                        />
+                        <div
+                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2"
+                        >
+                            <span class="text-xs font-medium">#Transition</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-300">12.7M videos</p>
+                </div>
+                <div class="flex-shrink-0 w-32">
+                    <div class="relative rounded-lg overflow-hidden h-44 mb-2">
+                        <img
+                                src="https://readdy.ai/api/search-image?query=couple%2520doing%2520a%2520romantic%2520dance%2520challenge%2C%2520coordinated%2520movements%2C%2520stylish%2520outfits%2C%2520urban%2520setting%2C%2520high%2520quality&width=300&height=500&seq=challenge4&orientation=portrait"
+                                alt="Challenge"
+                                class="w-full h-full object-cover"
+                        />
+                        <div
+                                class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-2"
+                        >
+                            <span class="text-xs font-medium">#CoupleGoals</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-300">9.8M videos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Videos -->
+        <div>
+            <h3 class="text-lg font-semibold mb-3">Popular Now</h3>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="relative aspect-[9/16] rounded-lg overflow-hidden">
+                    <img
+                            src="https://readdy.ai/api/search-image?query=young%2520woman%2520dancing%2520with%2520creative%2520lighting%2C%2520trendy%2520outfit%2C%2520urban%2520background%2C%2520high%2520quality%2C%2520viral%2520content&width=300&height=500&seq=video1&orientation=portrait"
+                            alt="Video"
+                            class="w-full h-full object-cover"
+                    />
+                    <div class="absolute bottom-2 left-2 flex items-center">
+                        <i class="ri-play-fill ri-sm mr-1"></i>
+                        <span class="text-xs">1.2M</span>
+                    </div>
+                </div>
+                <div class="relative aspect-[9/16] rounded-lg overflow-hidden">
+                    <img
+                            src="https://readdy.ai/api/search-image?query=man%2520doing%2520parkour%2520tricks%2520in%2520urban%2520setting%2C%2520dynamic%2520pose%2C%2520athletic%2520build%2C%2520high%2520quality%2C%2520action%2520shot&width=300&height=500&seq=video2&orientation=portrait"
+                            alt="Video"
+                            class="w-full h-full object-cover"
+                    />
+                    <div class="absolute bottom-2 left-2 flex items-center">
+                        <i class="ri-play-fill ri-sm mr-1"></i>
+                        <span class="text-xs">845K</span>
+                    </div>
+                </div>
+                <div class="relative aspect-[9/16] rounded-lg overflow-hidden">
+                    <img
+                            src="https://readdy.ai/api/search-image?query=person%2520doing%2520comedy%2520skit%2C%2520funny%2520facial%2520expression%2C%2520casual%2520outfit%2C%2520home%2520setting%2C%2520high%2520quality%2C%2520humorous%2520content&width=300&height=500&seq=video3&orientation=portrait"
+                            alt="Video"
+                            class="w-full h-full object-cover"
+                    />
+                    <div class="absolute bottom-2 left-2 flex items-center">
+                        <i class="ri-play-fill ri-sm mr-1"></i>
+                        <span class="text-xs">632K</span>
+                    </div>
+                </div>
+                <div class="relative aspect-[9/16] rounded-lg overflow-hidden">
+                    <img
+                            src="https://readdy.ai/api/search-image?query=beauty%2520influencer%2520doing%2520makeup%2520tutorial%2C%2520close-up%2520shot%2C%2520professional%2520lighting%2C%2520high%2520quality%2C%2520trendy%2520makeup&width=300&height=500&seq=video4&orientation=portrait"
+                            alt="Video"
+                            class="w-full h-full object-cover"
+                    />
+                    <div class="absolute bottom-2 left-2 flex items-center">
+                        <i class="ri-play-fill ri-sm mr-1"></i>
+                        <span class="text-xs">578K</span>
+                    </div>
+                </div>
+                <div class="relative aspect-[9/16] rounded-lg overflow-hidden">
+                    <img
+                            src="https://readdy.ai/api/search-image?query=pet%2520doing%2520funny%2520tricks%2C%2520cute%2520animal%2C%2520home%2520setting%2C%2520high%2520quality%2C%2520adorable%2520moment&width=300&height=500&seq=video5&orientation=portrait"
+                            alt="Video"
+                            class="w-full h-full object-cover"
+                    />
+                    <div class="absolute bottom-2 left-2 flex items-center">
+                        <i class="ri-play-fill ri-sm mr-1"></i>
+                        <span class="text-xs">1.5M</span>
+                    </div>
+                </div>
+                <div class="relative aspect-[9/16] rounded-lg overflow-hidden">
+                    <img
+                            src="https://readdy.ai/api/search-image?query=cooking%2520tutorial%2520close-up%2C%2520delicious%2520food%2520preparation%2C%2520professional%2520kitchen%2C%2520high%2520quality%2C%2520culinary%2520art&width=300&height=500&seq=video6&orientation=portrait"
+                            alt="Video"
+                            class="w-full h-full object-cover"
+                    />
+                    <div class="absolute bottom-2 left-2 flex items-center">
+                        <i class="ri-play-fill ri-sm mr-1"></i>
+                        <span class="text-xs">423K</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

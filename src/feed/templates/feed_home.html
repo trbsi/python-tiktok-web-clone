@@ -1,0 +1,85 @@
+{% extends "core/layout.html" %}
+
+{% block content %}
+
+<!-- Video Feed View -->
+<div id="feed-view" class="active-view">
+    <div class="video-container">
+        <video autoplay loop muted class="w-full h-full object-cover">
+            <source
+                    src="https://cdn.pixabay.com/video/2022/07/24/125314-733046618_large.mp4"
+                    type="video/mp4"
+            />
+        </video>
+
+        <!-- Video Overlay -->
+        <div
+                class="video-overlay absolute inset-0 flex flex-col justify-between p-4"
+        >
+            <!-- Top Bar -->
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-['Pacifico']">{{APP_NAME}}</div>
+                <button class="w-10 h-10 flex items-center justify-center">
+                    <i class="ri-search-line ri-xl"></i>
+                </button>
+            </div>
+
+            <!-- Right Action Bar -->
+            <div
+                    class="action-bar absolute right-4 bottom-24 flex flex-col items-center gap-6"
+            >
+                <button
+                        class="w-12 h-12 flex flex-col items-center justify-center"
+                >
+                    <i class="ri-heart-line ri-2x"></i>
+                    <span class="text-xs mt-1">87.5K</span>
+                </button>
+                <button
+                        class="w-12 h-12 flex flex-col items-center justify-center"
+                >
+                    <i class="ri-chat-1-line ri-2x"></i>
+                    <span class="text-xs mt-1">2,342</span>
+                </button>
+                <button
+                        class="w-12 h-12 flex flex-col items-center justify-center"
+                >
+                    <i class="ri-share-forward-line ri-2x"></i>
+                    <span class="text-xs mt-1">Share</span>
+                </button>
+                <button
+                        class="w-12 h-12 flex flex-col items-center justify-center"
+                >
+                    <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary overflow-hidden"
+                    >
+                        <img
+                                src="https://readdy.ai/api/search-image?query=young%2520woman%2520portrait%2C%2520professional%2520headshot%2C%2520smiling%2C%2520confident%2C%2520modern%2520style%2C%2520clean%2520background%2C%2520high%2520quality%2C%2520detailed%2520facial%2520features&width=200&height=200&seq=avatar1&orientation=squarish"
+                                alt="Creator"
+                                class="w-full h-full object-cover"
+                        />
+                    </div>
+                </button>
+            </div>
+
+            <!-- Bottom Info -->
+            <div class="flex flex-col gap-2 mb-2">
+                <div class="flex items-center gap-2">
+                    <span class="font-semibold">@sophia_dance</span>
+                    <span class="bg-primary text-white text-xs px-2 py-0.5 rounded-full">Follow</span>
+                </div>
+                <p class="text-sm">
+                    This new dance trend is taking over! 💃 #dancechallenge #viral
+                    #summervibes
+                </p>
+            </div>
+        </div>
+
+        <!-- Video Progress Bar -->
+        <div class="absolute bottom-0 left-0 w-full h-1 bg-gray-700">
+            <div class="h-full bg-primary progress_bar" style="width: 45%;"></div>
+        </div>
+    </div>
+</div>
+
+{% include "components/video_interaction_script.html" %}
+{% endblock content %}

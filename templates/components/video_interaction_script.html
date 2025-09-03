@@ -1,0 +1,58 @@
+<script id="video-interaction-script">
+    document.addEventListener("DOMContentLoaded", function () {
+      const videoContainer = document.querySelector(".video-container");
+      const video = videoContainer.querySelector("video");
+      const progressBar = videoContainer.querySelector(".progress_bar");
+      const likeButton = videoContainer.querySelector(
+        ".action-bar button:first-child",
+      );
+
+      // Double tap to like
+      let lastTap = 0;
+      videoContainer.addEventListener("click", function (e) {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+
+        if (tapLength < 300 && tapLength > 0) {
+          // Double tap detected
+          const heart = document.createElement("div");
+          heart.innerHTML = '<i class="ri-heart-fill ri-3x text-primary"></i>';
+          heart.style.position = "absolute";
+          heart.style.left = `${e.clientX - 24}px`;
+          heart.style.top = `${e.clientY - 24}px`;
+          heart.style.opacity = "1";
+          heart.style.transition = "all 0.8s ease-out";
+          videoContainer.appendChild(heart);
+
+          // Like animation
+          likeButton.innerHTML =
+            '<i class="ri-heart-fill ri-2x text-primary"></i><span class="text-xs mt-1">87.5K</span>';
+
+          setTimeout(() => {
+            heart.style.transform = "translateY(-80px) scale(1.5)";
+            heart.style.opacity = "0";
+            setTimeout(() => {
+              heart.remove();
+            }, 800);
+          }, 50);
+        }
+
+        lastTap = currentTime;
+      });
+
+      // Simulate video progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 0.5;
+        if (progress > 100) {
+          progress = 0;
+        }
+        progressBar.style.width = `${progress}%`;
+      }, 100);
+
+      // Clean up on page change
+      return () => {
+        clearInterval(interval);
+      };
+    });
+</script>
