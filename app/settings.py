@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
-import environ
 import os
+from pathlib import Path
+
+import environ
 
 env = environ.Env(
     # set casting, default value
@@ -140,3 +141,5 @@ else:
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_AGE = 86400 * 30
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
