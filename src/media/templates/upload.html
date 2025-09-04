@@ -1,0 +1,196 @@
+{% extends "core/layout.html" %}
+
+{% block content %}
+<!-- Upload View -->
+<div id="upload-view" class="bg-black h-full">
+    <div class="h-full flex flex-col">
+        <!-- Camera Preview -->
+        <div class="flex-1 relative">
+            <img
+                    src="https://readdy.ai/api/search-image?query=camera%2520viewfinder%2520perspective%2C%2520person%2520preparing%2520to%2520record%2C%2520seen%2520through%2520camera%2520interface%2C%2520grid%2520lines%2C%2520exposure%2520indicators%2C%2520focus%2520points%2C%2520high%2520quality%2C%2520realistic&width=1080&height=1920&seq=camera&orientation=portrait"
+                    alt="Camera Preview"
+                    class="w-full h-full object-cover"
+            />
+
+            <!-- Top Controls -->
+            <div
+                    class="absolute top-0 left-0 right-0 p-4 flex justify-between items-center"
+            >
+                <button class="w-10 h-10 flex items-center justify-center">
+                    <i class="ri-close-line ri-xl"></i>
+                </button>
+                <div class="flex gap-4">
+                    <button class="w-10 h-10 flex items-center justify-center">
+                        <i class="ri-flashlight-line ri-xl"></i>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center">
+                        <i class="ri-timer-line ri-xl"></i>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center">
+                        <i class="ri-camera-switch-line ri-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Side Effects Menu -->
+            <div
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-6"
+            >
+                <button
+                        class="w-12 h-12 rounded-full bg-gray-800 bg-opacity-60 flex items-center justify-center"
+                >
+                    <i class="ri-magic-line ri-xl"></i>
+                </button>
+                <button
+                        class="w-12 h-12 rounded-full bg-gray-800 bg-opacity-60 flex items-center justify-center"
+                >
+                    <i class="ri-filter-3-line ri-xl"></i>
+                </button>
+                <button
+                        class="w-12 h-12 rounded-full bg-gray-800 bg-opacity-60 flex items-center justify-center"
+                >
+                    <i class="ri-speed-line ri-xl"></i>
+                </button>
+                <button
+                        class="w-12 h-12 rounded-full bg-gray-800 bg-opacity-60 flex items-center justify-center"
+                >
+                    <i class="ri-timer-line ri-xl"></i>
+                </button>
+            </div>
+
+            <!-- Bottom Controls -->
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <button
+                            class="px-4 py-2 rounded-full bg-gray-800 bg-opacity-60 text-sm"
+                    >
+                        60s
+                    </button>
+                    <button
+                            class="px-4 py-2 rounded-full bg-gray-800 bg-opacity-60 text-sm"
+                    >
+                        Effects
+                    </button>
+                    <button
+                            class="px-4 py-2 rounded-full bg-gray-800 bg-opacity-60 text-sm"
+                    >
+                        Upload
+                    </button>
+                </div>
+
+                <div class="flex justify-center items-center">
+                    <button
+                            class="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center"
+                    >
+                        <div class="w-16 h-16 rounded-full bg-primary"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Editing Tools (Hidden by default) -->
+        <div class="hidden bg-black p-4">
+            <div class="flex justify-between items-center mb-4">
+                <button class="text-primary">Cancel</button>
+                <h3 class="text-lg font-semibold">Edit Video</h3>
+                <button class="text-primary">Next</button>
+            </div>
+
+            <div class="mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm">Trim</span>
+                    <span class="text-sm">00:15</span>
+                </div>
+                <div class="h-16 bg-gray-800 rounded-lg mb-2 overflow-hidden">
+                    <div class="flex h-full">
+                        <div class="w-1/6 h-full">
+                            <img
+                                    src="https://readdy.ai/api/search-image?query=video%2520frame%2520thumbnail%2C%2520person%2520dancing%2C%2520vibrant%2520colors%2C%2520high%2520quality%2C%2520motion%2520blur&width=100&height=100&seq=thumb1&orientation=squarish"
+                                    alt="Thumbnail"
+                                    class="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div class="w-1/6 h-full">
+                            <img
+                                    src="https://readdy.ai/api/search-image?query=video%2520frame%2520thumbnail%2C%2520person%2520dancing%2C%2520vibrant%2520colors%2C%2520high%2520quality%2C%2520motion%2520blur&width=100&height=100&seq=thumb2&orientation=squarish"
+                                    alt="Thumbnail"
+                                    class="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div class="w-1/6 h-full">
+                            <img
+                                    src="https://readdy.ai/api/search-image?query=video%2520frame%2520thumbnail%2C%2520person%2520dancing%2C%2520vibrant%2520colors%2C%2520high%2520quality%2C%2520motion%2520blur&width=100&height=100&seq=thumb3&orientation=squarish"
+                                    alt="Thumbnail"
+                                    class="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div class="w-1/6 h-full">
+                            <img
+                                    src="https://readdy.ai/api/search-image?query=video%2520frame%2520thumbnail%2C%2520person%2520dancing%2C%2520vibrant%2520colors%2C%2520high%2520quality%2C%2520motion%2520blur&width=100&height=100&seq=thumb4&orientation=squarish"
+                                    alt="Thumbnail"
+                                    class="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div class="w-1/6 h-full">
+                            <img
+                                    src="https://readdy.ai/api/search-image?query=video%2520frame%2520thumbnail%2C%2520person%2520dancing%2C%2520vibrant%2520colors%2C%2520high%2520quality%2C%2520motion%2520blur&width=100&height=100&seq=thumb5&orientation=squarish"
+                                    alt="Thumbnail"
+                                    class="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div class="w-1/6 h-full">
+                            <img
+                                    src="https://readdy.ai/api/search-image?query=video%2520frame%2520thumbnail%2C%2520person%2520dancing%2C%2520vibrant%2520colors%2C%2520high%2520quality%2C%2520motion%2520blur&width=100&height=100&seq=thumb6&orientation=squarish"
+                                    alt="Thumbnail"
+                                    class="w-full h-full object-cover"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="75"
+                        class="w-full h-2 bg-gray-700 rounded-full appearance-none"
+                />
+            </div>
+
+            <div class="grid grid-cols-4 gap-4 mb-4">
+                <button class="flex flex-col items-center">
+                    <div
+                            class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-1"
+                    >
+                        <i class="ri-scissors-line ri-lg"></i>
+                    </div>
+                    <span class="text-xs">Trim</span>
+                </button>
+                <button class="flex flex-col items-center">
+                    <div
+                            class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-1"
+                    >
+                        <i class="ri-text"></i>
+                    </div>
+                    <span class="text-xs">Text</span>
+                </button>
+                <button class="flex flex-col items-center">
+                    <div
+                            class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-1"
+                    >
+                        <i class="ri-music-2-line ri-lg"></i>
+                    </div>
+                    <span class="text-xs">Sound</span>
+                </button>
+                <button class="flex flex-col items-center">
+                    <div
+                            class="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-1"
+                    >
+                        <i class="ri-filter-3-line ri-lg"></i>
+                    </div>
+                    <span class="text-xs">Effects</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
