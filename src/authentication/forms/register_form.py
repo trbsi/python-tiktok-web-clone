@@ -20,6 +20,8 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit)
         role = self.cleaned_data['role']
+        if role == 'admin':
+            role = 'user'
         Group.objects.get_or_create(name=role)
         user.groups.add(Group.objects.get(name=role))
         return user

@@ -143,3 +143,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_AGE = 86400 * 30
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+
+if env('APP_ENV') == 'local':
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+    EMAIL_HOST = "smtp.yourprovider.com"  # e.g. smtp.gmail.com, smtp.sendgrid.net, etc.
+    EMAIL_PORT = 587  # 587 for TLS, 465 for SSL, 25 (not recommended)
+    EMAIL_USE_TLS = True  # or EMAIL_USE_SSL = True
+    EMAIL_HOST_USER = "your_account@example.com"
+    EMAIL_HOST_PASSWORD = "your_password_or_app_password"
+
+    DEFAULT_FROM_EMAIL = "webmaster@example.com"  # sender address shown in emails
