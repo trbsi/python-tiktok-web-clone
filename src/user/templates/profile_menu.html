@@ -1,0 +1,51 @@
+<div class="relative min-h-screen">
+
+    <!-- Overlay -->
+    <div
+            id="menu-overlay"
+            class="fixed inset-0 bg-black/50 z-40 hidden"
+    ></div>
+
+    <!-- Slide-in Menu -->
+    <aside
+            id="slide-menu"
+            class="fixed top-0 right-0 h-full w-64 bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300"
+            :class="open ? 'translate-x-0' : 'translate-x-full'"
+    >
+        <!-- Close Button -->
+        <div class="flex justify-end p-4">
+            <button @click="open = !open" id="menu-close" class="text-gray-300 hover:text-white text-2xl font-bold">
+                &times;
+            </button>
+        </div>
+
+        <!-- Menu Items -->
+        <nav class="mt-4 flex flex-col">
+            <a href="#"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="fas fa-home w-5"></i> Home
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+            <a href="#"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="fas fa-info-circle w-5"></i> About
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+            <a href="#"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="fas fa-cogs w-5"></i> Services
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+            <a href="#"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="fas fa-envelope w-5"></i> Contact
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+            <a href="#"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="fas fa-user w-5"></i> Profile
+            </a>
+        </nav>
+    </aside>
+
+</div>

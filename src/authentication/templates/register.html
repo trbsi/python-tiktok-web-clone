@@ -1,0 +1,166 @@
+{% extends "core/layout.html" %}
+
+{% block content %}
+<div class="w-full max-w-md">
+    <div class="bg-gray-900 shadow-2xl rounded-2xl p-8">
+        <h1 class="text-2xl font-semibold text-white mb-6">Create Account</h1>
+
+        {# Global non-field errors #}
+        {% if form.non_field_errors %}
+        <div class="mb-4 rounded-lg border border-red-600 bg-red-900/60 p-3 text-sm text-red-200">
+            <ul class="list-disc pl-5 space-y-1">
+                {% for err in form.non_field_errors %}
+                <li>{{ err }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'register' %}" novalidate class="space-y-5">
+            {% csrf_token %}
+
+            {# Username #}
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    {{ form.username.label }}
+                </label>
+                <input
+                        type="text"
+                        name="{{ form.username.name }}"
+                        id="{{ form.username.id_for_label }}"
+                        value="{{ form.username.value|default_if_none:'' }}"
+                        placeholder="Your username"
+                        class="block w-full rounded-xl border border-gray-700 bg-gray-950 px-3 py-2 text-gray-100
+                   shadow-sm placeholder-gray-500 focus:border-indigo-500 focus:ring focus:ring-indigo-500/40"
+                        required
+                />
+                {% if form.username.errors %}
+                <div class="mt-1 text-sm text-red-400">
+                    {{ form.username.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            {# Email #}
+            <div>
+                <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    {{ form.email.label }}
+                </label>
+                <input
+                        type="email"
+                        name="{{ form.email.name }}"
+                        id="{{ form.email.id_for_label }}"
+                        value="{{ form.email.value|default_if_none:'' }}"
+                        placeholder="Your email"
+                        class="block w-full rounded-xl border border-gray-700 bg-gray-950 px-3 py-2 text-gray-100
+                   shadow-sm placeholder-gray-500 focus:border-indigo-500 focus:ring focus:ring-indigo-500/40"
+                        required
+                />
+                {% if form.email.errors %}
+                <div class="mt-1 text-sm text-red-400">
+                    {{ form.email.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            {# Password1 #}
+            <div>
+                <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    {{ form.password1.label }}
+                </label>
+                <input
+                        type="password"
+                        name="{{ form.password1.name }}"
+                        id="{{ form.password1.id_for_label }}"
+                        placeholder="••••••••"
+                        class="block w-full rounded-xl border border-gray-700 bg-gray-950 px-3 py-2 text-gray-100
+                   shadow-sm placeholder-gray-500 focus:border-indigo-500 focus:ring focus:ring-indigo-500/40"
+                        required
+                />
+                {% if form.password1.errors %}
+                <div class="mt-1 text-sm text-red-400">
+                    {{ form.password1.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            {# Password2 #}
+            <div>
+                <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    {{ form.password2.label }}
+                </label>
+                <input
+                        type="password"
+                        name="{{ form.password2.name }}"
+                        id="{{ form.password2.id_for_label }}"
+                        placeholder="••••••••"
+                        class="block w-full rounded-xl border border-gray-700 bg-gray-950 px-3 py-2 text-gray-100
+                   shadow-sm placeholder-gray-500 focus:border-indigo-500 focus:ring focus:ring-indigo-500/40"
+                        required
+                />
+                {% if form.password2.errors %}
+                <div class="mt-1 text-sm text-red-400">
+                    {{ form.password2.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            {# Role dropdown #}
+            <div>
+                <label for="{{ form.role.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
+                    {{ form.role.label }}
+                </label>
+                <select
+                        name="{{ form.role.name }}"
+                        id="{{ form.role.id_for_label }}"
+                        class="block w-full rounded-xl border border-gray-700 bg-gray-950 px-3 py-2 text-gray-100
+                   shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500/40"
+                        required
+                >
+                    {% for value, label in form.role.field.choices %}
+                    <option value="{{ value }}" {% if form.role.value == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                {% if form.role.errors %}
+                <div class="mt-1 text-sm text-red-400">
+                    {{ form.role.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            {# Accept terms checkbox #}
+            <div class="flex items-center gap-2">
+                <input
+                        type="checkbox"
+                        name="{{ form.accept_tos.name }}"
+                        id="{{ form.accept_tos.id_for_label }}"
+                        class="h-4 w-4 rounded border-gray-700 bg-gray-900 text-indigo-600 focus:ring-indigo-500"
+                        {% if form.accept_tos.value %}checked{% endif %}
+                        required
+                />
+                <label for="{{ form.accept_tos.id_for_label }}" class="text-sm text-gray-400">
+                    {{ form.accept_tos.label }}
+                </label>
+            </div>
+
+            {% if form.accept_tos.errors %}
+            <div class="mt-1 text-sm text-red-400">
+                {{ form.accept_tos.errors }}
+            </div>
+            {% endif %}
+
+            <button type="submit"
+                    class="w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-white font-medium shadow
+                 hover:bg-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/40"
+            >
+                Sign Up
+            </button>
+        </form>
+    </div>
+
+    <p class="mt-6 text-center text-sm text-gray-400">
+        Already have an account?
+        <a href="{% url 'login' %}" class="text-indigo-400 hover:text-indigo-300 font-medium">Log in</a>
+    </p>
+</div>
+{% endblock content %}

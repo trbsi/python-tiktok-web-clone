@@ -18,32 +18,48 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link
-            href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
-            rel="stylesheet"
-    />
-    <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-            rel="stylesheet"
-    />
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
-    />
-     <link
-            rel="stylesheet"
-            href="{% static 'css/app.css' %}"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}"/>
+
+    <!-- Fontawesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 </head>
-<body class="bg-black text-white">
+<body class="bg-black text-white max-w-xl mx-auto">
 <div id="app" class="h-full flex flex-col">
     <!-- Main Content Area -->
-    <div id="main-content" class="flex-1 relative">
+    <div id="main-content" class="flex-1 relative overflow-y-auto overflow-x-hidden">
         {% block content %}{% endblock content %}
     </div>
 
     {% include "components/bottom_nav.html" %}
 </div>
 
+<script>
+    toastr.options.closeDuration = 5000;
+    toastr.options.progressBar = true;
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+            toastr.success('{{message}}');
+            {% elif message.tags == 'error' %}
+            toastr.error('{{message}}');
+            {% elif message.tags == 'warning' %}
+            toastr.warning('{{message}}');
+            {% elif message.tags == 'info' %}
+            toastr.info('{{message}}');
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>
 </body>
 </html>

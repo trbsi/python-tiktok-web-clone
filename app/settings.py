@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'src.inbox.apps.InboxConfig',
     'src.user.apps.UserConfig',
     'src.media.apps.MediaConfig',
+    'src.core.apps.CoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -138,3 +139,4 @@ else:
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SESSION_COOKIE_AGE = 86400 * 30
