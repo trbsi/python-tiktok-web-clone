@@ -34,6 +34,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
+APP_ENV = env('APP_ENV')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
@@ -129,11 +130,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 STATIC_URL = '/static/'
-if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static'),
-    ]
-else:
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+if APP_ENV == 'production':
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
