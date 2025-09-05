@@ -6,4 +6,4 @@ class AppLoginView(LoginView):
     template_name = 'login.html'
 
     def get_success_url(self):
-        return reverse_lazy('feed.home')
+        return reverse_lazy('feed.fyp')

@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from src.authentication.forms.app_login_view import AppLoginView
+from src.authentication.forms.app_password_change_view import AppPasswordChangeView
 from src.authentication.forms.app_password_reset_view import AppPasswordResetView
 
 urlpatterns = [
@@ -26,6 +27,7 @@ urlpatterns = [
     path('authentication/', include('src.authentication.urls')),
     path('auth/login/', AppLoginView.as_view(), name='login'),
     path('auth/password_reset/', AppPasswordResetView.as_view(), name='password_reset'),
+    path('auth/password_change/', AppPasswordChangeView.as_view(), name='password_change'),
     path('auth/', include('django.contrib.auth.urls')),
     path('discover/', include('src.discover.urls')),
     path('feed/', include('src.feed.urls')),

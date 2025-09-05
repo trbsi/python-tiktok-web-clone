@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'src.user.apps.UserConfig',
     'src.media.apps.MediaConfig',
     'src.core.apps.CoreConfig',
+    'src.engagement.apps.EngagementConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,6 +144,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_AGE = 86400 * 30
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+MEDIA_ROOT = 'uploads'
 
 if env('APP_ENV') == 'local':
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
