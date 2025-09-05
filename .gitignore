@@ -7,6 +7,7 @@
 __pycache__
 db.sqlite3
 sent_emails
+staticfiles
 
 # Backup files #
 *.bak
