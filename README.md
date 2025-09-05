@@ -59,11 +59,58 @@ poetry run python manage.py collectstatic
 
 9. Production setup (recommended)
 
-poetry run gunicorn <project_folder>.wsgi:application --bind 0.0.0.0:8000
+### Option A: Use systemd service
+
+Create a service file:
 
 ```
-poetry run gunicorn app.wsgi:application --bind 0.0.0.0:8000
+sudo nano /etc/systemd/system/mydjango.service
 ```
+
+Example content:
+
+```
+[Unit]
+Description=Gunicorn Django App
+After=network.target
+
+[Service]
+User=youruser
+Group=www-data
+WorkingDirectory=/path/to/your/project
+ExecStart=/home/youruser/.local/bin/poetry run gunicorn app.wsgi:application --bind 0.0.0.0:8000 --workers 3
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Reload systemd and start the service:
+
+```
+sudo systemctl daemon-reload;
+sudo systemctl start mydjango;
+sudo systemctl enable mydjango;
+```
+
+Allow firewall:
+
+```
+sudo ufw allow 8000/tcp
+sudo ufw status
+```
+
+Status:
+
+```
+sudo systemctl status mydjango
+```
+
+Access:
+http://84.46.251.228:8000/
+
+### Option B: Nginx
+
+TODO
 
 10. Updating your project later
 
