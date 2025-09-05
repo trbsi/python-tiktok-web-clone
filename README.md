@@ -48,19 +48,21 @@ nano .env
 7. Apply database migrations
 
 ```
-python3 manage.py migrate
+poetry run python manage.py migrate
 ```
 
 8. Collect static files (for production)
 
 ```
-python3 manage.py collectstatic
+poetry run python manage.py collectstatic
 ```
 
 9. Production setup (recommended)
 
+poetry run gunicorn <project_folder>.wsgi:application --bind 0.0.0.0:8000
+
 ```
-poetry run gunicorn config.wsgi:application --bind 0.0.0.0:8000
+poetry run gunicorn app.wsgi:application --bind 0.0.0.0:8000
 ```
 
 10. Updating your project later
