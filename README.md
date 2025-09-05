@@ -105,6 +105,12 @@ Status:
 sudo systemctl status mydjango
 ```
 
+Restart if needed
+
+```
+sudo systemctl restart mydjango
+```
+
 Access:
 http://84.46.251.228:8000/
 
