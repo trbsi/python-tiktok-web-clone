@@ -1,10 +1,10 @@
 import random
 from datetime import datetime
 
-from django.contrib.auth.models import User
 from faker import Faker
 
 from src.media.models import Media
+from src.user.models import User as User
 
 
 class MediaSeeder:

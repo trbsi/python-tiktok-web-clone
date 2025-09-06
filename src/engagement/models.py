@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User
 from django.db import models
 
 from src.media.models import Media
+from src.user.models import User as User
 
 
 class Like(models.Model):

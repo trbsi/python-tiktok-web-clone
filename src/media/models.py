@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 from django.db import models
+
+from src.user.models import User as User
 
 
 class Media(models.Model):

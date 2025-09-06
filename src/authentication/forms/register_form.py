@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+
+from src.user.models import User as User
 
 ROLES = [
     ('user', 'User'),

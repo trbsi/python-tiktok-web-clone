@@ -36,8 +36,6 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 APP_ENV = env('APP_ENV')
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -138,11 +136,6 @@ if APP_ENV == 'production':
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-SESSION_COOKIE_AGE = 86400 * 30
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = '/'
-MEDIA_ROOT = 'uploads'
 
 if env('APP_ENV') == 'local':
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
@@ -157,3 +150,11 @@ else:
     EMAIL_HOST_PASSWORD = "your_password_or_app_password"
 
     DEFAULT_FROM_EMAIL = "webmaster@example.com"  # sender address shown in emails
+
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SESSION_COOKIE_AGE = 86400 * 30
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+MEDIA_ROOT = 'uploads'
+AUTH_USER_MODEL = 'user.User'
