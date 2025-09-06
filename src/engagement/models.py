@@ -10,6 +10,11 @@ class Like(models.Model):
     media = models.ForeignKey(Media, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'media'], name='unique_like')
+        ]
+
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)

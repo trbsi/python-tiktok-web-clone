@@ -30,4 +30,10 @@ class Media(models.Model):
     file_type = models.CharField(max_length=20, choices=FILE_TYPE)
     status = models.CharField(max_length=20, choices=STATUSES)
     description = models.TextField(null=True)
+    like_count = models.PositiveIntegerField(default=0)
+    comment_count = models.PositiveIntegerField(default=0)
+    share_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_file_url(self):
+        return self.file

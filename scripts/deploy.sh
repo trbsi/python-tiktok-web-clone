@@ -5,4 +5,4 @@
 # =========================
 
 git pull --rebase
-sudo systemctl restart mydjango
+sudo systemctl restart mydjangos
