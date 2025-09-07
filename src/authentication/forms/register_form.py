@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
 
-from src.user.models import User as User
+from src.user.models import User as User, UserProfile
 
 ROLES = [
     ('user', 'User'),
@@ -26,4 +26,5 @@ class RegisterForm(UserCreationForm):
             role = 'user'
         Group.objects.get_or_create(name=role)
         user.groups.add(Group.objects.get(name=role))
+        UserProfile.objects.create(user=user)
         return user
