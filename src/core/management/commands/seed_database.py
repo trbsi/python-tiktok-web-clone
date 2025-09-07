@@ -1,9 +1,8 @@
-from pathlib import Path
-
 from django.core.management import BaseCommand, call_command, CommandError
 
 from app import settings
 from database.seeders import *
+from database.seeders.inbox_seeder import InboxSeeder
 
 
 class Command(BaseCommand):
@@ -11,23 +10,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("--truncate", action="store_true", default=False)
-        parser.add_argument("--drop", action="store_true", default=False)
 
     def handle(self, *args, **options):
         if settings.APP_ENV != 'local':
             raise CommandError('You are not in local env')
 
         should_truncate = options["truncate"]
-        drop = options["drop"]
-
-        if drop:
-            database = Path(settings.DATABASES['default']['NAME'])
-            if database.exists():
-                database.unlink()
-            database.touch()
-            database.chmod(0o666)
-            self.stdout.write(self.style.SUCCESS('Database dropped. Run without drop to seed'))
-            return
 
         if should_truncate:
             call_command("flush", interactive=False)
@@ -35,9 +23,22 @@ class Command(BaseCommand):
         call_command("makemigrations", interactive=False)
         call_command("migrate")
 
+        self.write('Seeding groups')
         GroupSeeder().seed()
+
+        self.write('Seeding users')
         UserSeeder().seed()
+
+        self.write('Seeding media')
         MediaSeeder().seed()
+
+        self.write('Seeding engagement')
         EngagementSeeder().seed()
 
+        self.write('Seeding inbox')
+        InboxSeeder().seed()
+
         self.stdout.write(self.style.SUCCESS('Done'))
+
+    def write(self, string: str) -> None:
+        self.stdout.write(self.style.SUCCESS(string))

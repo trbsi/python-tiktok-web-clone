@@ -5,14 +5,14 @@ from src.user.models import User as User
 
 class Conversation(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user1')
-    user2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user2')
+    performer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_performer')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_user')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=('user1', 'user2'), name='conversation_unique_user')
+            models.UniqueConstraint(fields=('performer', 'user'), name='conversation_unique_performer_user')
         ]
 
 
