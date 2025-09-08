@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'src.user.apps.UserConfig',
     'src.media.apps.MediaConfig',
     'src.core.apps.CoreConfig',
+    'src.payment.apps.PaymentConfig',
     'src.engagement.apps.EngagementConfig',
     'django.contrib.admin',
     'django.contrib.auth',
