@@ -101,9 +101,9 @@ if (DB_TYPE == 'mysql'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'tiktok',
-            'USER': 'root',
-            'PASSWORD': '',
+            'NAME': env('DB_NAME'),
+            'USER': env('DB_USER'),
+            'PASSWORD': env('DB_PASSWORD'),
             'HOST': '127.0.0.1',
             'PORT': '3306',
         }
