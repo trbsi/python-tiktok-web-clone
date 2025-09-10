@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
+from django.core.validators import RegexValidator
 
 from src.user.models import User as User, UserProfile
 
@@ -9,8 +10,14 @@ ROLES = [
     ('performer', 'Performer'),
 ]
 
+alphanumeric = RegexValidator(
+    r'^[0-9a-zA-Z]*$',
+    'Username must contain only letters and numbers.'
+)
+
 
 class RegisterForm(UserCreationForm):
+    username = forms.CharField(max_length=50, required=True, validators=[alphanumeric])
     email = forms.EmailField()
     role = forms.ChoiceField(choices=ROLES, required=True)
     accept_tos = forms.BooleanField(required=True, label='I accept Terms Of Use')

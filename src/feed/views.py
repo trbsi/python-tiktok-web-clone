@@ -6,7 +6,7 @@ from src.feed.services.load_videos_service import LoadVideosService
 
 
 @require_GET
-def fyp(request: HttpRequest) -> HttpResponse:
+def discover(request: HttpRequest) -> HttpResponse:
     return render(request, 'feed_home.html')
 
 
@@ -20,12 +20,12 @@ def videos(request: HttpRequest) -> JsonResponse:
     data = request.GET
     page = int(data.get('page'))
     per_page = int(data.get('per_page'))
-    
+
     service: LoadVideosService = LoadVideosService(
         per_page=per_page,
         page=page
     )
-    videos: list = service.get_videos()
+    videos: list = service.get_videos(request.user)
     return JsonResponse({
         'results': videos,
         'next_page': page + 1,

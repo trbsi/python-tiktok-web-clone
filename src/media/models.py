@@ -1,40 +1,29 @@
 from django.db import models
 
+from src.media.enums import MediaEnum
+from src.media.query_managers import MediaManager
 from src.user.models import User as User
 
 
 class Media(models.Model):
-    STATUS_PUBLIC = 'public'
-    STATUS_PENDING = 'pending'
-    STATUS_LOCKED = 'locked'
-    STATUS_PRIVATE = 'private'
-
-    FILE_TYPE_AUDIO = 'audio'
-    FILE_TYPE_VIDEO = 'video'
-    FILE_TYPE_IMAGE = 'image'
-
-    STATUSES = (
-        ('public', 'Public'),
-        ('private', 'Private'),
-        ('pending', 'Pending'),
-        ('locked', 'Locked'),
-    )
-    FILE_TYPE = (
-        ('audio', 'Audio'),
-        ('video', 'Video'),
-        ('image', 'Image'),
-    )
-
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='media_user')
     file = models.FileField(upload_to='uploads/videos')
-    file_type = models.CharField(max_length=20, choices=FILE_TYPE)
-    status = models.CharField(max_length=20, choices=STATUSES)
+    file_type = models.CharField(max_length=20, choices=MediaEnum.file_types())
+    status = models.CharField(max_length=20, choices=MediaEnum.statuses())
     description = models.TextField(null=True)
     like_count = models.PositiveIntegerField(default=0)
     comment_count = models.PositiveIntegerField(default=0)
     share_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = MediaManager()
+    all_objects = models.Manager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['status'], name='idx_media_status'),
+        ]
 
     def get_file_url(self):
         return self.file

@@ -2,6 +2,11 @@
     display: none !important;
 }
 
+p {
+    padding-bottom: 10px;
+    font-size: 13px;
+}
+
 :where([class^="ri-"])::before { content: "\f3c2"; }
 body {
     font-family: 'Inter', sans-serif;

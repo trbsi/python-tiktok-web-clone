@@ -44,10 +44,10 @@ function videoFeed() {
             if (this.loadingMore || !this.hasMore) return;
             this.loadingMore = true;
             try {
-                const res = await fetch(`/api/videos?page=${this.page}&per_page=${this.perPage}`);
+                const res = await fetch(`/feed/api/videos?page=${this.page}&per_page=${this.perPage}`);
                 if (!res.ok) throw new Error('Failed to fetch videos');
                 const data = await res.json();
-
+                console.log(data)
                 // expected response shape: { results: [...], next_page: 2/null }
                 const items = data.results || data;
                 items.forEach(v => {
@@ -115,7 +115,8 @@ function videoFeed() {
             }, {threshold: [0, 0.25, 0.5, 0.6, 0.75, 1]});
 
             // observe all current video nodes
-            this.$refs.video.forEach(el => this.observer.observe(el));
+            console.log(this.$refs)
+             this.$refs.video.forEach(el => this.observer.observe(el));
         },
 
         playAtIndex(index) {

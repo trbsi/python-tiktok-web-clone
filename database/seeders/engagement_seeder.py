@@ -8,24 +8,30 @@ class EngagementSeeder:
     @staticmethod
     def seed():
         faker: Faker = Faker()
-        media: QuerySet = Media.objects.all()
+        media: QuerySet[Media] = Media.objects.all()
 
-        for item in media:
+        for media_item in media:
             integer = faker.random_int(0, 4)
             Like.objects.create(
                 user=User.objects.get(username='user' + str(integer)),
-                media=item,
+                media=media_item,
             )
             Share.objects.create(
                 user=User.objects.get(username='user' + str(integer)),
-                media=item,
+                media=media_item,
             )
 
-        for item in media:
+            media_item.like_count = media_item.like_count + 1
+            media_item.save()
+
+        for media_item in media:
             for i in range(20):
                 integer = faker.random_int(0, 4)
                 Comment.objects.create(
                     user=User.objects.get(username='user' + str(integer)),
-                    media=item,
+                    media=media_item,
                     comment=faker.text(),
                 )
+
+                media_item.comment_count = media_item.comment_count + 1
+                media_item.save()

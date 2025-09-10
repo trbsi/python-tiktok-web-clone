@@ -26,5 +26,6 @@ class MediaSeeder:
                 file_type='video',
                 status='public',
                 description=fake.text(),
-                created_at=datetime.now()
+                created_at=datetime.now(),
+                share_count=random.randint(1, 1000),
             )

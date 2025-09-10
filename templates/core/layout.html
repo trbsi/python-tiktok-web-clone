@@ -38,11 +38,11 @@
 <body class="bg-black text-white max-w-xl mx-auto">
 <div id="app" class="h-full flex flex-col">
     <!-- Main Content Area -->
-    <div id="main-content" class="flex-1 relative overflow-y-auto overflow-x-hidden">
+    <div id="main-content" class="flex-1 relative overflow-y-auto overflow-x-hidden pb-16">
         {% block content %}{% endblock content %}
     </div>
 
-    {% include "components/bottom_nav.html" %}
+    {% include "components/bottom_navigation.html" %}
 </div>
 
 <script>
