@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
-from src.feed.services.load_videos_service import LoadVideosService
+from src.feed.services.load_feed_service import LoadFeedService
 
 
 @require_GET
@@ -16,17 +16,18 @@ def following(request: HttpRequest) -> HttpResponse:
 
 
 @require_GET
-def videos(request: HttpRequest) -> JsonResponse:
+def feed(request: HttpRequest) -> JsonResponse:
     data = request.GET
     page = int(data.get('page'))
     per_page = int(data.get('per_page'))
 
-    service: LoadVideosService = LoadVideosService(
+    service: LoadFeedService = LoadFeedService()
+    items: list = service.get_feed_items(
         per_page=per_page,
-        page=page
+        page=page,
+        user=request.user
     )
-    videos: list = service.get_videos(request.user)
     return JsonResponse({
-        'results': videos,
+        'results': items,
         'next_page': page + 1,
     })

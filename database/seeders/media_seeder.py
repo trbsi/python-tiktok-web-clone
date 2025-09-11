@@ -3,6 +3,7 @@ from datetime import datetime
 
 from faker import Faker
 
+from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.user.models import User as User
 
@@ -24,8 +25,10 @@ class MediaSeeder:
                 user=User.objects.get(username=performer_name),
                 file=random.choice(videos),
                 file_type='video',
-                status='public',
+                status=MediaEnum.STATUS_PUBLIC.value,
                 description=fake.text(),
                 created_at=datetime.now(),
                 share_count=random.randint(1, 1000),
+                like_count=random.randint(1, 1000),
+                comment_count=random.randint(1, 1000),
             )

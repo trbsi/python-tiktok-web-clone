@@ -9,6 +9,6 @@ class InboxEnum(Enum):
     @staticmethod
     def statuses() -> Tuple:
         return (
-            (InboxEnum.STATUS_ACTIVE, 'Active'),
-            (InboxEnum.STATUS_DELETED, 'Deleted'),
+            (InboxEnum.STATUS_ACTIVE.value, 'Active'),
+            (InboxEnum.STATUS_DELETED.value, 'Deleted'),
         )

@@ -36,6 +36,8 @@ urlpatterns = [
     path('inbox/', include('src.inbox.urls')),
     path('user/', include('src.user.urls')),
     path('media/', include('src.media.urls')),
+    path('engagement/', include('src.engagement.urls')),
+    path('follower/', include('src.follower.urls')),
 ]
 
 if settings.DEBUG == True:

@@ -9,7 +9,7 @@ class Conversation(models.Model):
     id = models.BigAutoField(primary_key=True)
     performer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_performer')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_user')
-    status = models.CharField(max_length=10, choices=InboxEnum.statuses(), default=InboxEnum.STATUS_ACTIVE)
+    status = models.CharField(max_length=10, choices=InboxEnum.statuses(), default=InboxEnum.STATUS_ACTIVE.value)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

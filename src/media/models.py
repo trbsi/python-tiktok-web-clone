@@ -26,4 +26,4 @@ class Media(models.Model):
         ]
 
     def get_file_url(self):
-        return self.file
+        return str(self.file)

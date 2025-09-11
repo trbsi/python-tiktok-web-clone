@@ -6,7 +6,7 @@ function videoFeed() {
         hasMore: true,
         currentIndex: 0,
         observer: null,
-        progress: {},              // progress per index (0..100)
+        progressBar: {},              // progress per index (0..100)
         loadingVideo: {},          // buffering flags per index
         commentsOpen: false,
         comments: [],
@@ -14,24 +14,11 @@ function videoFeed() {
         commentInput: '',
         activeVideo: null,         // currently opened video for comments
         perPage: 10,               // how many videos per fetch
+        isMuted: true,
 
         init() {
             // initial load
             this.loadMore();
-
-            // set up an IntersectionObserver to detect which video is in view
-            // We'll create the observer after a short delay so DOM nodes exist after first load.
-            this.$nextTick(() => {
-                // observe via polling for refs available
-                const waitForRefs = () => {
-                    if (!this.$refs.video || !this.$refs.video.length) {
-                        setTimeout(waitForRefs, 100);
-                        return;
-                    }
-                    this.setupObserver();
-                };
-                waitForRefs();
-            });
 
             // pause all videos on page load, then play the top-most after a tiny delay for autoplay to work consistently
             window.addEventListener('visibilitychange', () => {
@@ -47,42 +34,53 @@ function videoFeed() {
                 const res = await fetch(`/feed/api/videos?page=${this.page}&per_page=${this.perPage}`);
                 if (!res.ok) throw new Error('Failed to fetch videos');
                 const data = await res.json();
-                console.log(data)
+
                 // expected response shape: { results: [...], next_page: 2/null }
                 const items = data.results || data;
                 items.forEach(v => {
                     // normalize fields we use:
-                    v.likes = v.likes ?? 0;
+                    v.like_count = v.like_count;
                     v.liked = !!v.liked;
-                    v.comments_count = v.comments_count ?? 0;
+                    v.comments_count = v.comments_count;
                     v.user = v.user || {username: 'unknown', avatar: 'https://via.placeholder.com/150'};
                     v.description = v.description ?? '';
+                    v.src = v.src;
+                    v.id = v.id;
                 });
 
                 this.videos = this.videos.concat(items);
                 this.page = data.next_page ?? (this.page + 1);
                 this.hasMore = !!data.next_page;
-
-                // after adding new items we need to re-run observer
-                this.$nextTick(() => {
-                    if (this.observer) {
-                        this.$refs.video.forEach(el => this.observer.observe(el));
-                    } else {
-                        this.setupObserver();
-                    }
-                });
             } catch (e) {
                 console.error(e);
             } finally {
                 this.loadingMore = false;
+
+                // after adding new items we need to re-run observer
+                this.$nextTick(() => {
+
+                    if (this.observer) {
+                        this.getVideos().forEach(el => this.observer.observe(el));
+                    } else {
+                        this.setupObserver();
+                    }
+                });
             }
+        },
+
+        getVideos() {
+            return this.$root.querySelectorAll('[x-ref="video"]');
+        },
+
+        getVideo(index) {
+            return this.$root.querySelectorAll('[x-ref="video"]')[index];
         },
 
         setupObserver() {
             // clean up if exists
             if (this.observer) {
                 try {
-                    this.$refs.video.forEach(el => this.observer.unobserve(el));
+                    this.getVideos().forEach(el => this.observer.unobserve(el));
                 } catch (e) {
                 }
                 this.observer.disconnect();
@@ -110,18 +108,17 @@ function videoFeed() {
                 } else {
                     // not enough visible
                     // optional: pause
-                    // this.pauseAtIndex(index)
+                    this.pauseAtIndex(index)
                 }
             }, {threshold: [0, 0.25, 0.5, 0.6, 0.75, 1]});
 
             // observe all current video nodes
-            console.log(this.$refs)
-             this.$refs.video.forEach(el => this.observer.observe(el));
+            this.getVideos().forEach(el => this.observer.observe(el))
         },
 
         playAtIndex(index) {
             // pause all
-            this.$refs.video.forEach((v, i) => {
+            this.getVideos().forEach((v, i) => {
                 try {
                     if (i === index) {
                         // ensure we attempt to play; browsers require muted for autoplay
@@ -141,7 +138,7 @@ function videoFeed() {
                     } else {
                         v.pause();
                         v.currentTime = 0; // optional: rewind off-screen videos
-                        this.progress[i] = 0;
+                        this.progressBar[i] = 0;
                     }
                 } catch (e) {
                     console.error(e);
@@ -149,14 +146,42 @@ function videoFeed() {
             });
         },
 
+        pauseAtIndex(index) {
+            const video = this.getVideo(index)
+            if (!video) return;
+
+            try {
+                video.pause();
+                this.progressBar[index] = 0;
+            } catch (e) {
+                console.error(`Failed to pause video at index ${index}`, e);
+            }
+        },
+
+
         pauseAll() {
-            if (!this.$refs.video) return;
-            this.$refs.video.forEach(v => {
+            this.getVideos().forEach(v => {
                 try {
                     v.pause();
                 } catch (e) {
                 }
             });
+        },
+
+        muteAll() {
+            if (!this.getVideos()) return;
+            this.getVideos().forEach(video => {
+                video.muted = true;
+            });
+            this.isMuted = true;
+        },
+
+        unmuteAll() {
+            if (!this.getVideos()) return;
+            this.getVideos().forEach(video => {
+                video.muted = false;
+            });
+            this.isMuted = false
         },
 
         playCurrent() {
@@ -166,7 +191,7 @@ function videoFeed() {
         updateProgress(index, event) {
             const video = event.target;
             if (!video.duration) return;
-            this.progress[index] = Math.round((video.currentTime / video.duration) * 100);
+            this.progressBar[index] = Math.round((video.currentTime / video.duration) * 100);
         },
 
         onVideoLoaded(index) {
@@ -184,17 +209,32 @@ function videoFeed() {
             return n;
         },
 
+        togglePlay(index) {
+            var video = this.getVideo(index)
+            if (!video) return;
+
+            if (video.paused) {
+                this.pauseAll()
+                this.currentIndex = index
+                this.playAtIndex(index)
+            } else {
+                video.pause()
+            }
+        },
+
         async toggleLike(video, index) {
             // Optimistic UI
             const previousLiked = video.liked;
             const previousLikes = video.likes;
             video.liked = !video.liked;
             video.likes += video.liked ? 1 : -1;
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 
             try {
-                const res = await fetch(`/api/videos/${video.id}/like`, {
+                const res = await fetch(`/engagement/api/like/${video.id}`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken,},
                     body: JSON.stringify({like: video.liked}),
                     credentials: 'include'
                 });
@@ -209,6 +249,10 @@ function videoFeed() {
                 console.error(e);
                 alert('Failed to update like. Try again.');
             }
+        },
+
+        follow() {
+            
         },
 
         async openComments(video) {

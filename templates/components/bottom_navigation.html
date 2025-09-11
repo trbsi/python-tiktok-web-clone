@@ -4,12 +4,12 @@
 >
     <a href="{% url 'feed.following' %}"
        id="home-btn"
-       class="flex flex-col items-center justify-center py-1 {% if '/feed/following' in request.path %}text-primary{% else %}text-gray-400{% endif %}"
+       class="flex flex-col items-center justify-center py-1 {% if '/feed/following' in request.path or request.path == '/' %}text-primary{% else %}text-gray-400{% endif %}"
     >
         <div class="w-6 h-6 flex items-center justify-center">
             <i class="fa-solid fa-users"></i>
         </div>
-        <span class="text-xs">Following</span>
+        <span class="text-xs">Follow</span>
     </a>
     <a href="{% url 'feed.discover' %}"
        id="discover-btn"

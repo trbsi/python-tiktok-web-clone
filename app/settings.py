@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'src.core.apps.CoreConfig',
     'src.payment.apps.PaymentConfig',
     'src.engagement.apps.EngagementConfig',
+    'src.follower.apps.FollowerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

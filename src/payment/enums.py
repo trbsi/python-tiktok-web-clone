@@ -13,14 +13,14 @@ class PaymentEnum(Enum):
     @staticmethod
     def statuses() -> Tuple:
         return (
-            (PaymentEnum.STATUS_PENDING, 'Pending'),
-            (PaymentEnum.STATUS_APPROVED, 'Approved'),
-            (PaymentEnum.STATUS_CANCELED, 'Canceled'),
+            (PaymentEnum.STATUS_PENDING.value, 'Pending'),
+            (PaymentEnum.STATUS_APPROVED.value, 'Approved'),
+            (PaymentEnum.STATUS_CANCELED.value, 'Canceled'),
         )
 
     @staticmethod
     def providers() -> Tuple:
         return (
-            (PaymentEnum.PROVIDER_SEGPAY, 'SegGay'),
-            (PaymentEnum.PROVIDER_EPOCH, 'Epoch'),
+            (PaymentEnum.PROVIDER_SEGPAY.value, 'SegGay'),
+            (PaymentEnum.PROVIDER_EPOCH.value, 'Epoch'),
         )
