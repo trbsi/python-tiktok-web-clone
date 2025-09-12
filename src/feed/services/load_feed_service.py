@@ -9,17 +9,21 @@ from src.user.models import User
 
 
 class LoadFeedService:
-    def get_feed_items(self, per_page: int, page: int, user: User | AnonymousUser) -> list:
+    PER_PAGE = 25
+
+    def get_feed_items(self, page: int, user: User | AnonymousUser) -> list:
+        per_page = self.PER_PAGE
         likes = Like.objects.none()
         following = Follow.objects.none()
         if user.is_authenticated:
-            likes = Like.objects.filter(user=user, media=OuterRef('pk'))
-            following = Follow.get_following(user=user)
+            likes = Like.objects.filter(user=user, media=OuterRef('pk'))  # pk (primary key) from media table
+            following = Follow.objects.filter(follower=user, following=OuterRef('user_id'))  # user_id from media table
 
-        items: QuerySet[Media] = (Media.objects
-                                  .order_by('-created_at')
-                                  .annotate(liked=Exists(likes))
-                                  .annotate(followed=Exists(following)))
+        items: QuerySet[Media] = (
+            Media.objects
+            .order_by('-created_at')
+            .annotate(liked=Exists(likes), followed=Exists(following))
+        )
 
         paginator = Paginator(object_list=items, per_page=per_page)
         page = paginator.page(page)
