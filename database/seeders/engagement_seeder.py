@@ -25,6 +25,9 @@ class EngagementSeeder:
             media_item.save()
 
         for media_item in media:
+            if (media_item.id % 2 == 0):
+                pass
+            
             for i in range(20):
                 integer = faker.random_int(0, 4)
                 Comment.objects.create(

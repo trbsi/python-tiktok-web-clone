@@ -18,12 +18,12 @@
         <nav class="mt-4 flex flex-col">
             <a href="{% url 'password_change' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
-                <i class="fas fa-home w-5"></i> Change password
+                <i class="ri-key-line"></i> Change password
             </a>
             <hr class="border-gray-700 mx-4"/>
             <a href="{% url 'user.delete' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
-                <i class="fa-solid fa-trash"></i> Delete account
+                <i class="ri-delete-bin-6-fill"></i> Delete account
             </a>
             <hr class="border-gray-700 mx-4"/>
 
@@ -31,7 +31,7 @@
                 {% csrf_token %}
                 <button type="submit"
                         class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
-                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    <i class="ri-logout-box-r-fill"></i> Logout
                 </button>
             </form>
         </nav>

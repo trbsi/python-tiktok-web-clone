@@ -3,5 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('api/like/<int:video_id>', views.like),
+    path('api/like/media/<int:media_id>', views.like),
+    path('api/comments/media/<int:media_id>', views.list_comments),
+    path('api/comments', views.create_comment)
 ]

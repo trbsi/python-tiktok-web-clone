@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'src.payment.apps.PaymentConfig',
     'src.engagement.apps.EngagementConfig',
     'src.follower.apps.FollowerConfig',
+    'src.report.apps.ReportConfig',
+    'src.notification.apps.NotificationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -163,7 +165,8 @@ else:
     EMAIL_HOST_USER = "your_account@example.com"
     EMAIL_HOST_PASSWORD = "your_password_or_app_password"
 
-    DEFAULT_FROM_EMAIL = "webmaster@example.com"  # sender address shown in emails
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+ADMIN_EMAILS = env('ADMIN_EMAILS').split(',')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

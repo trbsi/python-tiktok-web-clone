@@ -30,10 +30,9 @@ class LoadFeedService:
 
         result = []
         for item in page.object_list:
-            avatar = str(item.user.profile.profile_image) if (
-                item.user.profile.profile_image) else f"https://ui-avatars.com/api/?name={item.user.username}"
             result.append({
                 'id': item.id,
+                'type': item.file_type,
                 'src': item.get_file_url(),
                 'like_count': item.like_count,
                 'comments_count': item.comment_count,
@@ -42,7 +41,7 @@ class LoadFeedService:
                 'followed': item.followed,
                 'user': {
                     'username': item.user.username,
-                    'avatar': avatar,
+                    'avatar': item.user.get_avatar(),
                 },
             })
 

@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import QuerySet
 
 from src.user.models import User
 
@@ -17,14 +16,14 @@ class Follow(models.Model):
         ]
 
     @staticmethod
-    def get_followers(user) -> QuerySet[User]:
+    def get_followers(user):
         """
         Returns all users who follow the given user.
         """
         return User.objects.filter(following_relations__following=user)
 
     @staticmethod
-    def get_following(user) -> QuerySet[User]:
+    def get_following(user):
         """
         Returns all users that the given user is following.
         """

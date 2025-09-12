@@ -3,9 +3,9 @@ from typing import Tuple
 
 
 class MediaEnum(Enum):
-    STATUS_PUBLIC = 'public'
+    STATUS_FREE = 'free'
+    STATUS_PAID = 'paid'
     STATUS_PENDING = 'pending'
-    STATUS_LOCKED = 'locked'
     STATUS_PRIVATE = 'private'
     STATUS_DELETED = 'deleted'
 
@@ -16,10 +16,10 @@ class MediaEnum(Enum):
     @staticmethod
     def statuses() -> Tuple:
         return (
-            (MediaEnum.STATUS_PUBLIC.value, 'Public'),
+            (MediaEnum.STATUS_FREE.value, 'Free'),
+            (MediaEnum.STATUS_PAID.value, 'Paid'),
             (MediaEnum.STATUS_PRIVATE.value, 'Private'),
             (MediaEnum.STATUS_PENDING.value, 'Pending'),
-            (MediaEnum.STATUS_LOCKED.value, 'Locked'),
             (MediaEnum.STATUS_DELETED.value, 'Deleted'),
         )
 

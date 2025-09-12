@@ -1,6 +1,6 @@
-function videoFeed() {
+function mediaFeed() {
     return {
-        videos: [],                // list of video objects
+        media: [],                // list of video objects
         page: 1,                   // pagination
         loadingMore: false,
         hasMore: true,
@@ -12,15 +12,14 @@ function videoFeed() {
         comments: [],
         commentsLoading: false,
         commentInput: '',
-        activeVideo: null,         // currently opened video for comments
-        perPage: 10,               // how many videos per fetch
+        activeMedia: null,         // currently opened video for comments
         isMuted: true,
 
         init() {
             // initial load
             this.loadMore();
 
-            // pause all videos on page load, then play the top-most after a tiny delay for autoplay to work consistently
+            // pause all media on page load, then play the top-most after a tiny delay for autoplay to work consistently
             window.addEventListener('visibilitychange', () => {
                 if (document.hidden) this.pauseAll();
                 else this.playCurrent();
@@ -28,27 +27,19 @@ function videoFeed() {
         },
 
         async loadMore() {
-            if (this.loadingMore || !this.hasMore) return;
+            if (this.loadingMore || !this.hasMore) {
+                return;
+            }
+
             this.loadingMore = true;
             try {
-                const res = await fetch(`/feed/api/videos?page=${this.page}&per_page=${this.perPage}`);
-                if (!res.ok) throw new Error('Failed to fetch videos');
+                const res = await fetch(`/feed/api/media?page=${this.page}`);
+                if (!res.ok) throw new Error('Failed to fetch media');
                 const data = await res.json();
 
                 // expected response shape: { results: [...], next_page: 2/null }
                 const items = data.results || data;
-                items.forEach(v => {
-                    // normalize fields we use:
-                    v.like_count = v.like_count;
-                    v.liked = !!v.liked;
-                    v.comments_count = v.comments_count;
-                    v.user = v.user || {username: 'unknown', avatar: 'https://via.placeholder.com/150'};
-                    v.description = v.description ?? '';
-                    v.src = v.src;
-                    v.id = v.id;
-                });
-
-                this.videos = this.videos.concat(items);
+                this.media = this.media.concat(items);
                 this.page = data.next_page ?? (this.page + 1);
                 this.hasMore = !!data.next_page;
             } catch (e) {
@@ -58,9 +49,8 @@ function videoFeed() {
 
                 // after adding new items we need to re-run observer
                 this.$nextTick(() => {
-
                     if (this.observer) {
-                        this.getVideos().forEach(el => this.observer.observe(el));
+                        this.getMedia().forEach(el => this.observer.observe(el));
                     } else {
                         this.setupObserver();
                     }
@@ -68,25 +58,25 @@ function videoFeed() {
             }
         },
 
-        getVideos() {
-            return this.$root.querySelectorAll('[x-ref="video"]');
+        getMedia() {
+            return this.$root.querySelectorAll('[x-ref="media"]');
         },
 
-        getVideo(index) {
-            return this.$root.querySelectorAll('[x-ref="video"]')[index];
+        getSingleMedia(index) {
+            return this.$root.querySelectorAll('[x-ref="media"]')[index];
         },
 
         setupObserver() {
             // clean up if exists
             if (this.observer) {
                 try {
-                    this.getVideos().forEach(el => this.observer.unobserve(el));
+                    this.getMedia().forEach(el => this.observer.unobserve(el));
                 } catch (e) {
                 }
                 this.observer.disconnect();
             }
 
-            // Options tuned so video considered "in view" when >=60% visible
+            // Options tuned so media considered "in view" when >=60% visible
             this.observer = new IntersectionObserver((entries) => {
                 // choose the entry with highest intersectionRatio
                 let best = null;
@@ -102,7 +92,7 @@ function videoFeed() {
                     this.currentIndex = index;
                     this.playAtIndex(index);
                     // if we are 5th before end, load more
-                    if (this.videos.length - index <= 5) {
+                    if (this.media.length - index <= 5) {
                         this.loadMore();
                     }
                 } else {
@@ -112,13 +102,14 @@ function videoFeed() {
                 }
             }, {threshold: [0, 0.25, 0.5, 0.6, 0.75, 1]});
 
-            // observe all current video nodes
-            this.getVideos().forEach(el => this.observer.observe(el))
+            // observe all current media nodes
+            this.getMedia().forEach(el => this.observer.observe(el))
         },
 
         playAtIndex(index) {
+            console.log('index', index)
             // pause all
-            this.getVideos().forEach((v, i) => {
+            this.getMedia().forEach((v, i) => {
                 try {
                     if (i === index) {
                         // ensure we attempt to play; browsers require muted for autoplay
@@ -147,7 +138,7 @@ function videoFeed() {
         },
 
         pauseAtIndex(index) {
-            const video = this.getVideo(index)
+            const video = this.getSingleMedia(index)
             if (!video) return;
 
             try {
@@ -158,9 +149,8 @@ function videoFeed() {
             }
         },
 
-
         pauseAll() {
-            this.getVideos().forEach(v => {
+            this.getMedia().forEach(v => {
                 try {
                     v.pause();
                 } catch (e) {
@@ -169,16 +159,16 @@ function videoFeed() {
         },
 
         muteAll() {
-            if (!this.getVideos()) return;
-            this.getVideos().forEach(video => {
+            if (!this.getMedia()) return;
+            this.getMedia().forEach(video => {
                 video.muted = true;
             });
             this.isMuted = true;
         },
 
         unmuteAll() {
-            if (!this.getVideos()) return;
-            this.getVideos().forEach(video => {
+            if (!this.getMedia()) return;
+            this.getMedia().forEach(video => {
                 video.muted = false;
             });
             this.isMuted = false
@@ -200,7 +190,7 @@ function videoFeed() {
         },
 
         onScroll() {
-            // placeholder in case we want to handle touch scrolling specifics
+            console.log('asdasdasd')
         },
 
         formatCount(n) {
@@ -210,8 +200,10 @@ function videoFeed() {
         },
 
         togglePlay(index) {
-            var video = this.getVideo(index)
-            if (!video) return;
+            var video = this.getSingleMedia(index)
+            if (!video) {
+                return;
+            }
 
             if (video.paused) {
                 this.pauseAll()
@@ -222,48 +214,45 @@ function videoFeed() {
             }
         },
 
-        async toggleLike(video, index) {
+        async toggleLike(media, index) {
             // Optimistic UI
-            const previousLiked = video.liked;
-            const previousLikes = video.likes;
-            video.liked = !video.liked;
-            video.likes += video.liked ? 1 : -1;
-            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+            const previousLiked = media.liked;
+            const previousLikes = media.likes;
+            media.liked = !media.liked;
+            media.likes += media.liked ? 1 : -1;
 
             try {
-                const res = await fetch(`/engagement/api/like/${video.id}`, {
+                const res = await fetch(`/engagement/api/like/media/${media.id}`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken,},
-                    body: JSON.stringify({like: video.liked}),
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(),},
                     credentials: 'include'
                 });
                 if (!res.ok) throw new Error('Like failed');
                 // optionally update counts from server response
                 const data = await res.json();
-                if (data.likes != null) video.likes = data.likes;
+                if (data.likes != null) media.likes = data.likes;
             } catch (e) {
                 // rollback
-                video.liked = previousLiked;
-                video.likes = previousLikes;
+                media.liked = previousLiked;
+                media.likes = previousLikes;
                 console.error(e);
                 alert('Failed to update like. Try again.');
             }
         },
 
         follow() {
-            
+
         },
 
-        async openComments(video) {
+        async openComments(media) {
             this.commentsOpen = true;
-            this.activeVideo = video;
+            this.activeMedia = media;
             this.comments = [];
             this.commentInput = '';
             this.commentsLoading = true;
 
             try {
-                const res = await fetch(`/api/videos/${video.id}/comments`);
+                const res = await fetch(`/engagement/api/comments/media/${media.id}`);
                 if (!res.ok) throw new Error('Failed to fetch comments');
                 const data = await res.json();
                 this.comments = data.results || data;
@@ -277,13 +266,14 @@ function videoFeed() {
 
         closeComments() {
             this.commentsOpen = false;
-            this.activeVideo = null;
+            this.activeMedia = null;
         },
 
         async submitComment() {
-            if (!this.activeVideo) return;
+            if (!this.activeMedia) return;
             const text = this.commentInput.trim();
             if (!text) return;
+
             // optimistic add
             const temp = {
                 id: 'temp-' + Date.now(),
@@ -294,26 +284,32 @@ function videoFeed() {
             this.comments.unshift(temp);
             this.commentInput = '';
             // increment comments_count in UI
-            this.activeVideo.comments_count = (this.activeVideo.comments_count || 0) + 1;
+            this.activeMedia.comments_count = (this.activeMedia.comments_count || 0) + 1;
+
+            var body = {
+                'media_id': this.activeMedia.id,
+                'comment': text
+            }
 
             try {
-                const res = await fetch(`/api/videos/${this.activeVideo.id}/comments`, {
+                const res = await fetch(`/engagement/api/comments`, {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({text})
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken()},
+                    body: JSON.stringify(body)
                 });
                 if (!res.ok) throw new Error('Failed to post comment');
                 const saved = await res.json();
                 // replace temp comment with saved comment (if server returns it)
                 // naive approach: replace first temp id
-                const idx = this.comments.findIndex(c => c.id === temp.id);
-                if (idx !== -1 && saved) this.comments.splice(idx, 1, saved);
+                const idx = this.comments.findIndex(comment => comment.id === temp.id);
+                if (idx !== -1 && saved) {
+                    this.comments.splice(idx, 1, saved);
+                }
             } catch (e) {
                 // rollback UI changes
-                this.comments = this.comments.filter(c => c.id !== temp.id);
-                this.activeVideo.comments_count = Math.max(0, (this.activeVideo.comments_count || 1) - 1);
-                alert('Failed to post comment.');
+                this.comments = this.comments.filter(comment => comment.id !== temp.id);
+                this.activeMedia.comments_count = Math.max(0, (this.activeMedia.comments_count || 1) - 1);
                 console.error(e);
             }
         },
@@ -321,10 +317,10 @@ function videoFeed() {
         openProfile(user) {
             // open user profile - replace with your routing
             // If you use client-side routing, navigate there instead.
-            window.location.href = `/users/${encodeURIComponent(user.username)}`;
+            window.location.href = `/user/${encodeURIComponent(user.username)}`;
         },
 
-        async shareVideo(video) {
+        async shareMedia(video) {
             const shareData = {
                 title: 'Check out this video',
                 text: video.description || '',
@@ -342,6 +338,31 @@ function videoFeed() {
                 console.error('Share failed', e);
                 alert('Unable to share on this device.');
             }
+        },
+
+        async reportMedia(media) {
+            if (!confirm('Are you sure?')) {
+                return
+            }
+
+            try {
+                const res = await fetch(`/report/api/report`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(),},
+                    body: JSON.stringify({'type': 'media', 'content_id': media.id}),
+                    credentials: 'include'
+                });
+                if (!res.ok) throw new Error('Report failed');
+                // optionally update counts from server response
+                const data = await res.json();
+                alert('Content has been reported. We will review it.');
+            } catch (e) {
+                console.error(e);
+            }
+        },
+
+        getCsrfToken() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         }
     };
 }

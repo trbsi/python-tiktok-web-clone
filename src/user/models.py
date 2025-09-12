@@ -12,6 +12,12 @@ class User(AbstractUser):
     objects = UserQueryManager()
     all_objects = models.Manager()
 
+    def get_avatar(self):
+        if self.profile.profile_image != '':
+            return str(self.profile.profile_image)
+
+        return f"https://ui-avatars.com/api/?name={self.username}"
+
 
 class UserProfile(models.Model):
     id = models.AutoField(primary_key=True)

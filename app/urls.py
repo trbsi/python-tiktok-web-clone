@@ -38,6 +38,7 @@ urlpatterns = [
     path('media/', include('src.media.urls')),
     path('engagement/', include('src.engagement.urls')),
     path('follower/', include('src.follower.urls')),
+    path('report/', include('src.report.urls')),
 ]
 
 if settings.DEBUG == True:

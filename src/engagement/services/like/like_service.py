@@ -4,11 +4,11 @@ from src.user.models import User
 
 
 class LikeService():
-    def toggle(self, video_id: int, user: User) -> None:
-        media:Media = Media.objects.get(id=video_id)
-        like: Like = Like.objects.filter(user=user,media=media)
+    def toggle(self, media_id: int, user: User) -> None:
+        media: Media = Media.objects.get(id=media_id)
+        like: Like = Like.objects.filter(user=user, media=media)
 
         if like:
             like.delete()
         else:
-            Like.objects.create(user=user,media=media)
+            Like.objects.create(user=user, media=media)

@@ -19,11 +19,9 @@ def following(request: HttpRequest) -> HttpResponse:
 def feed(request: HttpRequest) -> JsonResponse:
     data = request.GET
     page = int(data.get('page'))
-    per_page = int(data.get('per_page'))
 
     service: LoadFeedService = LoadFeedService()
     items: list = service.get_feed_items(
-        per_page=per_page,
         page=page,
         user=request.user
     )

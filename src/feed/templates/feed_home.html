@@ -1,4 +1,4 @@
-{% extends "core/layout.html" %}
+<script src="../../../static/js/feed.js"></script>{% extends "core/layout.html" %}
 {% load static %}
 
 {% block head %}
@@ -9,7 +9,7 @@
 
 <!-- Video Feed View -->
 <div
-        x-data="videoFeed()"
+        x-data="mediaFeed()"
         x-init="init()"
         class="min-h-screen bg-black text-white"
 >
@@ -20,28 +20,33 @@
             @scroll.window.debounce="onScroll"
     >
         <!-- Video items -->
-        <template x-for="(video, index) in videos" :key="video.id">
+        <template x-for="(media, index) in media" :key="media.id">
             <div
                     class="video-container relative h-screen snap-start flex items-center justify-center bg-black"
 
             >
                 <!-- video element -->
-                <video
-                        @click="togglePlay(index)"
-                        x-ref="video"
-                        :data-index="index"
-                        :id="`video-${video.id}`"
-                        class="w-full h-full object-cover"
-                        playsinline
-                        muted
-                        loop
-                        preload="metadata"
-                        @timeupdate="updateProgress(index, $event)"
-                        @loadeddata="onVideoLoaded(index)"
-                >
-                    <source :src="video.src" type="video/mp4"/>
-                    Your browser does not support the video tag.
-                </video>
+                <template x-if="media.type == 'video'">
+                    <video
+                            @click="togglePlay(index)"
+                            x-ref="media"
+                            :data-index="index"
+                            :id="`video-${media.id}`"
+                            class="w-full h-full object-cover"
+                            playsinline
+                            muted
+                            loop
+                            preload="metadata"
+                            @timeupdate="updateProgress(index, $event)"
+                            @loadeddata="onVideoLoaded(index)"
+                    >
+                        <source :src="media.src" type="video/mp4"/>
+                        Your browser does not support the video tag.
+                    </video>
+                </template>
+                <template x-if="media.type === 'image'">
+                    <img :src="media.src">
+                </template>
 
                 <!-- spinner loader while video buffering -->
                 <div
@@ -55,67 +60,78 @@
                 <div class="video-overlay absolute inset-0 flex flex-col justify-between p-4 pointer-events-none">
                     <!-- Top bar -->
                     <div class="flex justify-between items-center pointer-events-auto">
-                        <div class="text-2xl font-['Pacifico']">{{APP_NAME}}</div>
-                        <div class="flex items-center gap-3 text-sm">
-                            <button x-show="isMuted" @click="unmuteAll()"><i
-                                    class="fa-solid fa-volume-xmark"></i></button>
-                            <button x-show="!isMuted" @click="muteAll()"><i
-                                    class="fa-solid fa-volume-high"></i></button>
+                        <div class="text-2xl font-['Pacifico'] opacity-30">{{APP_NAME}}</div>
+                        <div class="flex items-center gap-3 text-sm opacity-50">
+                            <button x-show="isMuted" @click="unmuteAll()">
+                                <i class="ri-volume-mute-fill ri-xl"></i>
+                            </button>
+                            <button x-show="!isMuted" @click="muteAll()">
+                                <i class="ri-volume-up-fill ri-xl"></i>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Right action bar -->
-                    <div class="action-bar absolute right-4 bottom-24 flex flex-col items-center gap-6 pointer-events-auto">
+                    <div class="opacity-70 action-bar absolute right-4 bottom-24 flex flex-col items-center gap-6 pointer-events-auto">
                         <!-- Like -->
                         <button
-                                @click="toggleLike(video, index)"
-                                class="w-12 h-12 flex flex-col items-center justify-center"
-                                :class="{'text-red-500': video.liked}"
+                                @click="toggleLike(media, index)"
+                                class="flex flex-col items-center justify-center"
+                                :class="{'text-red-500': media.liked}"
                                 aria-label="Like"
                         >
-                            <i x-show="!video.liked" class="ri-heart-line ri-2x"></i>
-                            <i x-show="video.liked" class="ri-heart-fill ri-2x text-primary"></i>
-                            <span class="text-xs mt-1" x-text="formatCount(video.like_count)"></span>
+                            <i x-show="!media.liked" class="ri-heart-line ri-xl"></i>
+                            <i x-show="media.liked" class="ri-heart-fill ri-xl text-primary"></i>
+                            <span class="text-xs mt-1" x-text="formatCount(media.like_count)"></span>
                         </button>
 
                         <!-- Comment -->
                         <button
-                                @click="openComments(video)"
-                                class="w-12 h-12 flex flex-col items-center justify-center"
+                                @click="openComments(media)"
+                                class="flex flex-col items-center justify-center"
                                 aria-label="Comments"
                         >
-                            <i class="ri-chat-1-line ri-2x"></i>
-                            <span class="text-xs mt-1" x-text="formatCount(video.comments_count)"></span>
+                            <i class="ri-chat-1-line ri-xl"></i>
+                            <span class="text-xs mt-1" x-text="formatCount(media.comments_count)"></span>
                         </button>
 
                         <!-- Share -->
+                        <!--                        <button-->
+                        <!--                                @click="shareMedia(video)"-->
+                        <!--                                class="flex flex-col items-center justify-center"-->
+                        <!--                                aria-label="Share"-->
+                        <!--                        >-->
+                        <!--                            <i class="ri-share-forward-line ri-xl"></i>-->
+                        <!--                            <span class="text-xs mt-1">Share</span>-->
+                        <!--                        </button>-->
+
                         <button
-                                @click="shareVideo(video)"
-                                class="w-12 h-12 flex flex-col items-center justify-center"
-                                aria-label="Share"
+                                @click="reportMedia(media)"
+                                class="flex flex-col items-center justify-center"
+                                aria-label="Report"
                         >
-                            <i class="ri-share-forward-line ri-2x"></i>
-                            <span class="text-xs mt-1">Share</span>
+                            <i class="ri-flag-line ri-xl"></i>
+                            <span class="text-xs mt-1">Report</span>
                         </button>
 
                         <!-- User avatar -->
-                        <button @click="openProfile(video.user)" class="w-12 h-12 flex items-center justify-center">
-                            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/30">
-                                <img :src="video.user.avatar" alt="User" class="w-full h-full object-cover"/>
+                        <button @click="openProfile(media.user)" class="flex items-center justify-center">
+                            <div class="w-7 h-7 rounded-full overflow-hidden border-2 border-white/30">
+                                <img :src="media.user.avatar" alt="User" class="w-full h-full object-cover"/>
                             </div>
                         </button>
                     </div>
 
                     <!-- Bottom info -->
-                    <div class="flex flex-col gap-2 mb-2 pointer-events-auto">
+                    <div class="opacity-70 flex flex-col gap-2 mb-2 pointer-events-auto">
                         <div class="flex items-center gap-2">
-                            <span class="font-semibold" x-text="`@${video.user.username}`"></span>
-                            <button x-show="video.followed === false"
+                            <span class="font-semibold text-sm" x-text="`@${media.user.username}`"></span>
+                            <button x-show="media.followed === false"
                                     @click="follow()"
                                     class="bg-primary text-white text-xs px-2 py-0.5 rounded-full">Follow
                             </button>
                         </div>
-                        <p class="text-sm" x-text="video.description"></p>
+                        <p class="text-xs" x-text="media.description"></p>
                     </div>
                 </div>
 
