@@ -26,27 +26,25 @@
 
             >
                 <!-- video element -->
-                <template x-if="media.type == 'video'">
-                    <video
-                            @click="togglePlay(index)"
-                            x-ref="media"
-                            :data-index="index"
-                            :id="`video-${media.id}`"
-                            class="w-full h-full object-cover"
-                            playsinline
-                            muted
-                            loop
-                            preload="metadata"
-                            @timeupdate="updateProgress(index, $event)"
-                            @loadeddata="onVideoLoaded(index)"
-                    >
-                        <source :src="media.src" type="video/mp4"/>
-                        Your browser does not support the video tag.
-                    </video>
-                </template>
-                <template x-if="media.type === 'image'">
-                    <img :src="media.src">
-                </template>
+                <video
+                        x-show="media.type == 'video'"
+                        :data-type="media.type"
+                        @click="togglePlay(index)"
+                        x-ref="media"
+                        :data-index="index"
+                        :id="`video-${media.id}`"
+                        class="w-full h-full object-cover"
+                        playsinline
+                        muted
+                        loop
+                        preload="metadata"
+                        @timeupdate="updateProgress(index, $event)"
+                        @loadeddata="onVideoLoaded(index)"
+                >
+                    <source :src="media.src" type="video/mp4"/>
+                    Your browser does not support the video tag.
+                </video>
+                <img :src="media.src" x-show="media.type === 'image'" :data-type="media.type">
 
                 <!-- spinner loader while video buffering -->
                 <div

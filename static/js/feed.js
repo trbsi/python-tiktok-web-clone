@@ -107,28 +107,26 @@ function mediaFeed() {
         },
 
         playAtIndex(index) {
-            console.log('index', index)
             // pause all
-            this.getMedia().forEach((v, i) => {
+            this.getMedia().forEach((media, i) => {
+                const type = media.dataset.type;
+                if (type !== 'video') {
+                    return;
+                }
                 try {
                     if (i === index) {
                         // ensure we attempt to play; browsers require muted for autoplay
                         this.loadingVideo[i] = true;
-                        v.muted = true;
-                        const playPromise = v.play();
-                        if (playPromise && playPromise.then) {
-                            playPromise.then(() => {
-                                this.loadingVideo[i] = false;
-                            }).catch(() => {
-                                this.loadingVideo[i] = false;
-                            });
-                        } else {
+                        media.play().then(() => {
                             this.loadingVideo[i] = false;
-                        }
-                        v.loop = true;
+                        }).catch((e) => {
+                            this.loadingVideo[i] = false;
+                            console.log(e)
+                        });
+                        media.loop = true;
                     } else {
-                        v.pause();
-                        v.currentTime = 0; // optional: rewind off-screen videos
+                        media.pause();
+                        media.currentTime = 0; // optional: rewind off-screen videos
                         this.progressBar[i] = 0;
                     }
                 } catch (e) {
