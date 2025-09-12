@@ -2,7 +2,6 @@ import random
 import string
 
 from src.engagement.models import Comment
-from src.inbox.enums import InboxEnum
 from src.inbox.models import Conversation
 from src.media.enums import MediaEnum
 from src.media.models import Media
@@ -19,7 +18,7 @@ class DeleteUserService:
         # TODO remove media from storage
         Media.objects.filter(user=user).update(status=MediaEnum.STATUS_DELETED.value)
         Comment.objects.filter(user=user).delete()
-        Conversation.objects.filter(user=user).update(status=InboxEnum.STATUS_DELETED.value)
+        Conversation.objects.filter(user=user).delete()
 
         # TODO maybe send request to payment provider to cancel subscription
         Subscription.objects.filter(user=user).update(status=PaymentEnum.STATUS_CANCELED.value)

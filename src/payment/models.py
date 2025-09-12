@@ -14,6 +14,7 @@ class PaymentHistory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = models.Manager()
 
 class Subscription(models.Model):
     id = models.AutoField(primary_key=True)
@@ -23,3 +24,5 @@ class Subscription(models.Model):
     status = models.CharField(max_length=10, choices=PaymentEnum.statuses())
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
