@@ -27,6 +27,32 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"/>
 
+    <style>
+        input {
+            display: block; /* block */
+            width: 100%; /* w-full */
+            border-radius: 0.75rem; /* rounded-xl */
+            border-width: 1px; /* border */
+            border-color: #374151; /* border-gray-700 */
+            background-color: #111827; /* bg-gray-950 */
+            padding-left: 0.75rem; /* px-3 */
+            padding-right: 0.75rem; /* px-3 */
+            padding-top: 0.5rem; /* py-2 */
+            padding-bottom: 0.5rem; /* py-2 */
+            color: #f3f4f6; /* text-gray-100 */
+            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-sm */
+        }
+
+        input::placeholder {
+            color: #6b7280; /* placeholder-gray-500 */
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6366f1; /* focus:border-indigo-500 */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25); /* focus:ring focus:ring-indigo-500/40 */
+        }
+    </style>
 </head>
 <body class="bg-black text-white max-w-xl mx-auto">
 <div id="app" class="h-full flex flex-col">
