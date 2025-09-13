@@ -54,8 +54,74 @@ function mediaFeed() {
                     } else {
                         this.setupObserver();
                     }
+
+                    this.handleScroll()
                 });
             }
+        },
+
+        handleScroll()  {
+            var $feed = $('#feed');
+            var $containers = $feed.find('.media-container');
+            var total = $containers.length;
+            var index = 0;
+            var isAnimating = false;
+            var threshold = 50;
+            var duration = 400; // animation duration in ms
+            var touchStartY = 0;
+
+            function goTo(targetIndex) {
+                targetIndex = Math.max(0, Math.min(total - 1, targetIndex));
+                if (isAnimating || targetIndex === index) return;
+
+                isAnimating = true;
+                index = targetIndex;
+
+                var targetScroll = index * $containers.first().outerHeight();
+                $feed.stop().animate(
+                    { scrollTop: targetScroll },
+                    duration,
+                    'swing',
+                    function() {
+                        isAnimating = false;
+                    }
+                );
+            }
+
+            // --- Wheel / desktop ---
+            $feed.on('wheel', function(e) {
+                e.preventDefault();
+                if (isAnimating) return;
+
+                var delta = e.originalEvent.deltaY;
+                if (delta > 0) goTo(index + 1);
+                else if (delta < 0) goTo(index - 1);
+            });
+
+            // --- Touch / mobile ---
+            $feed.on('touchstart', function(e) {
+                touchStartY = e.originalEvent.touches[0].clientY;
+            });
+
+            $feed.on('touchend', function(e) {
+                if (isAnimating) return;
+
+                var touchEndY = e.originalEvent.changedTouches[0].clientY;
+                var deltaY = touchStartY - touchEndY;
+
+                if (Math.abs(deltaY) < threshold) return;
+
+                if (deltaY > 0) goTo(index + 1);
+                else goTo(index - 1);
+            });
+
+            // --- Resize ---
+            $(window).on('resize', function() {
+                $feed.scrollTop(index * $containers.first().outerHeight());
+            });
+
+            // Initial position
+            $feed.scrollTop(0);
         },
 
         getMedia() {

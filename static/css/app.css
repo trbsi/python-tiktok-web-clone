@@ -2,18 +2,29 @@
     display: none !important;
 }
 
+/*---------------------- LOCK SCROLLING --------------------*/
+  #feed {
+  overflow-y: scroll;   /* allow programmatic scrolling */
+  scroll-behavior: auto; /* disable native smooth scroll */
+  scroll-snap-type: none; /* disable snap for manual animation */
+  -webkit-overflow-scrolling: auto;
+  touch-action: none;   /* prevent native swipe momentum */
+  }
+
+
+/*---------------------- GENERAL --------------------*/
 :where([class^="ri-"])::before { content: "\f3c2"; }
 body {
     font-family: 'Inter', sans-serif;
     height: 100vh;
     overflow: hidden;
 }
-.video-container {
+.media-container {
     position: relative;
     height: calc(100vh - 4rem);
     overflow: hidden;
 }
-.video-overlay {
+.media-overlay {
     background: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.7) 100%);
 }
 .action-bar button {

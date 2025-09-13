@@ -1,9 +1,9 @@
 <script src="../../../static/js/feed.js"></script>{% extends "core/layout.html" %}
 {% load static %}
 
-{% block head %}
+{% block javascript %}
 <script src="{% static 'js/feed.js' %}"></script>
-{% endblock head %}
+{% endblock javascript %}
 
 {% block content %}
 
@@ -16,13 +16,13 @@
     <!-- Feed container: vertically snapping -->
     <div
             id="feed"
-            class="h-screen overflow-y-auto snap-y snap-mandatory"
+            class="h-screen overflow-y-auto"
             @scroll.window.debounce="onScroll"
     >
         <!-- Video items -->
         <template x-for="(media, index) in media" :key="media.id">
             <div
-                    class="video-container relative h-screen snap-start flex items-center justify-center bg-black"
+                    class="media-container relative h-screen snap-start flex items-center justify-center bg-black"
 
             >
                 <!-- video element -->
@@ -33,7 +33,7 @@
                         x-ref="media"
                         :data-index="index"
                         :id="`video-${media.id}`"
-                        class="w-full h-full object-cover"
+                        class="w-full object-cover"
                         playsinline
                         muted
                         loop
@@ -55,7 +55,7 @@
                 </div>
 
                 <!-- Overlay -->
-                <div class="video-overlay absolute inset-0 flex flex-col justify-between p-4 pointer-events-none">
+                <div class="media-overlay absolute inset-0 flex flex-col justify-between p-4 pointer-events-none">
                     <!-- Top bar -->
                     <div class="flex justify-between items-center pointer-events-auto">
                         <div class="text-2xl font-['Pacifico'] opacity-30">{{APP_NAME}}</div>
