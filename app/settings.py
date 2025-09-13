@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.twitter_oauth2',
 ]
 
 MIDDLEWARE = [
@@ -191,4 +191,3 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 MEDIA_ROOT = 'uploads'
 AUTH_USER_MODEL = 'user.User'
-SITE_ID = 1

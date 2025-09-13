@@ -92,13 +92,14 @@
 
         {% get_providers as socialaccount_providers %}
         {% for provider in socialaccount_providers %}
-        {% if provider.id == 'twitter' %}
-        <a href="{% provider_login_url provider.id %}" class="social-btn twitter-btn">
-            <!-- Twitter icon SVG -->
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0022.4.36a9.06 9.06 0 01-2.88 1.1A4.52 4.52 0 0016.5 0c-2.5 0-4.52 2-4.52 4.5 0 .35.04.7.11 1.03C7.69 5.45 4.07 3.49 1.64.68a4.48 4.48 0 00-.61 2.27c0 1.57.8 2.95 2 3.76a4.52 4.52 0 01-2.05-.57v.06c0 2.18 1.55 4 3.6 4.42a4.5 4.5 0 01-2.04.08 4.52 4.52 0 004.22 3.13A9.06 9.06 0 010 19.54a12.78 12.78 0 006.92 2.03c8.3 0 12.85-6.87 12.85-12.85l-.01-.58A9.18 9.18 0 0023 3z"/>
+        {% if provider.id == 'twitter' or provider.id == 'twitter_oauth2' %}
+        <a href="{% provider_login_url provider.id %}"
+           class="mt-5 flex items-center justify-center w-full gap-2 rounded-lg bg-black px-4 py-3 font-semibold text-white shadow transition hover:bg-neutral-900 hover:shadow-lg">
+            <!-- X logo (simple SVG) -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1227" width="20" height="20" fill="white">
+                <path d="M714 0h208L490 530l432 697H714L407 788 78 1227H-131L357 668-60 0H147l291 465L714 0z"/>
             </svg>
-            Login with Twitter
+            <span>Continue with X</span>
         </a>
         {% endif %}
         {% endfor %}
