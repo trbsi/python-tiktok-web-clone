@@ -31,6 +31,7 @@ urlpatterns = [
     path('auth/password_reset/', AppPasswordResetView.as_view(), name='password_reset'),
     path('auth/password_change/', AppPasswordChangeView.as_view(), name='password_change'),
     path('auth/', include('django.contrib.auth.urls')),
+    path('social-oauth/', include('allauth.urls')),
     path('discover/', include('src.discover.urls')),
     path('feed/', include('src.feed.urls')),
     path('inbox/', include('src.inbox.urls')),

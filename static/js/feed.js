@@ -305,7 +305,9 @@ function mediaFeed(feedType) {
         },
 
         follow() {
-
+            if (!confirm('Are you sure?')) {
+                return;
+            }
         },
 
         async openComments(media) {
