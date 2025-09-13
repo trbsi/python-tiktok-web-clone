@@ -9,7 +9,7 @@
 
 <!-- Video Feed View -->
 <div
-        x-data="mediaFeed()"
+        x-data="mediaFeed('{{type}}')"
         x-init="init()"
         class="min-h-screen bg-black text-white"
 >
@@ -124,7 +124,7 @@
                     <div class="opacity-70 flex flex-col gap-2 mb-2 pointer-events-auto">
                         <div class="flex items-center gap-2">
                             <span class="font-semibold text-sm" x-text="`@${media.user.username}`"></span>
-                            <button x-show="media.followed === false"
+                            <button x-if="media.followed === false"
                                     @click="follow()"
                                     class="bg-primary text-white text-xs px-2 py-0.5 rounded-full">Follow
                             </button>

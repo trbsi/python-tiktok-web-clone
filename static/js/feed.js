@@ -1,4 +1,4 @@
-function mediaFeed() {
+function mediaFeed(feedType) {
     return {
         media: [],                // list of video objects
         page: 1,                   // pagination
@@ -33,7 +33,7 @@ function mediaFeed() {
 
             this.loadingMore = true;
             try {
-                const res = await fetch(`/feed/api/media?page=${this.page}`);
+                const res = await fetch(`/feed/api/media?page=${this.page}&type=${feedType}`);
                 if (!res.ok) throw new Error('Failed to fetch media');
                 const data = await res.json();
 
