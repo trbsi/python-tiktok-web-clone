@@ -21,7 +21,7 @@
         <span class="text-xs">Discover</span>
     </a>
 
-    {% if user.is_regular_user() == False %}
+    {% if user.is_regular_user == False %}
     <a href="{% url 'media.upload' %}"
        id="upload-btn"
        class="upload-btn w-14 h-14 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center !rounded-button"

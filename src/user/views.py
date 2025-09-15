@@ -13,7 +13,10 @@ from src.user.services.user_profile.user_profile_service import UserProfileServi
 def profile(request: HttpRequest, username: str) -> HttpResponse:
     user_profile_service = UserProfileService()
     user = user_profile_service.get_user(username)
-    return render(request, 'profile.html', {'user': user})
+    return render(request, 'profile.html', {
+        'user': user,
+        'logged_in_user': request.user
+    })
 
 
 @require_GET

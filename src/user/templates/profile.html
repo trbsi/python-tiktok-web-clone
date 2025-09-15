@@ -19,35 +19,40 @@
         <div class="flex flex-col items-center mb-6">
             <div class="w-24 h-24 rounded-full overflow-hidden mb-4">
                 <img
-                        src="https://readdy.ai/api/search-image?query=professional%2520portrait%2520of%2520young%2520woman%2C%2520confident%2520expression%2C%2520clean%2520background%2C%2520high%2520quality%2C%2520detailed%2520facial%2520features%2C%2520fashionable%2520appearance&width=200&height=200&seq=profile&orientation=squarish"
+                        src="{{ user.get_avatar }}"
                         alt="Profile"
                         class="w-full h-full object-cover"
                 />
             </div>
-            <h2 class="text-xl font-bold mb-1">@sekomirson</h2>
+            {% if user.first_name is None or user.first_name == '' %}
+            <h2 class="text-xl font-bold mb-1">{{user.username}}</h2>
+            {% else %}
+            <h2 class="text-xl font-bold mb-1">{{user.first_name}}</h2>
+            <h3 class="text-sm font-bold mb-1">{{user.username}}</h3>
+            {% endif %}
+
             <div class="flex gap-6 mb-4">
                 <div class="flex flex-col items-center">
-                    <span class="font-bold">248</span>
-                    <span class="text-sm text-gray-400">Following</span>
+                    <span class="font-bold">{{user.profile.follower_count}}</span>
+                    <span class="text-sm text-gray-400">Subscribers</span>
                 </div>
                 <div class="flex flex-col items-center">
-                    <span class="font-bold">12.4K</span>
-                    <span class="text-sm text-gray-400">Followers</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="font-bold">89.2K</span>
-                    <span class="text-sm text-gray-400">Likes</span>
+                    <span class="font-bold">{{user.profile.media_count}}</span>
+                    <span class="text-sm text-gray-400">Media</span>
                 </div>
             </div>
             <p class="text-center text-sm mb-4">
-                Digital creator 💃<br/>Business inquiries:
-                sekomirson@gmail.com
+                {% if user.profile.bio is not None %}
+                {{user.profile.bio}}
+                {% endif %}
             </p>
+            {% if logged_in_user.username == user.username %}
             <button
                     class="bg-primary text-white px-8 py-2 rounded-full !rounded-button font-medium"
             >
                 Edit Profile
             </button>
+            {% endif %}
         </div>
 
         <!-- Content Tabs -->
@@ -57,9 +62,6 @@
             </button>
             <button class="flex-1 py-3 text-center text-gray-400">
                 <i class="ri-heart-line ri-lg"></i>
-            </button>
-            <button class="flex-1 py-3 text-center text-gray-400">
-                <i class="ri-lock-line ri-lg"></i>
             </button>
         </div>
 

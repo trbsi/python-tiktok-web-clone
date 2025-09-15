@@ -28,3 +28,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(null=True)
     profile_image = models.ImageField(upload_to='uploads/profile_image', null=True)
+    follower_count = models.IntegerField(default=0)
+    media_count = models.IntegerField(default=0)
+
+    objects = models.Manager()
