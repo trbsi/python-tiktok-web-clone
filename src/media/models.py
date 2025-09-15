@@ -9,7 +9,7 @@ class Media(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='media_user')
     file = models.FileField(upload_to='uploads/media', max_length=255)
-    file_thumbnail = models.FileField(upload_to='uploads/media', max_length=255)
+    file_thumbnail = models.FileField(upload_to='uploads/media', max_length=255, null=True)
     file_type = models.CharField(max_length=20, choices=MediaEnum.file_types())
     status = models.CharField(max_length=20, choices=MediaEnum.statuses())
     description = models.TextField(null=True)

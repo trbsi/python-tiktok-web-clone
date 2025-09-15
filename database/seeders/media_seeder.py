@@ -36,6 +36,7 @@ class MediaSeeder:
                 user=User.objects.get(username=performer_name),
                 file=rand_media,
                 file_type='video' if rand_media.endswith('.mp4') else 'image',
+                file_thumbnail=rand_media,
                 status=MediaEnum.STATUS_FREE.value,
                 description=fake.text(),
                 created_at=datetime.now(),
