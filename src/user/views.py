@@ -6,11 +6,14 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
 from src.user.services.delete_user.delete_user_service import DeleteUserService
+from src.user.services.user_profile.user_profile_service import UserProfileService
 
 
 @require_GET
 def profile(request: HttpRequest, username: str) -> HttpResponse:
-    return render(request, 'profile.html')
+    user_profile_service = UserProfileService()
+    user = user_profile_service.get_user(username)
+    return render(request, 'profile.html', {'user': user})
 
 
 @require_GET

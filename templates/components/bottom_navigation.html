@@ -20,12 +20,16 @@
         </div>
         <span class="text-xs">Discover</span>
     </a>
+
+    {% if user.is_regular_user() == False %}
     <a href="{% url 'media.upload' %}"
        id="upload-btn"
        class="upload-btn w-14 h-14 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center !rounded-button"
     >
         <i class="ri-add-line ri-2x text-white"></i>
     </a>
+    {% endif %}
+
     <a href="{% url 'inbox.home' %}"
        id="inbox-btn"
        class="flex flex-col items-center justify-center py-1 {% if '/inbox' in request.path %}text-primary{% else %}text-gray-400{% endif %}"

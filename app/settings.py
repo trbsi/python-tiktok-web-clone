@@ -195,3 +195,4 @@ AUTH_USER_MODEL = 'user.User'
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"  # "mandatory" if you want verified emails
+SUPPORT_EMAIL = env('SUPPORT_EMAIL')

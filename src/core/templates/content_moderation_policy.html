@@ -1,0 +1,97 @@
+{% extends "core/layout.html" %}
+
+{% block content %}
+<div class="p-7">
+    <h1 class="text-3xl font-bold mb-6">Content Moderation Policy for {{APP_NAME}}</h1>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">1. Purpose</h2>
+        <p>
+            {{APP_NAME}} Ltd (“{{APP_NAME}}”, “we”, “our”, “us”) is committed to providing a safe and legal platform for
+            adult
+            entertainment.
+            This Content Moderation Policy explains how we monitor, review, and enforce compliance with applicable laws,
+            Mastercard rules, and our Terms of Use.
+        </p>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">2. Prohibited Content</h2>
+        <p>The following content is strictly prohibited on {{APP_NAME}}:</p>
+        <ul class="list-disc list-inside ml-4">
+            <li>Child sexual abuse material (CSAM) or any depiction of minors.</li>
+            <li>Non-consensual sexual content.</li>
+            <li>Incest, bestiality, extreme violence, or exploitation.</li>
+            <li>Content that promotes or facilitates human trafficking, sex trafficking, or physical abuse.</li>
+            <li>Content that infringes intellectual property rights.</li>
+        </ul>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">3. Creator Obligations</h2>
+        <p>Creators must:</p>
+        <ul class="list-disc list-inside ml-4">
+            <li>Provide a valid government-issued ID and signed consent form before uploading.</li>
+            <li>Provide consent forms and IDs for every individual appearing in their content.</li>
+            <li>Confirm that all persons depicted are at least 18 years old and that legal consent has been obtained for
+                public distribution and downloads.
+            </li>
+        </ul>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">4. Upload Review Process</h2>
+        <ul class="list-disc list-inside ml-4">
+            <li>All uploaded content is automatically screened by Hive AI before publication.</li>
+            <li>Flagged content is placed into a moderation queue for manual review.</li>
+            <li>Our moderation team reviews flagged content to ensure compliance before it goes live.</li>
+            <li>Live streams must take place on our controlled platform, with real-time monitoring and the ability to
+                remove
+                streams immediately if violations are detected.
+            </li>
+        </ul>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">5. Complaint and Takedown Process</h2>
+        <ul class="list-disc list-inside ml-4">
+            <li>Users can report content they believe is illegal or violates the Standards.</li>
+            <li>Reports must be reviewed within 7 business days. Illegal content will be removed immediately once
+                verified.
+            </li>
+            <li>Any person depicted in content may request its removal. If consent cannot be verified, the content will
+                be
+                removed immediately.
+            </li>
+        </ul>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">6. Reporting to Acquirer</h2>
+        <p>{{APP_NAME}} will provide monthly reports to our acquiring bank including:</p>
+        <ul class="list-disc list-inside ml-4">
+            <li>Flagged content</li>
+            <li>Content removals</li>
+            <li>User complaints</li>
+            <li>Takedown actions</li>
+        </ul>
+    </section>
+
+    <section class="mb-6">
+        <h2 class="text-xl font-semibold mb-2">7. Enforcement</h2>
+        <p>
+            Violation of this policy may result in account suspension, removal of content, or permanent termination.
+            {{APP_NAME}} reserves the right to cooperate with law enforcement in cases of suspected illegal activity.
+        </p>
+        <p class="mt-2">
+            This setup ensures that {{APP_NAME}} is fully compliant with Mastercard mandates, payment provider
+            requirements,
+            and
+            global legal standards.
+            It also protects us by documenting consent, keeping secure records, and proving that we have strong
+            moderation
+            and reporting systems in place.
+        </p>
+    </section>
+</div>
+{% endblock content %}

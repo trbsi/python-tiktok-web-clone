@@ -3,12 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group
 from django.core.validators import RegexValidator
 
+from src.user.enum import UserEnum
 from src.user.models import User as User, UserProfile
-
-ROLES = [
-    ('user', 'User'),
-    ('performer', 'Performer'),
-]
 
 alphanumeric = RegexValidator(
     r'^[0-9a-zA-Z]*$',
@@ -19,7 +15,7 @@ alphanumeric = RegexValidator(
 class RegisterForm(UserCreationForm):
     username = forms.CharField(max_length=50, required=True, validators=[alphanumeric])
     email = forms.EmailField()
-    role = forms.ChoiceField(choices=ROLES, required=True)
+    role = forms.ChoiceField(choices=UserEnum.roles(), required=True)
     accept_tos = forms.BooleanField(required=True, label='I accept Terms Of Use')
 
     class Meta:

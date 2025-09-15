@@ -152,7 +152,10 @@
         </template>
 
         <!-- final empty state -->
-        <div x-show="!hasMore && !videos.length" class="p-8 text-center text-gray-400">
+        <div x-show="!hasMore || !media.length"
+             class="text-3xl p-8 text-center text-gray-400 fixed inset-0 w-fit h-fit m-auto">
+            <i class="ri-video-fill ri-3x"></i>
+            <br>
             No videos to show.
         </div>
     </div>
