@@ -28,15 +28,25 @@ class MediaSeeder:
             'https://www.sneakalcoholbag.com/tiktok/e.jpg',
             'https://www.sneakalcoholbag.com/tiktok/f.jpg',
         ]
+        thumbnails = [
+            'https://www.sneakalcoholbag.com/tiktok/a.jpg',
+            'https://www.sneakalcoholbag.com/tiktok/b.jpg',
+            'https://www.sneakalcoholbag.com/tiktok/c.jpg',
+            'https://www.sneakalcoholbag.com/tiktok/d.jpg',
+            'https://www.sneakalcoholbag.com/tiktok/e.jpg',
+            'https://www.sneakalcoholbag.com/tiktok/f.jpg',
+        ]
+
         for i in range(100):
             performer_name = 'performer' + str(fake.random_int(min=0, max=4))
             rand_media = random.choice(media)
+            random_thumbnail = random.choice(thumbnails)
 
             Media.objects.create(
                 user=User.objects.get(username=performer_name),
                 file=rand_media,
                 file_type='video' if rand_media.endswith('.mp4') else 'image',
-                file_thumbnail=rand_media,
+                file_thumbnail=random_thumbnail,
                 status=MediaEnum.STATUS_FREE.value,
                 description=fake.text(),
                 created_at=datetime.now(),

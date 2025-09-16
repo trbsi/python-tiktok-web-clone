@@ -1,0 +1,62 @@
+<div class="relative">
+    <!-- Slide-in Menu -->
+    <aside
+
+            id="slide-menu"
+            class="fixed top-0 right-0 h-full w-64 bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300 "
+            :class="open ? 'translate-x-0' : 'translate-x-full'"
+            x-cloak
+    >
+        <!-- Close Button -->
+        <div class="flex justify-end p-4">
+            <button @click="open = !open" id="menu-close" class="text-gray-300 hover:text-white text-2xl font-bold">
+                &times;
+            </button>
+        </div>
+
+        <!-- Menu Items -->
+        <nav class="mt-4 flex flex-col">
+            <a href="{% url 'password_change' %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="ri-mail-fill"></i> Change email
+            </a>
+            <a href="{% url 'password_change' %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="ri-key-line"></i> Change password
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+            <a href="{% url 'user.delete' %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="ri-delete-bin-6-fill"></i> Delete account
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+
+            <a href="{% url 'terms_of_use' %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="ri-file-list-line"></i> Terms of use
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+
+            <a href="{% url 'content_moderation_policy' %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="ri-contacts-book-2-line"></i> Content moderation policy
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+
+            <a href="{% url 'privacy_policy' %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="ri-profile-line"></i> Privacy policy
+            </a>
+            <hr class="border-gray-700 mx-4"/>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit"
+                        class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                    <i class="ri-logout-box-r-fill"></i> Logout
+                </button>
+            </form>
+        </nav>
+    </aside>
+
+</div>

@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
 from src.user.services.delete_user.delete_user_service import DeleteUserService
+from src.user.services.user_media.user_media_service import UserMediaService
 from src.user.services.user_profile.user_profile_service import UserProfileService
 
 
@@ -17,6 +18,32 @@ def profile(request: HttpRequest, username: str) -> HttpResponse:
         'user': user,
         'logged_in_user': request.user
     })
+
+
+@require_GET
+def profile_liked_media(request: HttpRequest, username: str) -> HttpResponse:
+    user_profile_service = UserProfileService()
+    user = user_profile_service.get_user(username)
+    return render(request, 'profile.html', {
+        'user': user,
+        'logged_in_user': request.user
+    })
+
+
+@require_GET
+def get_user_media(request: HttpRequest, username: str) -> JsonResponse:
+    get = request.GET
+    user_media_service = UserMediaService()
+    result = user_media_service.get_user_media(username=username, current_page=int(get.get('page')))
+    return JsonResponse(result)
+
+
+@require_GET
+def get_user_liked_media(request: HttpRequest, username: str) -> JsonResponse:
+    get = request.GET
+    user_media_service = UserMediaService()
+    result = user_media_service.get_user_liked_media(username=username, current_page=int(get.get('page')))
+    return JsonResponse(result)
 
 
 @require_GET

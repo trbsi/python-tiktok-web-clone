@@ -25,7 +25,7 @@ body {
 
 .media-container {
     position: relative;
-    height: calc(100vh - 4rem);
+    height: calc(100dvh - 4rem);
     overflow: hidden;
 }
 

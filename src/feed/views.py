@@ -20,7 +20,6 @@ def feed(request: HttpRequest) -> JsonResponse:
     data = request.GET
     page = int(data.get('page'))
     type = data.get('type')
-    print(type)
     service: LoadFeedService = LoadFeedService()
     if type == 'following':
         items: list = service.get_following_feed(page=page, user=request.user)
