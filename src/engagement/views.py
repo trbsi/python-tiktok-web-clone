@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 
@@ -26,6 +27,7 @@ def list_comments(request: HttpRequest, media_id: int) -> JsonResponse:
 
 
 @require_POST
+@login_required
 def create_comment(request: HttpRequest) -> JsonResponse:
     post = json.loads(request.body)
     service = CreateComment()

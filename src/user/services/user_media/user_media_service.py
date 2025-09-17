@@ -7,9 +7,9 @@ from src.user.models import User
 
 
 class UserMediaService:
-    PER_PAGE = 25
+    PER_PAGE = 10
 
-    def get_user_media(self, username: str, current_page: int) -> list:
+    def get_user_media(self, username: str, current_page: int) -> dict:
         user: User = User.objects.get(username=username)
         media: QuerySet[Media] = Media.objects.filter(user=user).order_by('-created_at')
 
@@ -20,13 +20,14 @@ class UserMediaService:
         for media_item in page.object_list:
             result.append({
                 'id': media_item.id,
-                'file': str(media_item.file),
-                'thumbnail': str(media_item.thumbnail),
+                'thumbnail': str(media_item.file_thumbnail),
             })
 
-        return result
+        next_page = page.next_page_number() if page.has_next() else None
 
-    def get_user_liked_media(self, username: str, current_page: int) -> list:
+        return {'result': result, 'next_page': next_page}
+
+    def get_user_liked_media(self, username: str, current_page: int) -> dict:
         user: User = User.objects.get(username=username)
         likes: QuerySet[Like] = Like.objects.filter(user=user).order_by('-created_at')
 
@@ -40,8 +41,9 @@ class UserMediaService:
         for media_item in media:
             result.append({
                 'id': media_item.id,
-                'file': str(media_item.file),
-                'thumbnail': str(media_item.thumbnail),
+                'thumbnail': str(media_item.file_thumbnail),
             })
 
-        return result
+        next_page = page.next_page_number() if page.has_next() else None
+
+        return {'result': result, 'next_page': next_page}

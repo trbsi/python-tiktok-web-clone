@@ -1,4 +1,4 @@
-function mediaFeed(feedType) {
+function mediaFeed(feedType, mediaApiUrl) {
     return {
         media: [],                // list of video objects
         page: 1,                   // pagination
@@ -33,7 +33,7 @@ function mediaFeed(feedType) {
 
             this.loadingMore = true;
             try {
-                const res = await fetch(`/feed/api/media?page=${this.page}&type=${feedType}`);
+                const res = await fetch(`${mediaApiUrl}?page=${this.page}&type=${feedType}`);
                 if (!res.ok) throw new Error('Failed to fetch media');
                 const data = await res.json();
 
@@ -67,7 +67,7 @@ function mediaFeed(feedType) {
             var index = 0;
             var isAnimating = false;
             var threshold = 50;
-            var duration = 400; // animation duration in ms
+            var duration = 150; // animation duration in ms
             var touchStartY = 0;
 
             function goTo(targetIndex) {
@@ -281,9 +281,9 @@ function mediaFeed(feedType) {
         async toggleLike(media, index) {
             // Optimistic UI
             const previousLiked = media.liked;
-            const previousLikes = media.likes;
+            const previousLikes = media.like_count;
             media.liked = !media.liked;
-            media.likes += media.liked ? 1 : -1;
+            media.like_count += media.liked ? 1 : -1;
 
             try {
                 const res = await fetch(`/engagement/api/like/media/${media.id}`, {
@@ -294,11 +294,11 @@ function mediaFeed(feedType) {
                 if (!res.ok) throw new Error('Like failed');
                 // optionally update counts from server response
                 const data = await res.json();
-                if (data.likes != null) media.likes = data.likes;
+                if (data.like_count != null) media.like_count = data.like_count;
             } catch (e) {
                 // rollback
                 media.liked = previousLiked;
-                media.likes = previousLikes;
+                media.like_count = previousLikes;
                 console.error(e);
                 alert('Failed to update like. Try again.');
             }
@@ -421,7 +421,7 @@ function mediaFeed(feedType) {
                 if (!res.ok) throw new Error('Report failed');
                 // optionally update counts from server response
                 const data = await res.json();
-                alert('Content has been reported. We will review it.');
+                alert('Thanks for your feedback. We’ll review this video shortly.');
             } catch (e) {
                 console.error(e);
             }

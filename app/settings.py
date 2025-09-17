@@ -183,6 +183,7 @@ else:
 
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 ADMIN_EMAILS = env('ADMIN_EMAILS').split(',')
+SUPPORT_EMAIL = env('SUPPORT_EMAIL')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -193,6 +194,6 @@ LOGIN_REDIRECT_URL = '/'
 MEDIA_ROOT = 'uploads'
 AUTH_USER_MODEL = 'user.User'
 
+# allauth settings
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"  # "mandatory" if you want verified emails
-SUPPORT_EMAIL = env('SUPPORT_EMAIL')

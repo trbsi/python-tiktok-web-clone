@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
     path('discover', views.discover, name='feed.discover'),
     path('following', views.following, name='feed.following'),
-    path('api/media', views.feed),
+    path('api/media', views.api_get_feed, name='feed.api.get_media'),
 ]

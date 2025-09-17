@@ -11,22 +11,22 @@ from src.user.models import User
 class LoadFeedService:
     PER_PAGE = 25
 
-    def get_following_feed(self, page: int, user: User | AnonymousUser) -> list:
+    def get_following_feed(self, page: int, user: User | AnonymousUser) -> dict:
         following_list = []
         if user.is_authenticated:
             following_list = Follow.get_following(user).values_list('id', flat=True)
 
-        return self._get_feed_items(page=page, user=user, following_list=following_list)
+        return self._get_feed_items(current_page=page, user=user, following_list=following_list)
 
-    def get_discover_feed(self, page: int, user: User | AnonymousUser) -> list:
-        return self._get_feed_items(page=page, user=user)
+    def get_discover_feed(self, page: int, user: User | AnonymousUser) -> dict:
+        return self._get_feed_items(current_page=page, user=user)
 
     def _get_feed_items(
             self,
-            page: int,
+            current_page: int,
             user: User | AnonymousUser,
             following_list: list = []
-    ) -> list:
+    ) -> dict:
         likes = Like.objects.none()
         is_following = Follow.objects.none()
 
@@ -46,7 +46,7 @@ class LoadFeedService:
             items = items.filter(user__id__in=following_list)
 
         paginator = Paginator(object_list=items, per_page=self.PER_PAGE)
-        page = paginator.page(page)
+        page = paginator.page(current_page)
 
         result = []
         for item in page.object_list:
@@ -61,8 +61,9 @@ class LoadFeedService:
                 'followed': item.followed,
                 'user': {
                     'username': item.user.username,
-                    'avatar': item.user.get_avatar(),
+                    'avatar': item.user.get_profile_image(),
                 },
             })
 
-        return result
+        next_page = page.next_page_number() if page.has_next() else None
+        return {'result': result, 'next_page': next_page}

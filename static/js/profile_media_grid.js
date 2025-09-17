@@ -1,6 +1,57 @@
-function profileMediaGrid() {
+function profileGrid(username, mediaApiUrl) {
     return {
-        media: [],
+        mediaList: [],
+        page: 1,
+        loading: false,
+        hasMore: true,
+        perPage: 12,
 
-    };
+        init() {
+            this.loadMedia();
+
+            // Infinite scroll observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.target === this.$refs.sentinel) {
+                        if (!this.loading && this.hasMore) {
+                            this.loadMedia();
+                        }
+                    }
+                });
+            }, {rootMargin: '200px'});
+        },
+
+        async loadMedia() {
+            if (this.loading || !this.hasMore) return;
+            this.loading = true;
+
+            try {
+                // Example API endpoint – adjust to your backend
+                const res = await fetch(`${mediaApiUrl}?page=${this.page}&username=${username}`);
+                if (!res.ok) throw new Error("Failed to load media");
+
+                const data = await res.json();
+                const items = data.results || data;
+                this.mediaList.push(...items);
+
+                this.page = data.next_page ?? (this.page + 1);
+                this.hasMore = !!data.next_page;
+                console.log(this.mediaList)
+            } catch (e) {
+                console.error(e);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        formatCount(value) {
+            if (!(typeof value === 'number')) {
+                return value
+            }
+
+            if (value >= 1e6) return (value / 1e6).toFixed(1) + "M";
+            if (value >= 1e3) return (value / 1e3).toFixed(1) + "K";
+            returnvaluen;
+        }
+    }
 }

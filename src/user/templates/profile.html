@@ -16,58 +16,10 @@
 
     <div class="p-4">
         <!-- Profile Header -->
-        <div class="flex flex-col items-center mb-6">
-            <div class="w-24 h-24 rounded-full overflow-hidden mb-4">
-                <img
-                        src="{{ user.get_avatar }}"
-                        alt="Profile"
-                        class="w-full h-full object-cover"
-                />
-            </div>
-            {% if user.first_name is None or user.first_name == '' %}
-            <h2 class="text-xl font-bold mb-1">{{user.username}}</h2>
-            {% else %}
-            <h2 class="text-xl font-bold mb-1">{{user.first_name}}</h2>
-            <h3 class="text-sm font-bold mb-1">{{user.username}}</h3>
-            {% endif %}
-
-            <div class="flex gap-6 mb-4">
-                <div class="flex flex-col items-center">
-                    <span class="font-bold">{{user.profile.follower_count}}</span>
-                    <span class="text-sm text-gray-400">Subscribers</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="font-bold">{{user.profile.media_count}}</span>
-                    <span class="text-sm text-gray-400">Media</span>
-                </div>
-            </div>
-            <p class="text-center text-sm mb-4">
-                {% if user.profile.bio is not None %}
-                {{user.profile.bio}}
-                {% endif %}
-            </p>
-            {% if logged_in_user.username == user.username %}
-            <button
-                    class="bg-primary text-white px-8 py-2 rounded-full !rounded-button font-medium"
-            >
-                Edit Profile
-            </button>
-            {% endif %}
-        </div>
+        {% include "components/profile_header.html" %}
 
         <!-- Content Tabs -->
-        <div class="flex border-b border-gray-800 mb-4">
-            <a href="{% url 'user.profile' username=user.username %}"
-               class="flex-1 py-3 text-center  {% if '/liked' not in request.path %}tab-active{% endif %}">
-                <i class="ri-grid-line ri-lg"></i>
-            </a>
-            {% if logged_in_user.username == user.username %}
-            <a href="{% url 'user.profile.liked_media' username=user.username %}"
-               class="flex-1 py-3 text-center text-gray-400 {% if '/liked'  in request.path %}tab-active{% endif %}">
-                <i class="ri-heart-line ri-lg"></i>
-            </a>
-            {% endif %}
-        </div>
+        {% include "components/profile_content_tabs.html" %}
 
         <!-- Media Grid -->
         {% include "components/profile_media_grid.html" %}

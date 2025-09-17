@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.timezone import now
 
 from app import settings
 from src.user.enum import UserEnum
@@ -13,7 +16,7 @@ class User(AbstractUser):
     objects = UserQueryManager()
     all_objects = models.Manager()
 
-    def get_avatar(self):
+    def get_profile_image(self):
         if self.profile.profile_image != '':
             return str(self.profile.profile_image)
 
@@ -22,6 +25,9 @@ class User(AbstractUser):
     def is_regular_user(self) -> bool:
         return self.groups.filter(name=UserEnum.ROLE_USER.value).exists()
 
+    def is_performer(self) -> bool:
+        return self.groups.filter(name=UserEnum.ROLE_PERFORMER.value).exists()
+
 
 class UserProfile(models.Model):
     id = models.AutoField(primary_key=True)
@@ -29,6 +35,17 @@ class UserProfile(models.Model):
     bio = models.TextField(null=True)
     profile_image = models.ImageField(upload_to='uploads/profile_image', null=True)
     follower_count = models.IntegerField(default=0)
+    following_count = models.IntegerField(default=0)
     media_count = models.IntegerField(default=0)
 
     objects = models.Manager()
+
+
+class EmailChangeToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    new_email = models.EmailField()
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return self.created_at < now() - timedelta(hours=24)  # 24h validity

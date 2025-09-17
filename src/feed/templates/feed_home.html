@@ -9,7 +9,7 @@
 
 <!-- Video Feed View -->
 <div
-        x-data="mediaFeed('{{type}}')"
+        x-data="mediaFeed('{{type}}', '{{media_api_url}}')"
         x-init="init()"
         class="min-h-screen bg-black text-white"
 >
@@ -51,7 +51,7 @@
                         x-show="loadingVideo[index]"
                         class="absolute inset-0 flex items-center justify-center bg-black/60"
                 >
-                    <div class="animate-spin rounded-full border-4 border-t-4 border-gray-300 w-12 h-12"></div>
+                    {% include "components/loader.html" %}
                 </div>
 
                 <!-- Overlay -->
@@ -145,9 +145,8 @@
 
         <!-- skeleton loader cards while loading more -->
         <template x-if="loadingMore">
-            <div class="space-y-4 p-6">
-                <div class="h-96 bg-gray-800 animate-pulse rounded"></div>
-                <div class="h-96 bg-gray-800 animate-pulse rounded"></div>
+            <div class="col-span-3 flex justify-center py-4">
+                {% include "components/loader.html" %}
             </div>
         </template>
 
