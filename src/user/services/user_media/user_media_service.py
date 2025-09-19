@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, Page
 from django.db.models import QuerySet
 
+from app.utils import reverse_lazy_with_query
 from src.engagement.models import Like
 from src.media.models import Media
 from src.user.models import User
@@ -20,7 +21,14 @@ class UserMediaService:
         for media_item in page.object_list:
             result.append({
                 'id': media_item.id,
-                'thumbnail': str(media_item.file_thumbnail),
+                'title': '',
+                'thumbnail': str(media_item.get_thumbnail_url()),
+                'item_type': media_item.file_type,
+                'destination_url': reverse_lazy_with_query(
+                    route_name='feed.following',
+                    kwargs=None,
+                    query_params={'uid': user.id, 'mid': media_item.id},
+                ),
             })
 
         next_page = page.next_page_number() if page.has_next() else None
@@ -35,13 +43,20 @@ class UserMediaService:
         page: Page = paginator.page(current_page)
 
         media_ids = page.object_list.values_list('media_id', flat=True)
-        media = Media.objects.filter(id__in=media_ids).order_by('-created_at')
+        media = Media.objects.select_related('user').filter(id__in=media_ids).order_by('-created_at')
 
         result = []
         for media_item in media:
             result.append({
                 'id': media_item.id,
-                'thumbnail': str(media_item.file_thumbnail),
+                'title': media_item.user.username,
+                'thumbnail': str(media_item.get_thumbnail_url()),
+                'item_type': media_item.file_type,
+                'destination_url': reverse_lazy_with_query(
+                    route_name='feed.following',
+                    kwargs=None,
+                    query_params={'uid': media_item.user.id, 'mid': media_item.id},
+                ),
             })
 
         next_page = page.next_page_number() if page.has_next() else None

@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
 from src.user.forms.update_email_form import UpdateEmailForm
+from src.user.forms.update_profile_form import UpdateProfileForm
 from src.user.models import User
 from src.user.services.change_email.email_change_service import EmailChangeService
 from src.user.services.delete_user.delete_user_service import DeleteUserService
@@ -18,20 +19,21 @@ from src.user.services.user_profile.user_profile_service import UserProfileServi
 # ------------------- USER PROFILE HOMEPAGE ------------------------
 @require_GET
 def profile(request: HttpRequest, username: str) -> HttpResponse:
-    user = request.user
-    if user.is_regular_user() and user.username != username:
+    logged_in_user = request.user
+    user_profile_service = UserProfileService()
+    current_user: User = user_profile_service.get_user(username)
+
+    if current_user.is_regular_user() and current_user.username != logged_in_user.username:
         raise Http404
 
-    user_profile_service = UserProfileService()
-    user: User = user_profile_service.get_user(username)
-    if user.is_performer():
+    if current_user.is_performer():
         media_api_url = reverse_lazy('user.api.get_media')
     else:
         media_api_url = reverse_lazy('user.api.get_following')
 
     return render(request, 'profile.html', {
-        'current_user': user,
-        'logged_in_user': user,
+        'current_user': current_user,
+        'logged_in_user': logged_in_user,
         'media_api_url': media_api_url
     })
 
@@ -56,6 +58,23 @@ def api_get_following(request: HttpRequest) -> JsonResponse:
     result = service.get_following(user=request.user, current_page=page)
 
     return JsonResponse({'results': result['result'], 'next_page': result['next_page']})
+
+
+# ------------------- UPDATE PROFILE ------------------------
+def update_profile(request: HttpRequest) -> HttpResponse:
+    form = UpdateProfileForm(instance=request.user.profile)
+    if request.method == 'POST':
+        form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            form.resize_image()
+            return redirect('user.profile', username=request.user.username)
+
+    return render(
+        request,
+        'update_profile.html',
+        {'form': form, 'user': request.user}
+    )
 
 
 # ------------------- USER LIKED MEDIA ------------------------

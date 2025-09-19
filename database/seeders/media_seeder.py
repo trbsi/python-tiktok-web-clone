@@ -1,11 +1,12 @@
 import random
 from datetime import datetime
 
+from django.contrib.auth.models import Group
 from faker import Faker
 
 from src.media.enums import MediaEnum
 from src.media.models import Media
-from src.user.models import User as User
+from src.user.enum import UserEnum
 
 
 class MediaSeeder:
@@ -37,20 +38,23 @@ class MediaSeeder:
             'https://www.sneakalcoholbag.com/tiktok/f.jpg',
         ]
 
-        for i in range(100):
-            performer_name = 'performer' + str(fake.random_int(min=0, max=4))
-            rand_media = random.choice(media)
-            random_thumbnail = random.choice(thumbnails)
+        performer_groups = Group.objects.filter(name=UserEnum.ROLE_PERFORMER.value).first()
+        performers = performer_groups.user_set.all()
 
-            Media.objects.create(
-                user=User.objects.get(username=performer_name),
-                file=rand_media,
-                file_type='video' if rand_media.endswith('.mp4') else 'image',
-                file_thumbnail=random_thumbnail,
-                status=MediaEnum.STATUS_FREE.value,
-                description=fake.text(),
-                created_at=datetime.now(),
-                share_count=random.randint(1, 1000),
-                like_count=random.randint(1, 1000),
-                comment_count=random.randint(1, 1000),
-            )
+        for performer in performers:
+            for i in range(10):
+                rand_media = random.choice(media)
+                random_thumbnail = random.choice(thumbnails)
+
+                Media.objects.create(
+                    user=performer,
+                    file=rand_media,
+                    file_type='video' if rand_media.endswith('.mp4') else 'image',
+                    file_thumbnail=random_thumbnail,
+                    status=MediaEnum.STATUS_FREE.value,
+                    description=fake.text(),
+                    created_at=datetime.now(),
+                    share_count=random.randint(1, 1000),
+                    like_count=random.randint(1, 1000),
+                    comment_count=random.randint(1, 1000),
+                )

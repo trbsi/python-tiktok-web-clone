@@ -18,7 +18,7 @@ class User(AbstractUser):
 
     def get_profile_image(self):
         if self.profile.profile_image != '':
-            return str(self.profile.profile_image)
+            return settings.MEDIA_URL + str(self.profile.profile_image)
 
         return f"https://ui-avatars.com/api/?name={self.username}"
 
@@ -30,10 +30,14 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
+    # instance: UserProfile
+    def upload_path(self, user_profile, filename: str) -> str:
+        return f'user_profile/{user_profile.user_id}/{filename}'
+
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
-    bio = models.TextField(null=True)
-    profile_image = models.ImageField(upload_to='uploads/profile_image', null=True)
+    bio = models.TextField(null=True, blank=True)
+    profile_image = models.ImageField(upload_to=upload_path, null=True)
     follower_count = models.IntegerField(default=0)
     following_count = models.IntegerField(default=0)
     media_count = models.IntegerField(default=0)

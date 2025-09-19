@@ -1,0 +1,91 @@
+{% extends "core/layout.html" %}
+
+{% block javascript %}
+<script>
+    const input = document.getElementById("profile_image");
+    const preview = document.getElementById("profilePreview");
+    const previewWrapper = document.getElementById("previewWrapper");
+
+    // When clicking the preview image, open file input
+    previewWrapper.addEventListener("click", () => {
+      input.click();
+    });
+
+    // When a new file is chosen, update the preview
+    input.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+      }
+    });
+</script>
+{% endblock javascript %}
+
+{% block content %}
+<div class="w-full mr-5">
+    <div class="bg-gray-900 shadow-2xl rounded-2xl p-8">
+        <h1 class="text-2xl font-semibold text-white mb-6">Update profile</h1>
+
+        {# Non-form (global) errors, #}
+        {% if form.non_field_errors %}
+        <div class="mb-4 rounded-lg border border-red-600 bg-red-900/60 p-3 text-sm text-red-200">
+            <ul class="list-disc pl-5 space-y-1">
+                {% for err in form.non_field_errors %}
+                <li>{{ err }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'user.update_profile' %}" enctype="multipart/form-data" novalidate
+              class="space-y-5">
+            {% csrf_token %}
+
+            <div>
+                <!-- Hidden file input -->
+                <input type="file" name="profile_image" id="profile_image" accept="image/*" class="hidden">
+
+                <!-- Profile preview (clickable) -->
+                <div class="flex justify-center flex-col text-center">
+                    <div>Click to change picture</div>
+                    <i class="ri-arrow-down-box-fill ri-lg"></i>
+                    <div class="w-24 h-24 rounded-full overflow-hidden mb-4 mt-4 mx-auto cursor-pointer"
+                         id="previewWrapper">
+                        <img id="profilePreview"
+                             src="{{user.get_profile_image}}"
+                             alt="Profile"
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+
+
+            <div>
+                <textarea
+                        rows="5"
+                        name="{{ form.bio.name }}"
+                        id="{{ form.bio.id_for_label }}"
+                        placeholder="{{ form.bio.label }}"
+                        class="block w-full rounded-xl border border-gray-700 bg-gray-950 px-3 py-2 text-gray-100
+                   shadow-sm placeholder-gray-500 focus:border-indigo-500 focus:ring focus:ring-indigo-500/40"
+                >{{form.bio.value|default_if_none:''}}</textarea>
+                {% if form.bio.errors %}
+                <p class="mt-1 text-sm text-red-400">
+                    {% for err in form.bio.errors %}{{ err }}{% if not forloop.last %}<br/>{% endif %}{% endfor %}
+                </p>
+                {% endif %}
+            </div>
+
+            <button
+                    type="submit"
+                    class="w-full rounded-xl  bg-gradient-to-r from-primary to-secondary px-4 py-2.5 text-white font-medium shadow
+                 hover:bg-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/40"
+            >
+                Update
+            </button>
+        </form>
+
+    </div>
+
+</div>
+{% endblock content %}

@@ -29,6 +29,12 @@ body {
     overflow: hidden;
 }
 
+.media-container-no-more-media  {
+    position: relative;
+    height: calc(100dvh);
+    overflow: hidden;
+}
+
 .media-overlay {
     background: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.7) 100%);
 }
@@ -191,7 +197,11 @@ input:checked + .slider:before {
     display: block;
 }
 
-/* SOCIAL LOGIN BUTTONS */
+.profile_urls a {
+    text-decoration: underline;
+}
+
+/* -------------------- SOCIAL LOGIN BUTTONS ----------------------- */
 .social-btn {
     display: flex;
     align-items: center;

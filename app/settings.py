@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'src.core.apps.CoreConfig',
     'src.payment.apps.PaymentConfig',
     'src.engagement.apps.EngagementConfig',
-    'src.follower.apps.FollowerConfig',
+    'src.follow.apps.FollowConfig',
     'src.report.apps.ReportConfig',
     'src.notification.apps.NotificationConfig',
 
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cleanup.apps.CleanupConfig',
 
     'allauth',
     'allauth.account',
@@ -161,9 +162,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-
-if APP_ENV == 'production':
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -191,7 +192,6 @@ SESSION_COOKIE_AGE = 86400 * 30
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
-MEDIA_ROOT = 'uploads'
 AUTH_USER_MODEL = 'user.User'
 
 # allauth settings

@@ -1,6 +1,6 @@
-function mediaFeed(feedType, mediaApiUrl) {
+function mediaFeed(feedType, mediaApiUrl, filters) {
     return {
-        media: [],                // list of video objects
+        mediaList: [],                // list of video objects
         page: 1,                   // pagination
         loadingMore: false,
         hasMore: true,
@@ -33,13 +33,13 @@ function mediaFeed(feedType, mediaApiUrl) {
 
             this.loadingMore = true;
             try {
-                const res = await fetch(`${mediaApiUrl}?page=${this.page}&type=${feedType}`);
+                const res = await fetch(`${mediaApiUrl}?page=${this.page}&type=${feedType}&filters=${filters}`);
                 if (!res.ok) throw new Error('Failed to fetch media');
                 const data = await res.json();
 
                 // expected response shape: { results: [...], next_page: 2/null }
                 const items = data.results || data;
-                this.media = this.media.concat(items);
+                this.mediaList = this.mediaList.concat(items);
                 this.page = data.next_page ?? (this.page + 1);
                 this.hasMore = !!data.next_page;
             } catch (e) {
@@ -60,7 +60,7 @@ function mediaFeed(feedType, mediaApiUrl) {
             }
         },
 
-        handleScroll()  {
+        handleScroll() {
             var $feed = $('#feed');
             var $containers = $feed.find('.media-container');
             var total = $containers.length;
@@ -78,18 +78,19 @@ function mediaFeed(feedType, mediaApiUrl) {
                 index = targetIndex;
 
                 var targetScroll = index * $containers.first().outerHeight();
+
                 $feed.stop().animate(
-                    { scrollTop: targetScroll },
+                    {scrollTop: targetScroll},
                     duration,
                     'swing',
-                    function() {
+                    function () {
                         isAnimating = false;
                     }
                 );
             }
 
             // --- Wheel / desktop ---
-            $feed.on('wheel', function(e) {
+            $feed.on('wheel', function (e) {
                 e.preventDefault();
                 if (isAnimating) return;
 
@@ -99,11 +100,11 @@ function mediaFeed(feedType, mediaApiUrl) {
             });
 
             // --- Touch / mobile ---
-            $feed.on('touchstart', function(e) {
+            $feed.on('touchstart', function (e) {
                 touchStartY = e.originalEvent.touches[0].clientY;
             });
 
-            $feed.on('touchend', function(e) {
+            $feed.on('touchend', function (e) {
                 if (isAnimating) return;
 
                 var touchEndY = e.originalEvent.changedTouches[0].clientY;
@@ -116,7 +117,7 @@ function mediaFeed(feedType, mediaApiUrl) {
             });
 
             // --- Resize ---
-            $(window).on('resize', function() {
+            $(window).on('resize', function () {
                 $feed.scrollTop(index * $containers.first().outerHeight());
             });
 
@@ -158,7 +159,7 @@ function mediaFeed(feedType, mediaApiUrl) {
                     this.currentIndex = index;
                     this.playAtIndex(index);
                     // if we are 5th before end, load more
-                    if (this.media.length - index <= 5) {
+                    if (this.mediaList.length - index <= 5) {
                         this.loadMore();
                     }
                 } else {
@@ -176,28 +177,28 @@ function mediaFeed(feedType, mediaApiUrl) {
             // pause all
             this.getMedia().forEach((media, i) => {
                 const type = media.dataset.type;
-                if (type !== 'video') {
-                    return;
-                }
-                try {
-                    if (i === index) {
-                        // ensure we attempt to play; browsers require muted for autoplay
-                        this.loadingVideo[i] = true;
-                        media.play().then(() => {
-                            this.loadingVideo[i] = false;
-                        }).catch((e) => {
-                            this.loadingVideo[i] = false;
-                            console.log(e)
-                        });
-                        media.loop = true;
-                    } else {
-                        media.pause();
-                        media.currentTime = 0; // optional: rewind off-screen videos
-                        this.progressBar[i] = 0;
+                if (type === 'video') {
+                    try {
+                        if (i === index) {
+                            // ensure we attempt to play; browsers require muted for autoplay
+                            this.loadingVideo[i] = true;
+                            media.play().then(() => {
+                                this.loadingVideo[i] = false;
+                            }).catch((e) => {
+                                this.loadingVideo[i] = false;
+                                console.log(e)
+                            });
+                            media.loop = true;
+                        } else {
+                            media.pause();
+                            media.currentTime = 0; // optional: rewind off-screen videos
+                            this.progressBar[i] = 0;
+                        }
+                    } catch (e) {
+                        console.error(e);
                     }
-                } catch (e) {
-                    console.error(e);
                 }
+
             });
         },
 
@@ -253,10 +254,6 @@ function mediaFeed(feedType, mediaApiUrl) {
             this.loadingVideo[index] = false;
         },
 
-        onScroll() {
-            console.log('asdasdasd')
-        },
-
         formatCount(n) {
             if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
             if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
@@ -304,9 +301,34 @@ function mediaFeed(feedType, mediaApiUrl) {
             }
         },
 
-        follow() {
-            if (!confirm('Are you sure?')) {
-                return;
+        async follow_unfollow(media) {
+            previousFollow = media.followed
+            futureFollow = !media.followed
+
+            try {
+                this.mediaList.forEach(video => {
+                    if (video.user.id === media.user.id) {
+                        video.followed = futureFollow
+                    }
+                });
+
+                const res = await fetch(`/follow/api/follow-unfollow`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(),},
+                    credentials: 'include',
+                    body: JSON.stringify({'following': media.user.id})
+                });
+
+                if (!res.ok) throw new Error('Failed to follow performer.');
+            } catch (e) {
+                console.error(e);
+                this.getMedia().forEach(video => {
+                    if (video.user.id === media.user.id) {
+                        video.followed = previousFollow
+                    }
+                });
+                alert('Failed to follow performer.');
+            } finally {
             }
         },
 

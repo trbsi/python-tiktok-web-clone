@@ -1,0 +1,128 @@
+<template x-for="(media, index) in mediaList" :key="media.id">
+    <div class="media-container relative snap-start flex items-center justify-center bg-black"
+    >
+        <!-- video element -->
+        <template x-if="media.type === 'video'">
+            <video
+                    :data-type="media.type"
+                    @click="togglePlay(index)"
+                    x-ref="media"
+                    :data-index="index"
+                    :id="`video-${media.id}`"
+                    class="w-full object-cover"
+                    playsinline
+                    muted
+                    loop
+                    preload="metadata"
+                    @timeupdate="updateProgress(index, $event)"
+                    @loadeddata="onVideoLoaded(index)"
+            >
+                <source :src="media.src" type="video/mp4"/>
+                Your browser does not support the video tag.
+            </video>
+        </template>
+        <template x-if="media.type === 'image'">
+            <img x-ref="media" :src="media.src" :data-type="media.type">
+        </template>
+
+        <!-- spinner loader while video buffering -->
+        <div
+                x-show="loadingVideo[index]"
+                class="absolute inset-0 flex items-center justify-center bg-black/60"
+        >
+            {% include "components/loader.html" %}
+        </div>
+
+        <!-- Overlay -->
+        <div class="media-overlay absolute inset-0 flex flex-col justify-between p-4 pointer-events-none">
+            <!-- Top bar -->
+            <div class="flex justify-between items-center pointer-events-auto">
+                <div class="text-2xl font-['Pacifico'] opacity-30">{{APP_NAME}}</div>
+                <div class="flex items-center gap-3 text-sm opacity-50">
+                    <button x-show="isMuted" @click="unmuteAll()">
+                        <i class="ri-volume-mute-fill ri-xl"></i>
+                    </button>
+                    <button x-show="!isMuted" @click="muteAll()">
+                        <i class="ri-volume-up-fill ri-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right action bar -->
+            <div class="opacity-70 action-bar absolute right-4 bottom-24 flex flex-col items-center gap-6 pointer-events-auto">
+                <!-- Like -->
+                <button
+                        @click="toggleLike(media, index)"
+                        class="flex flex-col items-center justify-center"
+                        :class="{'text-red-500': media.liked}"
+                        aria-label="Like"
+                >
+                    <i x-show="!media.liked" class="ri-heart-line ri-xl"></i>
+                    <i x-show="media.liked" class="ri-heart-fill ri-xl text-primary"></i>
+                    <span class="text-xs mt-1" x-text="formatCount(media.like_count)"></span>
+                </button>
+
+                <!-- Comment -->
+                <button
+                        @click="openComments(media)"
+                        class="flex flex-col items-center justify-center"
+                        aria-label="Comments"
+                >
+                    <i class="ri-chat-1-line ri-xl"></i>
+                    <span class="text-xs mt-1" x-text="formatCount(media.comments_count)"></span>
+                </button>
+
+                <!-- Share -->
+                <!--                        <button-->
+                <!--                                @click="shareMedia(video)"-->
+                <!--                                class="flex flex-col items-center justify-center"-->
+                <!--                                aria-label="Share"-->
+                <!--                        >-->
+                <!--                            <i class="ri-share-forward-line ri-xl"></i>-->
+                <!--                            <span class="text-xs mt-1">Share</span>-->
+                <!--                        </button>-->
+
+                <button
+                        @click="reportMedia(media)"
+                        class="flex flex-col items-center justify-center"
+                        aria-label="Report"
+                >
+                    <i class="ri-flag-line ri-xl"></i>
+                    <span class="text-xs mt-1">Report</span>
+                </button>
+
+                <!-- User avatar -->
+                <button @click="openProfile(media.user)" class="flex items-center justify-center">
+                    <div class="w-7 h-7 rounded-full overflow-hidden border-2 border-white/30">
+                        <img :src="media.user.avatar" alt="User" class="w-full h-full object-cover"/>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Bottom info -->
+            <div class="opacity-70 flex flex-col gap-2 mb-2 pointer-events-auto">
+                <div class="flex items-center gap-2">
+                    <span class="font-semibold text-sm" x-text="`@${media.user.username}`"></span>
+                    <button x-show="media.followed === false"
+                            @click="follow_unfollow(media)"
+                            class="bg-cyan-500 text-white text-xs px-2 py-0.5 rounded-full">
+                        {% if user.is_anonymous %}Login to follow{% else %}Follow{% endif %}
+                    </button>
+                    <button x-show="media.followed === true"
+                            @click="follow_unfollow(media)"
+                            class="bg-primary text-white text-xs px-2 py-0.5 rounded-full">Unfollow
+                    </button>
+                </div>
+                <p class="text-xs" x-text="media.description"></p>
+            </div>
+        </div>
+
+        <!-- Bottom progress bar for this video -->
+        <div class="absolute bottom-0 left-0 w-full h-1 bg-gray-700">
+            <div
+                    class="h-full bg-primary"
+                    :style="`width: ${progressBar[index] ?? 0}%`"
+            ></div>
+        </div>
+    </div>
+</template>

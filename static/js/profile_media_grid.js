@@ -44,14 +44,22 @@ function profileGrid(username, mediaApiUrl) {
             }
         },
 
-        formatCount(value) {
+        formatCount(value, mediaType) {
             if (!(typeof value === 'number')) {
+                if (mediaType === 'image') {
+                    return '<i class="ri-image-line"></i>';
+                }
+
+                if (mediaType === 'video') {
+                    return '<i class="ri-video-on-line"></i>';
+                }
+
                 return value
             }
 
             if (value >= 1e6) return (value / 1e6).toFixed(1) + "M";
             if (value >= 1e3) return (value / 1e3).toFixed(1) + "K";
-            returnvaluen;
+            return value;
         }
     }
 }

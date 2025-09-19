@@ -16,23 +16,31 @@
             class="flex flex-col items-center justify-start w-full h-96 text-white space-y-4"
     >
         <i class="ri-sketching ri-4x"></i>
-        <h2 class="text-xl">Nothing to show here</h2>
+        <h2 class="text-lg">Nothing to show here</h2>
     </div>
 
     <div class="grid grid-cols-3 gap-1">
         <!-- Grid of media -->
         <template x-for="(media, index) in mediaList" :key="media.id">
-            <div class="aspect-[9/16] relative">
-                <img
-                        :src="media.thumbnail"
-                        :alt="media.title || 'Media'"
-                        class="w-full h-full object-cover"
-                />
-                <div class="absolute bottom-2 left-2 flex items-center text-white drop-shadow">
-                    <i class="ri-play-fill ri-sm mr-1"></i>
-                    <span class="text-xs" x-text="formatCount(media.title)"></span>
+            <a :href="media.destination_url">
+                <div class="aspect-[9/16] relative">
+                    <img
+                            :src="media.thumbnail"
+                            :alt="media.title || 'Media'"
+                            class="w-full h-full object-cover"
+                    />
+                    <div class="absolute bottom-0 flex items-center text-white drop-shadow w-full">
+                        <div x-show="media.item_type == 'video'" class="text-sm p-[2px] w-full">
+                            <i class="ri-video-on-line ri-lg"></i>
+                        </div>
+                        <div x-show="media.item_type == 'image'" class="text-sm p-[2px] w-full">
+                            <i class="ri-image-line ri-lg"></i>
+                        </div>
+                        <div x-show="media.item_type == 'performer_profile'" x-text="media.title"
+                             class="text-xs bg-black/50 p-[2px] w-full"></div>
+                    </div>
                 </div>
-            </div>
+            </a>
         </template>
     </div>
 

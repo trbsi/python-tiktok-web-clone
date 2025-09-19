@@ -13,7 +13,7 @@
     <h3 class="text-sm font-bold mb-1">{{current_user.username}}</h3>
     {% endif %}
 
-    <div class="flex gap-6">
+    <div class="flex gap-6 mb-5">
         {% if logged_in_user.is_performer %}
         <div class="flex flex-col items-center">
             <span class="font-bold">{{current_user.profile.follower_count}}</span>
@@ -30,16 +30,27 @@
         </div>
         {% endif %}
     </div>
-    {% if current_user.profile.bio is not None %}
-    <p class="text-center text-sm mb-4 mt-4">
-        {{current_user.profile.bio}}
+
+    {% if current_user.profile.bio is not None and current_user.profile.bio != '' %}
+    <p class="text-center text-sm mb-4 profile_urls">
+        {{ current_user.profile.bio|linebreaksbr|urlize }}
     </p>
     {% endif %}
     {% if logged_in_user.username == current_user.username %}
-    <button
-            class="bg-primary text-white px-8 py-2 rounded-full !rounded-button font-medium mt-5"
+    <a href="{% url 'user.update_profile' %}"
+       class="bg-primary text-white px-5 py-1 rounded-full !rounded-button font-medium"
     >
         Edit Profile
-    </button>
+    </a>
     {% endif %}
 </div>
+
+{% block javascript %}
+
+<script>
+    //make links _blank if user has URLs in bio
+    document.querySelectorAll('.profile_urls a').forEach(a => {
+        a.setAttribute('target', '_blank');
+    });
+</script>
+{% endblock javascript %}

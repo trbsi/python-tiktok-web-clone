@@ -6,6 +6,10 @@ from src.user.models import User as User
 
 
 class Media(models.Model):
+
+    def get_upload_to_path(self, media, filename: str):
+        return f'user_profile/{media.user_id}/{filename}'
+
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='media_user')
     file = models.FileField(upload_to='uploads/media', max_length=255)
@@ -29,3 +33,6 @@ class Media(models.Model):
 
     def get_file_url(self):
         return str(self.file)
+
+    def get_thumbnail_url(self):
+        return str(self.file_thumbnail)

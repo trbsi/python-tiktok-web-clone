@@ -17,10 +17,25 @@ def discover(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def following(request: HttpRequest) -> HttpResponse:
+    get = request.GET
+    user_id = get.get('uid')
+    media_id = get.get('mid')
+    filters = []
+    if user_id:
+        filters.extend(['uid', user_id])
+
+    if media_id:
+        filters.extend(['mid', media_id])
+
     return render(
         request,
         'feed_home.html',
-        {'type': 'following', 'media_api_url': reverse_lazy('feed.api.get_media')}
+        {
+            'type': 'following',
+            'filters': ','.join(filters),
+            'media_api_url': reverse_lazy('feed.api.get_media'),
+            'user': request.user,
+        }
     )
 
 
@@ -29,9 +44,12 @@ def api_get_feed(request: HttpRequest) -> JsonResponse:
     requestData = request.GET
     page = int(requestData.get('page'))
     type = requestData.get('type')
+    filters = requestData.get('filters')
+
     service: LoadFeedService = LoadFeedService()
+
     if type == 'following':
-        data: dict = service.get_following_feed(page=page, user=request.user)
+        data: dict = service.get_following_feed(page=page, user=request.user, filters=filters)
     else:
         data: dict = service.get_discover_feed(page=page, user=request.user)
 

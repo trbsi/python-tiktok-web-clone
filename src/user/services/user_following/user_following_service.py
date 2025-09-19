@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
+from django.urls import reverse_lazy
 
-from src.follower.models import Follow
+from src.follow.models import Follow
 from src.user.models import User
 
 
@@ -13,13 +14,15 @@ class UserFollowingService:
         page = paginator.page(current_page)
 
         result = []
-        for user in page.object_list:
+        for user_data in page.object_list:
             result.append({
-                'id': user.id,
-                'title': user.username,
-                'thumbnail': str(user.get_profile_image()),
+                'id': user_data.id,
+                'title': user_data.username,
+                'thumbnail': str(user_data.get_profile_image()),
+                'item_type': 'performer_profile',
+                'destination_url': reverse_lazy('user.profile', kwargs={'username': user_data.username}),
             })
 
         next_page = page.next_page_number() if page.has_next() else None
 
-        return {'result': page.object_list, 'next_page': next_page}
+        return {'result': result, 'next_page': next_page}
