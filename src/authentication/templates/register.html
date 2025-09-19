@@ -105,31 +105,9 @@
                 {% endif %}
             </div>
 
-            {# Role dropdown #}
-            <div>
-                <label for="{{ form.role.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-1">
-                    {{ form.role.label }}
-                </label>
-                <select
-                        name="{{ form.role.name }}"
-                        id="{{ form.role.id_for_label }}"
-                        class="block w-full rounded-xl border border-gray-700 bg-gray-950 px-3 py-2 text-gray-100
-                   shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500/40"
-                        required
-                >
-                    {% for value, label in form.role.field.choices %}
-                    <option value="{{ value }}" {% if form.role.value == value %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-                {% if form.role.errors %}
-                <div class="mt-1 text-sm text-red-400">
-                    {{ form.role.errors }}
-                </div>
-                {% endif %}
-            </div>
-
             {# Accept terms checkbox #}
             <div class="flex items-center gap-2">
+                <a href="{% url 'terms_of_use' %}">Terms of use</a>
                 <input
                         type="checkbox"
                         name="{{ form.accept_tos.name }}"
