@@ -11,6 +11,7 @@ from src.user.forms.update_profile_form import UpdateProfileForm
 from src.user.models import User
 from src.user.services.change_email.email_change_service import EmailChangeService
 from src.user.services.delete_user.delete_user_service import DeleteUserService
+from src.user.services.update_profile.update_profile_service import UpdateProfileService
 from src.user.services.user_following.user_following_service import UserFollowingService
 from src.user.services.user_media.user_media_service import UserMediaService
 from src.user.services.user_profile.user_profile_service import UserProfileService
@@ -64,11 +65,10 @@ def api_get_following(request: HttpRequest) -> JsonResponse:
 def update_profile(request: HttpRequest) -> HttpResponse:
     form = UpdateProfileForm(instance=request.user.profile)
     if request.method == 'POST':
-        # TODO move to service
+        service = UpdateProfileService()
         form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
-        if form.is_valid():
-            form.save()
-            form.resize_image()
+        result = service.update_profile(form=form)
+        if result:
             return redirect('user.profile', username=request.user.username)
 
     return render(

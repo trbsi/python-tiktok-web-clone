@@ -9,6 +9,12 @@ from src.user.enum import UserEnum
 from src.user.query_managers import UserQueryManager
 
 
+# instance: UserProfile
+def profile_image_upload_path(user_profile, filename: str) -> str:
+    print(f'user_profile/{user_profile.user_id}/{filename}')
+    return f'user_profile/{user_profile.user_id}/{filename}'
+
+
 class User(AbstractUser):
     def __str__(self):
         return self.username
@@ -31,14 +37,10 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
-    # instance: UserProfile
-    def upload_path(self, user_profile, filename: str) -> str:
-        return f'user_profile/{user_profile.user_id}/{filename}'
-
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(null=True, blank=True)
-    profile_image = models.ImageField(upload_to=upload_path, null=True)
+    profile_image = models.ImageField(upload_to=profile_image_upload_path, null=True, blank=True)
     follower_count = models.IntegerField(default=0)
     following_count = models.IntegerField(default=0)
     media_count = models.IntegerField(default=0)
