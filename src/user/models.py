@@ -17,8 +17,9 @@ class User(AbstractUser):
     all_objects = models.Manager()
 
     def get_profile_image(self):
-        if self.profile.profile_image != '':
-            return settings.MEDIA_URL + str(self.profile.profile_image)
+        profile_image = str(self.profile.profile_image)
+        if profile_image != '' and profile_image is not None:
+            return settings.MEDIA_URL + profile_image
 
         return f"https://ui-avatars.com/api/?name={self.username}"
 
