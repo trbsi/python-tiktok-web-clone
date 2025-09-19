@@ -25,8 +25,8 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit)
         role = self.cleaned_data['role']
-        if role == 'admin':
-            role = 'user'
+        if role == UserEnum.ROLE_ADMIN.value:
+            role = UserEnum.ROLE_USER.value
         Group.objects.get_or_create(name=role)
         user.groups.add(Group.objects.get(name=role))
         UserProfile.objects.create(user=user)

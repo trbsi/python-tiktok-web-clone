@@ -64,6 +64,7 @@ def api_get_following(request: HttpRequest) -> JsonResponse:
 def update_profile(request: HttpRequest) -> HttpResponse:
     form = UpdateProfileForm(instance=request.user.profile)
     if request.method == 'POST':
+        # TODO move to service
         form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
         if form.is_valid():
             form.save()

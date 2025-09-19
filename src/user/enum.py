@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class UserEnum(Enum):
+    ROLE_ADMIN = 'admin'
     ROLE_USER = 'user'
     ROLE_PERFORMER = 'performer'
 
