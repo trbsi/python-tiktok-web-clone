@@ -5,8 +5,11 @@ from src.user.models import User as User
 
 class Conversation(models.Model):
     id = models.BigAutoField(primary_key=True)
-    performer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_performer')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_user')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_sender')  # user
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inbox_receiver')  # performer
+    last_message = models.TextField(null=True)
+    deleted_by_sender = models.BooleanField(default=False)
+    deleted_by_receiver = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -14,7 +17,7 @@ class Conversation(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=('performer', 'user'), name='conversation_unique_performer_user')
+            models.UniqueConstraint(fields=('sender', 'receiver'), name='conversation_unique_sender_receiver')
         ]
 
 
@@ -25,3 +28,5 @@ class Message(models.Model):
     content = models.TextField()
     attachment_url = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = models.Manager()

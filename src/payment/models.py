@@ -16,13 +16,20 @@ class PaymentHistory(models.Model):
 
     objects = models.Manager()
 
-class Subscription(models.Model):
+
+class Balance(models.Model):
+    COIN_TO_FIAT = 100  # 100 coins = 1$
+
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    provider = models.CharField(max_length=10, choices=PaymentEnum.providers())
-    provider_payment_id = models.CharField(max_length=50)
-    status = models.CharField(max_length=10, choices=PaymentEnum.statuses())
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='balance', default=0)
+    balance = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = models.Manager()
+
+    def performer_balance(self):
+        return self.balance / self.COIN_TO_FIAT
+
+    def user_balance(self):
+        return self.balance

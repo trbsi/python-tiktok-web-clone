@@ -31,7 +31,7 @@
     </a>
     {% endif %}
 
-    <a href="{% url 'inbox.home' %}"
+    <a href="{% url 'inbox.conversations' %}"
        id="inbox-btn"
        class="flex flex-col items-center justify-center py-1 {% if 'inbox.' in request.resolver_match.url_name %}text-primary{% else %}text-gray-400{% endif %}"
     >

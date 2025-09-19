@@ -21,7 +21,7 @@ from src.user.services.user_profile.user_profile_service import UserProfileServi
 def profile(request: HttpRequest, username: str) -> HttpResponse:
     logged_in_user = request.user
     user_profile_service = UserProfileService()
-    current_user: User = user_profile_service.get_user(username)
+    current_user: User = user_profile_service.get_user_by_username(username)
 
     if current_user.is_regular_user() and current_user.username != logged_in_user.username:
         raise Http404
@@ -87,7 +87,7 @@ def profile_liked_media(request: HttpRequest, username: str) -> HttpResponse:
         raise Http404
 
     user_profile_service = UserProfileService()
-    user = user_profile_service.get_user(username=username)
+    user = user_profile_service.get_user_by_username(username=username)
 
     return render(request, 'profile.html', {
         'current_user': user,

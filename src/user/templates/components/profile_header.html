@@ -23,11 +23,23 @@
             <span class="font-bold">{{current_user.profile.media_count}}</span>
             <span class="text-sm text-gray-400">Media</span>
         </div>
+        {% if logged_in_user.username == current_user.username %}
+        <div class="flex flex-col items-center">
+            <span class="font-bold">{{current_user.balance.performer_balance}}</span>
+            <span class="text-sm text-gray-400">Earnings</span>
+        </div>
+        {% endif %}
         {% else %}
         <div class="flex flex-col items-center">
             <span class="font-bold">{{current_user.profile.following_count}}</span>
             <span class="text-sm text-gray-400">Subscriptions</span>
         </div>
+        {% if logged_in_user.username == current_user.username %}
+        <div class="flex flex-col items-center">
+            <span class="font-bold">{{current_user.balance.user_balance}}</span>
+            <span class="text-sm text-gray-400">Balance</span>
+        </div>
+        {% endif %}
         {% endif %}
     </div>
 

@@ -15,8 +15,8 @@ class InboxSeeder():
         for performer in performers:
             for user in users:
                 conversion = Conversation.objects.create(
-                    performer=performer,
-                    user=user
+                    receiver=performer,
+                    sender=user
                 )
                 for i in range(100):
                     Message.objects.create(
