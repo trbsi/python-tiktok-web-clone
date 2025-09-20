@@ -12,9 +12,13 @@ class ListConversationsService():
     LAST_MESSAGE_SIZE = 50
 
     def list_conversations(self, current_user: User, current_page: int) -> dict:
-        conversations = (Conversation.objects
-                         .filter(Q(sender_id=current_user.id) | Q(recipient_id=current_user.id))
-                         .select_related('sender', 'recipient'))
+        conversations = (
+            Conversation.objects
+            .filter(
+                Q(sender=current_user, deleted_by_sender=False)
+                | Q(recipient=current_user, deleted_by_recipient=False)
+            )
+            .select_related('sender', 'recipient'))
         paginator = Paginator(object_list=conversations, per_page=self.PER_PAGE)
         page = paginator.page(current_page)
 

@@ -1,9 +1,12 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
+from src.inbox.services.delete_conversation.delete_conversation_service import DeleteConversationService
 from src.inbox.services.list_conversations.list_conversations_service import ListConversationsService
 
 
@@ -34,7 +37,10 @@ def api_list_conversations(request: HttpRequest) -> JsonResponse:
 @require_POST
 @login_required
 def api_delete(request: HttpRequest) -> JsonResponse:
-    return render(request, 'inbox_delete.html')
+    post = json.loads(request.body)
+    service = DeleteConversationService()
+    service.delete_conversations(ids=post['conversation_ids'], current_user=request.user)
+    return JsonResponse({})
 
 
 # --------------------------------- CONVERSATIONS -------------------------------

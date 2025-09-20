@@ -49,7 +49,7 @@ function conversationsComponent(listConversationsApi, deleteConversationApi) {
             "Content-Type": "application/json",
             "X-CSRFToken": getCsrfToken()
           },
-          body: JSON.stringify({ ids: this.selectedIds })
+          body: JSON.stringify({ conversation_ids: this.selectedIds })
         });
 
         if (!response.ok) throw new Error("Failed to delete conversations");
