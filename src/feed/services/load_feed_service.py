@@ -90,7 +90,7 @@ class LoadFeedService:
                 'user': {
                     'id': item.user.id,
                     'username': item.user.username,
-                    'avatar': item.user.get_profile_image(),
+                    'avatar': item.user.get_profile_picture(),
                 },
             })
 

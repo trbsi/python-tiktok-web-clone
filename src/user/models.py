@@ -22,7 +22,7 @@ class User(AbstractUser):
     objects = UserQueryManager()
     all_objects = models.Manager()
 
-    def get_profile_image(self):
+    def get_profile_picture(self):
         profile_image = str(self.profile.profile_image)
         if profile_image != '' and profile_image is not None:
             return settings.MEDIA_URL + profile_image

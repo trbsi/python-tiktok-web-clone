@@ -285,7 +285,7 @@ function mediaFeed(feedType, mediaApiUrl, filters) {
             try {
                 const res = await fetch(`/engagement/api/like/media/${media.id}`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(),},
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken(),},
                     credentials: 'include'
                 });
                 if (!res.ok) throw new Error('Like failed');
@@ -448,9 +448,5 @@ function mediaFeed(feedType, mediaApiUrl, filters) {
                 console.error(e);
             }
         },
-
-        getCsrfToken() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        }
     };
 }

@@ -17,7 +17,7 @@ class CommentListService():
                 'created_at': comment.created_at.strftime("%m/%d/%Y %H:%M:%S"),
                 'user': {
                     'username': comment.user.username,
-                    'avatar': comment.user.get_profile_image(),
+                    'avatar': comment.user.get_profile_picture(),
                 }
             })
 

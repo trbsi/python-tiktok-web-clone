@@ -18,7 +18,7 @@ class UserFollowingService:
             result.append({
                 'id': user_data.id,
                 'title': user_data.username,
-                'thumbnail': str(user_data.get_profile_image()),
+                'thumbnail': str(user_data.get_profile_picture()),
                 'item_type': 'performer_profile',
                 'destination_url': reverse_lazy('user.profile', kwargs={'username': user_data.username}),
             })

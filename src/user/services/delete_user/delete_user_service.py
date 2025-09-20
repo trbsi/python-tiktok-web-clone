@@ -1,6 +1,8 @@
 import random
 import string
 
+from django.db.models import Q
+
 from src.engagement.models import Comment
 from src.inbox.models import Conversation
 from src.media.enums import MediaEnum
@@ -15,8 +17,8 @@ class DeleteUserService:
 
         # TODO remove media from storage
         Media.objects.filter(user=user).update(status=MediaEnum.STATUS_DELETED.value)
-        Comment.objects.filter(user=user).delete()
-        Conversation.objects.filter(user=user).delete()
+        Comment.objects.filter(user=user).api_delete()
+        Conversation.objects.filter(Q(sender=user) | Q(receiver=user)).api_delete()
 
         user.username = f"{user.id}_deleted_user"
         user.first_name = f"{user.id}_deleted_user"

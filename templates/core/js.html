@@ -1,0 +1,18 @@
+<script>
+    toastr.options.closeDuration = 5000;
+    toastr.options.progressBar = true;
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+            toastr.success('{{message}}');
+            {% elif message.tags == 'error' %}
+            toastr.error('{{message}}');
+            {% elif message.tags == 'warning' %}
+            toastr.warning('{{message}}');
+            {% elif message.tags == 'info' %}
+            toastr.info('{{message}}');
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</script>

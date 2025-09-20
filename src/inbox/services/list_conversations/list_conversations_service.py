@@ -1,0 +1,40 @@
+from http.cookiejar import cut_port_re
+
+from django.core.paginator import Paginator
+from django.db.models import Q
+
+from src.inbox.models import Conversation
+from src.user.models import User
+
+
+class ListConversationsService():
+    PER_PAGE = 25
+    LAST_MESSAGE_SIZE = 50
+
+    def list_conversations(self, current_user: User, current_page: int) -> dict:
+        conversations = (Conversation.objects
+                         .filter(Q(sender_id=current_user.id) | Q(recipient_id=current_user.id))
+                         .select_related('sender', 'recipient'))
+        paginator = Paginator(object_list=conversations, per_page=self.PER_PAGE)
+        page = paginator.page(current_page)
+
+        result = []
+        for conversation in page.object_list:
+            other_user = conversation.get_other_user(current_user=current_user)
+            message = conversation.last_message
+            message = message if len(message) <= self.LAST_MESSAGE_SIZE else message[:self.LAST_MESSAGE_SIZE] + '...',
+
+            result.append(
+                {
+                    'id': conversation.id,
+                    'profile_picture': other_user.get_profile_picture(),
+                    'username': other_user.username,
+                    'updated_at': conversation.updated_at.strftime('%m/%d/%Y'),
+                    'last_message': message,
+                    'is_read': conversation.is_read(current_user=current_page),
+                }
+            )
+
+        next_page = page.next_page_number() if page.has_next() else None
+
+        return {'result': result, 'next_page': next_page}

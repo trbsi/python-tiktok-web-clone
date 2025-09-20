@@ -13,6 +13,6 @@ class FollowService:
 
         user_to_follow = User.objects.get(id=following)
         if is_following:
-            Follow.objects.filter(follower=follower, following=user_to_follow).delete()
+            Follow.objects.filter(follower=follower, following=user_to_follow).api_delete()
         else:
             Follow.objects.create(follower=follower, following=user_to_follow)
