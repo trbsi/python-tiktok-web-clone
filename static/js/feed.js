@@ -1,4 +1,4 @@
-function mediaFeed(feedType, mediaApiUrl, filters) {
+function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, reportContentApi, filters) {
     return {
         mediaList: [],                // list of video objects
         page: 1,                   // pagination
@@ -312,9 +312,9 @@ function mediaFeed(feedType, mediaApiUrl, filters) {
                     }
                 });
 
-                const res = await fetch(`/follow/api/follow-unfollow`, {
+                const res = await fetch(followUnfollowApi, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(),},
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken(),},
                     credentials: 'include',
                     body: JSON.stringify({'following': media.user.id})
                 });
@@ -380,10 +380,10 @@ function mediaFeed(feedType, mediaApiUrl, filters) {
             }
 
             try {
-                const res = await fetch(`/engagement/api/comments`, {
+                const res = await fetch(createCommentApi, {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken()},
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken()},
                     body: JSON.stringify(body)
                 });
                 if (!res.ok) throw new Error('Failed to post comment');
@@ -405,7 +405,11 @@ function mediaFeed(feedType, mediaApiUrl, filters) {
         openProfile(user) {
             // open user profile - replace with your routing
             // If you use client-side routing, navigate there instead.
-            window.location.href = `/user/${encodeURIComponent(user.username)}`;
+            window.location.href = ` / user / $
+                {
+                    encodeURIComponent(user.username)
+                }
+                `;
         },
 
         async shareMedia(video) {
@@ -434,9 +438,9 @@ function mediaFeed(feedType, mediaApiUrl, filters) {
             }
 
             try {
-                const res = await fetch(`/report/api/report`, {
+                const res = await fetch(reportContentApi, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(),},
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken(),},
                     body: JSON.stringify({'type': 'media', 'content_id': media.id}),
                     credentials: 'include'
                 });

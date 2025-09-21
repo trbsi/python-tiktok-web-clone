@@ -9,7 +9,7 @@
 
 <!-- Video Feed View -->
 <div
-        x-data="mediaFeed('{{type}}', '{{media_api_url}}', '{{filters}}')"
+        x-data="mediaFeed('{{type}}', '{{media_api_url}}', '{{follow_unfollow_api}}', '{{create_comment_api}}', '{{report_content_api}}', '{{filters}}')"
         x-init="init()"
         class="min-h-screen bg-black text-white"
 >
@@ -20,7 +20,7 @@
 
         <!-- No more media to load -->
         <div x-show="!hasMore"
-             class="media-container media-container-no-more-media relative snap-start flex items-center justify-center bg-black">
+             class="media-container media-container-no-more-media bg-black relative snap-start flex items-center justify-center bg-black">
             <div
                     class="text-3xl p-8 text-center text-gray-400  inset-0 w-  fit h-fit m-auto">
                 <i class="ri-video-fill ri-3x"></i>
@@ -38,7 +38,7 @@
 
         <!-- No media at all -->
         <div x-show="!mediaList.length"
-             class="text-3xl p-8 text-center text-gray-400 fixed inset-0 w-fit h-fit m-auto">
+             class="bg-black text-3xl p-8 text-center text-gray-400 fixed inset-0 w-fit h-fit m-auto">
             <i class="ri-video-fill ri-3x"></i>
             <br>
             No content to show.
