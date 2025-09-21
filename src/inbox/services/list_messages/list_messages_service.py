@@ -6,15 +6,23 @@ from src.inbox.models import Message
 
 class ListMessagesService:
     PER_PAGE = 25
+    PER_PAGE_AFTER_ID = 100
 
-    def list_messages(self, conversation_id: int, current_page: int, after_id: int) -> dict:
+    def list_messages(self, conversation_id: int, current_page: int, after_id: int | None) -> dict:
         messages = (
             Message.objects
             .filter(conversation_id=conversation_id)
             .select_related('sender')
             .order_by('-id')
         )
-        paginator = Paginator(object_list=messages, per_page=self.PER_PAGE)
+        per_page = self.PER_PAGE
+
+        if after_id is not None:
+            current_page = 1
+            per_page = self.PER_PAGE_AFTER_ID
+            messages = messages.filter(id__gt=after_id)
+
+        paginator = Paginator(object_list=messages, per_page=per_page)
         page = paginator.page(current_page)
 
         result = []

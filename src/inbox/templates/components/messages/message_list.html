@@ -23,10 +23,10 @@
                         <template x-if="msg.attachment_url">
                             <div class="mt-1">
                                 <template x-if="isImage(msg.attachment_url)">
-                                    <img :src="msg.attachment_url" class="rounded-lg max-w-xs">
+                                    <img :src="msg.attachment_url" class="rounded-lg w-full">
                                 </template>
                                 <template x-if="isVideo(msg.attachment_url)">
-                                    <video controls class="rounded-lg max-w-xs">
+                                    <video controls class="rounded-lg w-full">
                                         <source :src="msg.attachment_url" type="video/mp4">
                                     </video>
                                 </template>
@@ -48,10 +48,10 @@
                         <template x-if="msg.attachment_url">
                             <div class="mt-1">
                                 <template x-if="isImage(msg.attachment_url)">
-                                    <img :src="msg.attachment_url" class="rounded-lg max-w-xs ml-auto">
+                                    <img :src="msg.attachment_url" class="rounded-lg w-full ml-auto">
                                 </template>
                                 <template x-if="isVideo(msg.attachment_url)">
-                                    <video controls class="rounded-lg max-w-xs ml-auto">
+                                    <video controls class="rounded-lg w-full ml-auto">
                                         <source :src="msg.attachment_url" type="video/mp4">
                                     </video>
                                 </template>

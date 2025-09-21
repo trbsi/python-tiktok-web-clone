@@ -50,14 +50,14 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         },
 
         startPolling() {
-            return;
             this.pollingInterval = setInterval(async () => {
                 try {
                     const lastId = this.getHighestId();
-                    const res = await fetch(`${listMessagesApi}?after_id=${lastId}`);
+                    tempListMessagesApi = listMessagesApi.replace('__CONVERSATION_ID__', conversationId)
+                    const res = await fetch(`${tempListMessagesApi}?after_id=${lastId}`);
                     const data = await res.json();
                     if (data.results && data.results.length > 0) {
-                        // Insert new messages at the top (since flex-col-reverse)
+                        // Insert new messages at the top (since we have slice().reverse() in html template)
                         this.messagesList = [...data.results, ...this.messagesList];
                         this.scrollToBottom();
                     }

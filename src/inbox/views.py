@@ -79,8 +79,8 @@ def list_messages(request: HttpRequest, conversation_id: int) -> HttpResponse:
 @login_required
 def api_list_messages(request: HttpRequest, conversation_id: int) -> JsonResponse:
     get = request.GET
-    after_id = get.get('after_id')
-    page = int(get.get('page'))
+    after_id = int(get.get('after_id')) if get.get('after_id') is not None else None
+    page = int(get.get('page')) if get.get('page') is not None else 1
     user = request.user
 
     specification = CanUserAccessConversationSpecification()
