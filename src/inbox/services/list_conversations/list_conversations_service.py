@@ -2,6 +2,7 @@ from http.cookiejar import cut_port_re
 
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.urls import reverse_lazy
 
 from src.inbox.models import Conversation
 from src.user.models import User
@@ -36,6 +37,7 @@ class ListConversationsService():
                     'updated_at': conversation.updated_at.strftime('%m/%d/%Y'),
                     'last_message': message,
                     'is_read': conversation.is_read(current_user=current_page),
+                    'messages_url': reverse_lazy('inbox.messages', kwargs={'conversation_id': conversation.id}),
                 }
             )
 
