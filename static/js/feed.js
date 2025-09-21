@@ -1,4 +1,4 @@
-function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, reportContentApi, filters) {
+function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, reportContentApi, likeMediaApi,listCommentsApi, filters) {
     return {
         mediaList: [],                // list of video objects
         page: 1,                   // pagination
@@ -283,7 +283,8 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
             media.like_count += media.liked ? 1 : -1;
 
             try {
-                const res = await fetch(`/engagement/api/like/media/${media.id}`, {
+                tempLikeMediaApi = likeMediaApi.replace('__MEDIA_ID__', media.id)
+                const res = await fetch(tempLikeMediaApi, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken(),},
                     credentials: 'include'
@@ -340,7 +341,8 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
             this.commentsLoading = true;
 
             try {
-                const res = await fetch(`/engagement/api/comments/media/${media.id}`);
+                tempListCommentsApi = listCommentsApi.replace('__MEDIA_ID__', media.id)
+                const res = await fetch(tempListCommentsApi);
                 if (!res.ok) throw new Error('Failed to fetch comments');
                 const data = await res.json();
                 this.comments = data.results || data;

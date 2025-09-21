@@ -17,6 +17,8 @@ def discover(request: HttpRequest) -> HttpResponse:
             'follow_unfollow_api': reverse_lazy('follow.api.follow_unfollow'),
             'create_comment_api': reverse_lazy('engagement.api.create_comment'),
             'report_content_api': reverse_lazy('report.api.report_content'),
+            'like_media_api': reverse_lazy('engagement.api.like_media', kwargs={'media_id': '__MEDIA_ID__'}),
+            'list_comments_api': reverse_lazy('engagement.api.list_comments', kwargs={'media_id': '__MEDIA_ID__'}),
         }
     )
 
@@ -44,6 +46,8 @@ def following(request: HttpRequest) -> HttpResponse:
             'follow_unfollow_api': reverse_lazy('follow.api.follow_unfollow'),
             'create_comment_api': reverse_lazy('engagement.api.create_comment'),
             'report_content_api': reverse_lazy('report.api.report_content'),
+            'like_media_api': reverse_lazy('engagement.api.like_media', kwargs={'media_id': '__MEDIA_ID__'}),
+            'list_comments_api': reverse_lazy('engagement.api.list_comments', kwargs={'media_id': '__MEDIA_ID__'}),
         }
     )
 

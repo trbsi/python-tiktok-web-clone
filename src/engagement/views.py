@@ -15,14 +15,14 @@ def like(request: HttpRequest, media_id: int) -> JsonResponse:
         return JsonResponse({})
 
     like_service = LikeService()
-    like_service.toggle(media_id, request.user)
+    like_service.toggle(int(media_id), request.user)
     return JsonResponse({})
 
 
 @require_GET
 def list_comments(request: HttpRequest, media_id: int) -> JsonResponse:
     service = CommentListService()
-    comments = service.list(media_id)
+    comments = service.list(int(media_id))
     return JsonResponse({'results': comments})
 
 
