@@ -75,19 +75,23 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         async sendMessage() {
             if (!this.newMessage && !this.attachment) return;
             const formData = new FormData();
-            if (this.newMessage) formData.append("content", this.newMessage);
+            formData.append('conversationId', conversationId)
+            if (this.newMessage) formData.append("message", this.newMessage);
             if (this.attachment) formData.append("attachment", this.attachment);
 
             try {
                 const res = await fetch(sendMessageApi, {
-                    method: "POST", body: formData
+                    method: "POST",
+                    body: formData,
+                    headers: {'X-CSRFToken': getCsrfToken(), 'Accept': 'application/json'}
                 });
                 if (!res.ok) throw new Error("Failed to send message");
 
                 const msg = await res.json();
-                this.messagesList.unshift(msg); // flex-col-reverse
+                this.messagesList.unshift(msg); // reverse message list
                 this.newMessage = "";
                 this.attachment = null;
+                this.$refs.messageInput.style.height = "auto"; // reset to original size
                 this.$refs.fileInput.value = null;
                 this.scrollToBottom();
             } catch (e) {

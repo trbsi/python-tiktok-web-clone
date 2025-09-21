@@ -12,6 +12,7 @@ from src.inbox.services.list_messages.can_user_access_conversation_specification
     CanUserAccessConversationSpecification
 from src.inbox.services.list_messages.list_messages_service import ListMessagesService
 from src.inbox.services.list_messages.read_messages_service import ReadConversationService
+from src.inbox.services.send_message.send_message_service import SendMessageService
 
 
 # --------------------------------- CONVERSATIONS -------------------------------
@@ -94,13 +95,15 @@ def api_list_messages(request: HttpRequest, conversation_id: int) -> JsonRespons
     return JsonResponse({'results': result['result'], 'next_page': result['next_page']})
 
 
-# GET and POST
-@login_required
-def send_message(request: HttpRequest) -> HttpResponse:
-    return render(request, 'inbox_message.html')
-
-
 @require_POST
 @login_required
 def api_send_message(request: HttpRequest) -> JsonResponse:
-    return render(request, 'inbox_messages.html')
+    post = request.POST
+    service = SendMessageService()
+    message = service.send_message(
+        user=request.user,
+        messageContent=post.get('message'),
+        conversation_id=int(post.get('conversationId'))
+    )
+
+    return JsonResponse(message)

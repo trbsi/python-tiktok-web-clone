@@ -31,7 +31,7 @@ class ListMessagesService:
                 {
                     'id': message.id,
                     'created_at': message.created_at.strftime(settings.DATE_TIME_FORMAT),
-                    'content': message.content,
+                    'message': message.message,
                     'attachment_url': message.attachment_url,
                     'sender': {
                         'id': message.sender.id,
