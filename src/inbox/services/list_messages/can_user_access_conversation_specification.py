@@ -5,7 +5,7 @@ from src.user.models import User
 
 
 class CanUserAccessConversationSpecification:
-    def check(self, conversation_id: str, user: User) -> bool:
+    def check(self, conversation_id: int, user: User) -> bool:
         return (
             Conversation
             .objects

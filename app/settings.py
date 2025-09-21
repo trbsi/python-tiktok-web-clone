@@ -36,6 +36,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 APP_ENV = env('APP_ENV')
 DB_TYPE = env('DB_TYPE')
+DATE_TIME_FORMAT = '%m/%d/%Y %I:%M%p'
 
 # Application definition
 

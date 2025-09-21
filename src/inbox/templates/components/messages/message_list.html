@@ -1,27 +1,75 @@
-<!-- Messages Area -->
-<div class="flex-1 overflow-y-auto flex flex-col-reverse p-4 space-y-4 space-y-reverse">
-    <!-- Example messages -->
-
-    <!-- Received -->
-    <div class="flex items-end space-x-2">
-        <img src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full" alt="User">
-        <div class="max-w-xs">
-            <div class="bg-gray-800 text-white px-4 py-2 rounded-2xl rounded-bl-none">
-                Hey! How are you doing?
-            </div>
-            <span class="text-xs text-gray-400">10:30 AM</span>
-        </div>
+<div
+        id="message_list"
+        class="flex-1 overflow-y-auto flex flex-col p-4 space-y-4"
+        x-ref="scrollContainer"
+        @scroll.passive="handleScroll($event)"
+>
+    <!-- Loading indicator at the top for older messages -->
+    <div x-show="loading" class="flex justify-center py-2">
+        {% include "components/loader.html" %}
     </div>
 
-    <!-- Sent -->
-    <div class="flex items-end justify-end space-x-2">
-        <div class="max-w-xs text-right">
-            <div class="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-br-none">
-                I'm good, thanks! What about you?
-            </div>
-            <span class="text-xs text-gray-400">10:31 AM</span>
+    <template x-for="msg in messagesList.slice().reverse()" :key="msg.id">
+        <div>
+            <!-- Received -->
+            <template x-if="msg.sender.id !== currentUserId">
+                <div class="flex items-end space-x-2 mb-2">
+                    <img :src="msg.sender.profile_picture" class="w-10 h-10 rounded-full" alt="User">
+                    <div class="max-w-xs">
+                        <template x-if="msg.content">
+                            <div class="bg-gray-800 text-white px-4 py-2 rounded-2xl rounded-bl-none"
+                                 x-text="msg.content"></div>
+                        </template>
+                        <template x-if="msg.attachment_url">
+                            <div class="mt-1">
+                                <template x-if="isImage(msg.attachment_url)">
+                                    <img :src="msg.attachment_url" class="rounded-lg max-w-xs">
+                                </template>
+                                <template x-if="isVideo(msg.attachment_url)">
+                                    <video controls class="rounded-lg max-w-xs">
+                                        <source :src="msg.attachment_url" type="video/mp4">
+                                    </video>
+                                </template>
+                            </div>
+                        </template>
+                        <span class="text-xs text-gray-400" x-text="formatTime(msg.created_at)"></span>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Sent -->
+            <template x-if="msg.sender.id === currentUserId">
+                <div class="flex items-end justify-end space-x-2 mb-2">
+                    <div class="max-w-xs text-right">
+                        <template x-if="msg.content">
+                            <div class="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-br-none"
+                                 x-text="msg.content"></div>
+                        </template>
+                        <template x-if="msg.attachment_url">
+                            <div class="mt-1">
+                                <template x-if="isImage(msg.attachment_url)">
+                                    <img :src="msg.attachment_url" class="rounded-lg max-w-xs ml-auto">
+                                </template>
+                                <template x-if="isVideo(msg.attachment_url)">
+                                    <video controls class="rounded-lg max-w-xs ml-auto">
+                                        <source :src="msg.attachment_url" type="video/mp4">
+                                    </video>
+                                </template>
+                            </div>
+                        </template>
+                        <span class="text-xs text-gray-400" x-text="formatTime(msg.created_at)"></span>
+                    </div>
+                    <img :src="msg.sender.profile_picture" class="w-10 h-10 rounded-full" alt="Me">
+                </div>
+            </template>
         </div>
-        <img src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full" alt="Me">
+    </template>
+
+    <!-- No Messages Placeholder -->
+    <div x-show="!loading && messagesList.length === 0"
+         class="flex flex-col items-center justify-center h-full text-gray-400">
+        <i class="ri-chat-off-line ri-3x mb-2"></i>
+        <p class="text-lg">No messages yet</p>
+        <p class="text-sm">Say hello 👋</p>
     </div>
 </div>
-

@@ -2,6 +2,7 @@ from typing import List
 
 from django.db.models import QuerySet
 
+from app import settings
 from src.engagement.models import Comment
 
 
@@ -14,7 +15,7 @@ class CommentListService():
             result.append({
                 'id': comment.id,
                 'text': comment.comment,
-                'created_at': comment.created_at.strftime("%m/%d/%Y %H:%M:%S"),
+                'created_at': comment.created_at.strftime(settings.DATE_TIME_FORMAT),
                 'user': {
                     'username': comment.user.username,
                     'avatar': comment.user.get_profile_picture(),

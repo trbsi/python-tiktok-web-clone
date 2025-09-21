@@ -30,9 +30,7 @@ body {
 }
 
 .media-container-no-more-media  {
-    position: relative;
     height: calc(100dvh);
-    overflow: hidden;
 }
 
 .media-overlay {

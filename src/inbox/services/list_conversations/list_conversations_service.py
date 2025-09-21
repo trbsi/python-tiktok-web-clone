@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.urls import reverse_lazy
 
+from app import settings
 from src.inbox.models import Conversation
 from src.user.models import User
 
@@ -19,7 +20,9 @@ class ListConversationsService():
                 Q(sender=current_user, deleted_by_sender=False)
                 | Q(recipient=current_user, deleted_by_recipient=False)
             )
-            .select_related('sender', 'recipient'))
+            .select_related('sender', 'recipient')
+            .order_by('-updated_at')
+        )
         paginator = Paginator(object_list=conversations, per_page=self.PER_PAGE)
         page = paginator.page(current_page)
 
@@ -34,9 +37,9 @@ class ListConversationsService():
                     'id': conversation.id,
                     'profile_picture': other_user.get_profile_picture(),
                     'username': other_user.username,
-                    'updated_at': conversation.updated_at.strftime('%m/%d/%Y'),
+                    'updated_at': conversation.updated_at.strftime(settings.DATE_TIME_FORMAT),
                     'last_message': message,
-                    'is_read': conversation.is_read(current_user=current_page),
+                    'is_read': conversation.is_read(current_user=current_user),
                     'messages_url': reverse_lazy('inbox.messages', kwargs={'conversation_id': conversation.id}),
                 }
             )

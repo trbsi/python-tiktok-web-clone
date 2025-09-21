@@ -23,5 +23,5 @@ class InboxSeeder():
                     Message.objects.create(
                         conversation=conversion,
                         sender=performer if i % 2 == 0 else user,
-                        content=faker.text(),
+                        content=f'{i}. {faker.text()}',
                     )
