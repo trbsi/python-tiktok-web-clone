@@ -17,7 +17,8 @@ import environ
 
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    STORAGE_TYPE=(str, 'backblaze')
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'src.follow.apps.FollowConfig',
     'src.report.apps.ReportConfig',
     'src.notification.apps.NotificationConfig',
+    'src.storage.apps.StorageConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -130,6 +132,14 @@ if (DB_TYPE == 'mysql'):
         }
     }
 
+# Storage
+STORAGE_TYPE = env('STORAGE_TYPE')
+STORAGE_CONFIG = {
+    'backblaze': {
+        'application_key_id': env('BACKBLAZE_APPLICATION_KEY_ID'),
+        'application_key': env('BACKBLAZE_APPLICATION_KEY'),
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
