@@ -18,7 +18,6 @@ import environ
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
-    STORAGE_TYPE=(str, 'backblaze')
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -82,6 +81,12 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
 ]
 
+# Auth
+SESSION_COOKIE_AGE = 86400 * 30
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/auth/login/'
+AUTH_USER_MODEL = 'user.User'
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -124,9 +129,9 @@ if (DB_TYPE == 'mysql'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': env('DB_NAME'),
-            'USER': env('DB_USER'),
-            'PASSWORD': env('DB_PASSWORD'),
+            'NAME': env('MYSQL_DATABASE'),
+            'USER': env('MYSQL_USER'),
+            'PASSWORD': env('MYSQL_PASSWORD'),
             'HOST': '127.0.0.1',
             'PORT': '3306',
         }
@@ -138,8 +143,12 @@ STORAGE_CONFIG = {
     'backblaze': {
         'application_key_id': env('BACKBLAZE_APPLICATION_KEY_ID'),
         'application_key': env('BACKBLAZE_APPLICATION_KEY'),
+        'file_encryption_key': env('BACKBLAZE_SSE_C'),
+        'bucket_name': env('BACKBLAZE_DEFAULT_BUCKET_NAME'),
     }
 }
+STORAGE_CDN_URL = env('STORAGE_CDN_URL')
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -199,13 +208,52 @@ SUPPORT_EMAIL = env('SUPPORT_EMAIL')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-SESSION_COOKIE_AGE = 86400 * 30
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/auth/login/'
-
-AUTH_USER_MODEL = 'user.User'
 
 # allauth settings
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"  # "mandatory" if you want verified emails
+
+# Celery
+CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # Run tasks synchronously
+CELERY_TASK_EAGER_PROPAGATES = env('CELERY_TASK_EAGER_PROPAGATES')  # Propagate exceptions (so you see errors)
+
+# Logging
+# settings.py
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # Keep Django’s default loggers
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name}: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'daily_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'when': 'midnight',  # Rotate daily at midnight
+            'interval': 1,  # Every 1 day
+            'backupCount': 7,  # Keep 7 days of logs
+            'encoding': 'utf-8',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['daily_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'app': {  # Example: app-specific logging
+            'handlers': ['daily_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

@@ -99,11 +99,14 @@ def api_list_messages(request: HttpRequest, conversation_id: int) -> JsonRespons
 @login_required
 def api_send_message(request: HttpRequest) -> JsonResponse:
     post = request.POST
+    files = request.FILES
+
     service = SendMessageService()
     message = service.send_message(
         user=request.user,
         messageContent=post.get('message'),
-        conversation_id=int(post.get('conversationId'))
+        conversation_id=int(post.get('conversationId')),
+        file=files.get('file')
     )
 
     return JsonResponse(message)

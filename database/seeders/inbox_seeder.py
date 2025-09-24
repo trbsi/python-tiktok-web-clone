@@ -45,6 +45,6 @@ class InboxSeeder():
                     Message.objects.create(
                         conversation=conversion,
                         sender=performer if i % 2 == 0 else user,
-                        content=f'{i}. {faker.text()}',
+                        message=f'{i}. {faker.text()}',
                         attachment_url=attachment_url,
                     )

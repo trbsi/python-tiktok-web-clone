@@ -1,5 +1,7 @@
 from django.db import models
 
+from app import settings
+from src.media.enums import MediaEnum
 from src.user.models import User as User
 
 
@@ -39,7 +41,17 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='conversation')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
     message = models.TextField(null=True)
-    attachment_url = models.CharField(max_length=255, null=True, blank=True)
+    file_info = models.JSONField(null=True)
+    file_type = models.CharField(max_length=10, null=True, choices=MediaEnum.file_types())
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
+
+    def get_attachment_url(self) -> str:
+        return f'{settings.STORAGE_CDN_URL}/{self.file_info.get('file_name')}'
+
+    def is_image(self):
+        return self.file_type == MediaEnum.FILE_TYPE_IMAGE.value
+
+    def is_video(self):
+        return self.file_type == MediaEnum.FILE_TYPE_VIDEO.value

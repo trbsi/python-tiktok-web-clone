@@ -3,7 +3,7 @@ from b2sdk.v2 import *
 from app import settings
 
 
-def init_storage():
+def init_remote_storage() -> B2Api:
     if is_backblaze():
         config = settings.STORAGE_CONFIG['backblaze']
         info = InMemoryAccountInfo()
@@ -12,6 +12,8 @@ def init_storage():
         application_key = config['application_key']
         b2_api.authorize_account("production", application_key_id, application_key)
         return b2_api
+
+    raise Exception('Storage provider is not defined')
 
 
 def is_backblaze():

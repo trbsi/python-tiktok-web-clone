@@ -1,0 +1,121 @@
+version: "3.8"
+
+services:
+  my-app-db:
+    image: mariadb:11
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  my-app-redis:
+    image: redis:7
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  my-app-phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8080:80"
+    depends_on:
+      - my-app-db
+
+  my-app-web:
+    build:
+      context: ..
+      dockerfile: docker/web/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: redis://redis:6379/0
+      # enable debug for dev/live reload
+      DEBUG: 1
+      # Required by nginx-proxy + acme-companion
+      VIRTUAL_HOST: ${NGINX_VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${NGINX_LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${NGINX_LETSENCRYPT_EMAIL}
+    volumes:
+      - ../:/app:cached  # mount your source code
+      - static_volume:/app/staticfiles
+      - media_volume:/app/uploads
+    command: >
+      gunicorn ${DJANGO_SETTINGS_MODULE}.wsgi:application
+      --bind 0.0.0.0:8000
+      --workers 1
+      --reload
+      --log-level debug
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    expose:
+      - "8000"
+
+  my-app-celery_worker:
+    build:
+      context: ..
+      dockerfile: docker/web/Dockerfile
+    command: celery -A ${CELERY_APP} worker --loglevel=info --concurrency=1
+    env_file:
+      - ../.env
+    volumes:
+      - ../:/app:cached
+      - static_volume:/app/staticfiles
+      - media_volume:/app/uploads
+    depends_on:
+      - my-app-redis
+      - my-app-db
+
+  my-app-celery_beat:
+    build:
+      context: ..
+      dockerfile: docker/web/Dockerfile
+    command: celery -A ${CELERY_APP} beat --loglevel=info
+    env_file:
+      - ../.env
+    volumes:
+      - ../:/app:cached
+      - static_volume:/app/staticfiles
+      - media_volume:/app/uploads
+    depends_on:
+      - my-app-redis
+      - my-app-db
+
+  my-app-nginx:
+    image: jwilder/nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - nginx-vhost:/etc/nginx/vhost.d
+      - nginx-html:/usr/share/nginx/html
+
+volumes:
+  nginx-vhost:
+  nginx-html:
+  db_data:
+  redis_data:
+  static_volume:
+  media_volume:

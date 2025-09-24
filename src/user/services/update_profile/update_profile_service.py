@@ -8,12 +8,12 @@ class UpdateProfileService:
     def update_profile(self, form: UpdateProfileForm) -> bool:
         if form.is_valid():
             form.save()
-            self.resize_image(instance=form.instance)
+            self._resize_image(instance=form.instance)
             return True
 
         return False
 
-    def resize_image(self, instance: UserProfile):
+    def _resize_image(self, instance: UserProfile):
         if not instance.profile_image:
             return
 

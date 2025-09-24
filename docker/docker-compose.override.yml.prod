@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  # Nginx reverse proxy
+  my-app-nginx:
+    image: jwilder/nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - nginx-certs:/etc/nginx/certs
+      - nginx-vhost:/etc/nginx/vhost.d
+      - nginx-html:/usr/share/nginx/html
+
+  # ACME companion for automatic Let's Encrypt
+  my-app-acme-companion:
+    image: nginxproxy/acme-companion
+    restart: unless-stopped
+    depends_on:
+      - my-app-nginx
+    environment:
+      NGINX_PROXY_CONTAINER: my-app-nginx
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - nginx-certs:/etc/nginx/certs
+      - nginx-vhost:/etc/nginx/vhost.d
+      - nginx-html:/usr/share/nginx/html
+
+volumes:
+  nginx-certs:
+  nginx-vhost:
+  nginx-html:
+  db_data:
+  redis_data:
+  static_volume:
+  media_volume:

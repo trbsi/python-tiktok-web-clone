@@ -9,6 +9,9 @@ db.sqlite3
 sent_emails
 staticfiles
 uploads
+docker/docker-compose.override.yml
+docker/nginx/prod.conf
+logs/
 
 # Backup files #
 *.bak
