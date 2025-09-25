@@ -5,7 +5,8 @@
 3. Restart Celery
 
 ``` 
-docker compose up -d --build
+cd docker
+docker compose --env-file ../.env up -d --build
 docker compose restart celery_worker
 ```
 

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group
-from django.db.models.fields.related_descriptors import ManyRelatedManager
+from django.db.models import Manager
+from src.user.models import User
 
 from src.age_verification.models import PerformerAgreement, Kyc
 from src.user.enum import UserEnum
@@ -21,8 +22,8 @@ class SaveAgreementService():
             performer_role = Group.objects.get_or_create(name=UserEnum.ROLE_PERFORMER.value)
             user_role = Group.objects.get_or_create(name=UserEnum.ROLE_USER.value)
 
-            performer_role_user_set: ManyRelatedManager = performer_role.user_set
+            performer_role_user_set: Manager[User] = performer_role.user_set
             performer_role_user_set.add(user)
 
-            user_role_user_set: ManyRelatedManager = user_role.user_set
+            user_role_user_set: Manager[User] = user_role.user_set
             user_role_user_set.remove(user)

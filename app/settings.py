@@ -137,7 +137,7 @@ if (DB_TYPE == 'mysql'):
             'NAME': env('MYSQL_DATABASE'),
             'USER': env('MYSQL_USER'),
             'PASSWORD': env('MYSQL_PASSWORD'),
-            'HOST': '127.0.0.1',
+            'HOST': env('MYSQL_HOST'),
             'PORT': '3306',
         }
     }
@@ -148,7 +148,6 @@ STORAGE_CONFIG = {
     'backblaze': {
         'application_key_id': env('BACKBLAZE_APPLICATION_KEY_ID'),
         'application_key': env('BACKBLAZE_APPLICATION_KEY'),
-        'file_encryption_key': env('BACKBLAZE_SSE_C'),
         'bucket_name': env('BACKBLAZE_DEFAULT_BUCKET_NAME'),
     }
 }
@@ -219,8 +218,11 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"  # "mandatory" if you want verified emails
 
 # Celery
-CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # Run tasks synchronously
-CELERY_TASK_EAGER_PROPAGATES = env('CELERY_TASK_EAGER_PROPAGATES')  # Propagate exceptions (so you see errors)
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
 
 # Logging
 # settings.py

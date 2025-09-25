@@ -26,9 +26,9 @@ RUN poetry install --no-root --only main
 # Stage 2: runtime
 FROM python:latest
 
-RUN addgroup --system app && adduser --system --ingroup app app
+RUN addgroup --system my-app-user && adduser --system --ingroup my-app-user my-app-user
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    default-libmysqlclient-dev netcat curl \
+    default-libmysqlclient-dev netcat-openbsd curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -36,15 +36,12 @@ WORKDIR /app
 # Copy installed packages from builder
 COPY --from=builder /usr/local /usr/local
 
-# Copy project code
-COPY . /app
-
 # Copy entrypoint scripts
 COPY docker/web/entrypoint.sh /app/entrypoint.sh
 COPY docker/web/wait_for_db.py /app/wait_for_db.py
 RUN chmod +x /app/entrypoint.sh
 
-USER app
+USER my-app-user
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1

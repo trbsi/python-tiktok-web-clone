@@ -1,32 +1,33 @@
-version: "3.8"
-
 services:
   my-app-db:
-    image: mariadb:11
+    image: mysql:8.0
+    container_name: my-app-db
     restart: unless-stopped
-    env_file:
-      - ../.env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: [ "CMD-SHELL", "mysqladmin ping -uroot -pexample_root_password" ]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   my-app-redis:
     image: redis:7
+    container_name: my-app-redis
     restart: unless-stopped
     volumes:
       - redis_data:/data
 
   my-app-phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
+    container_name: my-app-phpmyadmin
     restart: unless-stopped
     environment:
       PMA_HOST: db
@@ -41,9 +42,8 @@ services:
     build:
       context: ..
       dockerfile: docker/web/Dockerfile
+    container_name: my-app-web
     restart: unless-stopped
-    env_file:
-      - ../.env
     environment:
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
       DATABASE_URL: ${DATABASE_URL}
@@ -59,26 +59,25 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/uploads
     command: >
-      gunicorn ${DJANGO_SETTINGS_MODULE}.wsgi:application
+      gunicorn ${DJANGO_WSGI}:application
       --bind 0.0.0.0:8000
       --workers 1
       --reload
       --log-level debug
     depends_on:
-      db:
+      my-app-db:
         condition: service_healthy
-      redis:
+      my-app-redis:
         condition: service_started
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
 
   my-app-celery_worker:
     build:
       context: ..
       dockerfile: docker/web/Dockerfile
+    container_name: my-app-celery_worker
     command: celery -A ${CELERY_APP} worker --loglevel=info --concurrency=1
-    env_file:
-      - ../.env
     volumes:
       - ../:/app:cached
       - static_volume:/app/staticfiles
@@ -91,19 +90,20 @@ services:
     build:
       context: ..
       dockerfile: docker/web/Dockerfile
-    command: celery -A ${CELERY_APP} beat --loglevel=info
-    env_file:
-      - ../.env
+    container_name: my-app-celery_beat
+    command: celery -A ${CELERY_APP} beat --loglevel=info --schedule=/app/celerybeat_data/celerybeat-schedule
     volumes:
       - ../:/app:cached
       - static_volume:/app/staticfiles
       - media_volume:/app/uploads
+      - ./celerybeat_data:/app/celerybeat-schedule
     depends_on:
       - my-app-redis
       - my-app-db
 
   my-app-nginx:
     image: jwilder/nginx-proxy
+    container_name: my-app-nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -119,3 +119,4 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
+  celerybeat_data:
