@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from django.db import models
 
 from src.user.models import User
@@ -44,3 +45,6 @@ class Follow(models.Model):
         Example: Follow.is_following(alice, bob) -> True if Alice follows Bob
         """
         return Follow.objects.filter(follower=user_a, following=user_b).exists()
+
+
+auditlog.register(Follow)

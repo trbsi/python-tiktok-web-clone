@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from django.db import models
 
 from src.media.models import Media
@@ -35,3 +36,8 @@ class Share(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
+
+
+auditlog.register(Like)
+auditlog.register(Comment)
+auditlog.register(Share)

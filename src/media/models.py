@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from django.db import models
 
 from app import settings
@@ -14,6 +15,7 @@ class Media(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='media_user')
     file_info = models.JSONField()
     file_thumbnail = models.JSONField(null=True, blank=True)
+    file_trailer = models.JSONField(null=True, blank=True)
     file_type = models.CharField(max_length=20, choices=MediaEnum.file_types())
     status = models.CharField(max_length=20, choices=MediaEnum.statuses())
     description = models.TextField(null=True)
@@ -42,3 +44,6 @@ class Media(models.Model):
 
     def is_video(self):
         return self.file_type == MediaEnum.FILE_TYPE_VIDEO.value
+
+
+auditlog.register(Media)

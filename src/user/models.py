@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from auditlog.registry import auditlog
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.timezone import now
@@ -56,3 +57,8 @@ class EmailChangeToken(models.Model):
 
     def is_expired(self):
         return self.created_at < now() - timedelta(hours=24)  # 24h validity
+
+
+auditlog.register(User)
+auditlog.register(UserProfile)
+auditlog.register(EmailChangeToken)

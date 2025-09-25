@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from django.db import models
 
 from src.report.enums import ReportEnum
@@ -12,3 +13,6 @@ class Report(models.Model):
     reported_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+auditlog.register(Report)

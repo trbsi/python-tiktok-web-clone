@@ -17,6 +17,7 @@ dependencies = [
     "django-cleanup (>=9.0.0,<10.0.0)",
     "b2sdk (>=2.10.0,<3.0.0)",
     "celery[redis] (>=5.5.3,<6.0.0)",
+    "django-auditlog (>=3.2.1,<4.0.0)",
 ]
 
 

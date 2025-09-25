@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from django.db import models
 
 from app import settings
@@ -55,3 +56,7 @@ class Message(models.Model):
 
     def is_video(self):
         return self.file_type == MediaEnum.FILE_TYPE_VIDEO.value
+
+
+auditlog.register(Conversation)
+auditlog.register(Message)

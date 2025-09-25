@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'src.report.apps.ReportConfig',
     'src.notification.apps.NotificationConfig',
     'src.storage.apps.StorageConfig',
+    'src.age_verification.apps.AgeVerificationConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -67,6 +68,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.twitter_oauth2',
+
+    'auditlog',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +81,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    "allauth.account.middleware.AccountMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
+
+    'auditlog.middleware.AuditlogMiddleware'
 ]
 
 # Auth

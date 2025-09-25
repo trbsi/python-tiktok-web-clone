@@ -40,6 +40,7 @@ urlpatterns = [
     path('engagement/', include('src.engagement.urls')),
     path('follow/', include('src.follow.urls')),
     path('report/', include('src.report.urls')),
+    path('age-verification/', include('src.age_verification.urls')),
 ]
 
 if settings.DEBUG == True:

@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from django.db import models
 
 from src.payment.enums import PaymentEnum
@@ -33,3 +34,7 @@ class Balance(models.Model):
 
     def user_balance(self):
         return self.balance
+
+
+auditlog.register(PaymentHistory)
+auditlog.register(Balance)
