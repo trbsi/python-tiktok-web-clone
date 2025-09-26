@@ -24,6 +24,7 @@ def compress_media_task(media_type: str, media_id: int) -> None:
     compress_file_service = CompressFileService()
     original_file_info = media.file_info
     local_file_path_directory = os.path.join(settings.MEDIA_ROOT, 'temp')
+    files_to_remove = []
 
     # download file from remote
     local_file_path = remote_storage_service.download_file(
@@ -50,6 +51,9 @@ def compress_media_task(media_type: str, media_id: int) -> None:
         remote_file_name=original_file_info.get('file_name')
     )
 
+    files_to_remove.append(output_file_path)
+    files_to_remove.append(local_file_path)
+
     # update model
     if media_type == 'inbox':
         media.file_info = file_info
@@ -59,4 +63,6 @@ def compress_media_task(media_type: str, media_id: int) -> None:
         media = Media.objects.get(pk=media_id)
 
     # remove local files
-    os.remove(local_file_path)
+    for file in files_to_remove:
+        if os.path.exists(file):
+            os.remove(file)
