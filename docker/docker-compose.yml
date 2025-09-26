@@ -30,7 +30,7 @@ services:
     container_name: my-app-phpmyadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: db
+      PMA_HOST: my-app-db
       PMA_USER: ${MYSQL_USER}
       PMA_PASSWORD: ${MYSQL_PASSWORD}
     ports:
@@ -55,10 +55,10 @@ services:
       LETSENCRYPT_HOST: ${NGINX_LETSENCRYPT_HOST}
       LETSENCRYPT_EMAIL: ${NGINX_LETSENCRYPT_EMAIL}
     volumes:
-      - ../:/app:cached  # mount your source code
+      - ../:/app:cached
       - my_app_static_volume:/app/staticfiles
       - my_app_media_volume:/app/uploads
-      - my_app_logs_volume:/app/logs
+      - ../logs:/app/logs
     command: >
       gunicorn ${DJANGO_WSGI}:application
       --bind 0.0.0.0:8000

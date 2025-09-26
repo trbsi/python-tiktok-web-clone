@@ -6,7 +6,7 @@ from src.user.models import User
 class Kyc(models.Model):
     PROVIDER_DIDIT = 'didit.me'
 
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     provider = models.CharField(max_length=20)
     provider_reference_id = models.CharField(max_length=255)
@@ -18,7 +18,7 @@ class Kyc(models.Model):
 class PerformerAgreement(models.Model):
     FORM_PERFORMER_AGREEMENT = 'performer_agreement'
 
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     form_type = models.CharField(max_length=20)
     form_version = models.IntegerField()

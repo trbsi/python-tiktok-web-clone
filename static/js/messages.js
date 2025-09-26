@@ -8,6 +8,7 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         attachment: null,
         allLoaded: false,
         currentUserId: currentUserId,
+        sending: false,
 
         async initChat() {
             await this.loadMessages();
@@ -16,7 +17,6 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         },
 
         async loadMessages() {
-
             if (this.loading || this.allLoaded) return;
             this.loading = true;
 
@@ -74,8 +74,13 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
 
         async sendMessage() {
             if (!this.newMessage && !this.attachment) return;
+
+            // Set sending state to true
+            this.sending = true;
+
+            // Prepare FormData
             const formData = new FormData();
-            formData.append('conversationId', conversationId)
+            formData.append('conversationId', conversationId);
             if (this.newMessage) formData.append("message", this.newMessage);
             if (this.attachment) formData.append("attachment", this.attachment);
 
@@ -83,31 +88,46 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
                 const res = await fetch(sendMessageApi, {
                     method: "POST",
                     body: formData,
-                    headers: {'X-CSRFToken': getCsrfToken(), 'Accept': 'application/json'}
+                    headers: {
+                        'X-CSRFToken': getCsrfToken(),
+                        'Accept': 'application/json'
+                    }
                 });
                 if (!res.ok) throw new Error("Failed to send message");
 
                 const msg = await res.json();
-                this.messagesList.unshift(msg); // reverse message list
+                this.messagesList.unshift(msg); // add message to list
+
+                // Reset input
                 this.newMessage = "";
                 this.attachment = null;
-                this.$refs.messageInput.style.height = "auto"; // reset to original size
+                this.$refs.messageInput.style.height = "auto"; // reset textarea
                 this.$refs.fileInput.value = null;
+
                 this.scrollToBottom();
             } catch (e) {
                 console.error("Send failed", e);
+            } finally {
+                this.sending = false; // hide loader
             }
         },
 
+
         handleFileUpload(event) {
-            this.attachment = event.target.files[0];
+            if (event.target.files.length > 0) {
+                this.attachment = event.target.files[0];
+            }
+        },
+
+        removeAttachment() {
+            this.attachment = null;
+            this.$refs.fileInput.value = null; // reset input so the same file can be chosen again
         },
 
         scrollToBottom() {
             this.$nextTick(() => {
                 const container = this.$refs.scrollContainer;
                 container.scrollTop = container.scrollHeight;
-                console.log(container.scrollHeight)
             });
         },
 

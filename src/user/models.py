@@ -38,7 +38,7 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(null=True, blank=True)
     profile_image = models.ImageField(upload_to=profile_image_upload_path, null=True, blank=True)

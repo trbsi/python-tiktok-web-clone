@@ -1,3 +1,5 @@
+ARG ENVIRONMENT=prod
+
 # Stage 1: build
 FROM python:latest as builder
 
@@ -21,14 +23,14 @@ RUN poetry config virtualenvs.create false
 COPY pyproject.toml poetry.lock* /app/
 
 # Install dependencies
-RUN poetry install --no-root --only main
+RUN poetry install --no-root
 
 # Stage 2: runtime
 FROM python:latest
 
 RUN addgroup --system my-app-user && adduser --system --ingroup my-app-user my-app-user
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    default-libmysqlclient-dev netcat-openbsd curl \
+    default-libmysqlclient-dev netcat-openbsd curl ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -41,9 +43,11 @@ COPY docker/web/entrypoint.sh /app/entrypoint.sh
 COPY docker/web/wait_for_db.py /app/wait_for_db.py
 RUN chmod +x /app/entrypoint.sh
 
-# Create logs and celerybeat directory
+# Create directories and give permission
 RUN mkdir -p /app/logs && chown -R my-app-user:my-app-user /app/logs
 RUN mkdir -p /app/celerybeat_data && chown -R my-app-user:my-app-user /app/celerybeat_data 
+RUN mkdir -p /app/staticfiles && chown -R my-app-user:my-app-user /app/staticfiles
+RUN mkdir -p /app/uploads && chown -R my-app-user:my-app-user /app/uploads
 
 USER my-app-user
 

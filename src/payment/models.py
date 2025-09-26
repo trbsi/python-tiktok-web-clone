@@ -6,7 +6,7 @@ from src.user.models import User
 
 
 class PaymentHistory(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     provider = models.CharField(max_length=10, choices=PaymentEnum.providers())
@@ -21,9 +21,9 @@ class PaymentHistory(models.Model):
 class Balance(models.Model):
     COIN_TO_FIAT = 100  # 100 coins = 1$
 
-    id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='balance', default=0)
-    balance = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+    id = models.BigAutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='balance')
+    balance = models.DecimalField(decimal_places=2, max_digits=10, default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

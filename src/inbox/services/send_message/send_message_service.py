@@ -6,6 +6,7 @@ from django.core.files.uploadedfile import UploadedFile, TemporaryUploadedFile
 
 from app import settings
 from src.inbox.models import Message
+from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
 from src.storage.tasks import compress_media_task
 from src.user.models import User
@@ -20,9 +21,13 @@ class SendMessageService:
             file: UploadedFile | None = None,
     ) -> dict:
         file_info = None
+        file_type = None
+        local_storage_service = LocalStorageService()
+
         if file is not None:
             extension = Path(file.name).suffix  # .jpg or .mp4
             remote_file_name = f'msg_{uuid.uuid4()}{extension}'
+            file_type = local_storage_service.get_file_type(uploaded_file=file)
 
             if isinstance(file, TemporaryUploadedFile):
                 local_file_path = file.temporary_file_path()
@@ -43,6 +48,7 @@ class SendMessageService:
             conversation_id=conversation_id,
             message=messageContent,
             file_info=file_info,
+            file_type=file_type,
         )
 
         compress_media_task.delay(media_type='inbox', media_id=message.id)

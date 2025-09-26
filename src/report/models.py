@@ -6,7 +6,7 @@ from src.user.models import User
 
 
 class Report(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     content_id = models.IntegerField()
     type = models.CharField(max_length=20, choices=ReportEnum.types())
     status = models.CharField(max_length=20, choices=ReportEnum.statuses())

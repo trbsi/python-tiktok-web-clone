@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from PIL import Image
@@ -30,6 +31,8 @@ class CompressFileService:
     """
 
     def compress_video(self, input_path: str, output_path: str) -> None:
+        input_path_size = os.path.getsize(input_path)
+
         command = [
             "ffmpeg", "-i", input_path,
             "-vf", f"scale=-2:{self.VIDEO_MAX_HEIGHT}",  # keep aspect ratio, limit height
@@ -41,3 +44,8 @@ class CompressFileService:
             output_path
         ]
         subprocess.run(command, check=True)
+
+        output_path_size = os.path.getsize(output_path)
+
+        if output_path_size > input_path_size:
+            os.replace(input_path, output_path)
