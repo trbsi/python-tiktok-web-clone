@@ -48,7 +48,10 @@ class Message(models.Model):
 
     objects = models.Manager()
 
-    def get_attachment_url(self) -> str:
+    def get_attachment_url(self) -> str | None:
+        if self.file_info is None:
+            return None
+
         return f'{settings.STORAGE_CDN_URL}/{self.file_info.get('file_name')}'
 
     def is_image(self):

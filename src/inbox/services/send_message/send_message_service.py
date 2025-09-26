@@ -21,16 +21,16 @@ class SendMessageService:
     ) -> dict:
         file_info = None
         if file is not None:
+            extension = Path(file.name).suffix  # .jpg or .mp4
+            remote_file_name = f'msg_{uuid.uuid4()}{extension}'
+
             if isinstance(file, TemporaryUploadedFile):
                 local_file_path = file.temporary_file_path()
             else:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=file.name) as local_file:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=extension) as local_file:
                     for chunk in file.chunks():
                         local_file.write(chunk)
                     local_file_path = local_file.name
-
-            extension = Path(file.name).suffix
-            remote_file_name = f'{uuid.uuid4()}.{extension}'
 
             file_upload_service = RemoteStorageService()
             file_info = file_upload_service.upload_file(

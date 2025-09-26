@@ -41,6 +41,10 @@ COPY docker/web/entrypoint.sh /app/entrypoint.sh
 COPY docker/web/wait_for_db.py /app/wait_for_db.py
 RUN chmod +x /app/entrypoint.sh
 
+# Create logs and celerybeat directory
+RUN mkdir -p /app/logs && chown -R my-app-user:my-app-user /app/logs
+RUN mkdir -p /app/celerybeat_data && chown -R my-app-user:my-app-user /app/celerybeat_data 
+
 USER my-app-user
 
 ENV PYTHONUNBUFFERED=1 \

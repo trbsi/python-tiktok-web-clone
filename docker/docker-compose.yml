@@ -9,9 +9,9 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - db_data:/var/lib/mysql
+      - my_app_db_data:/var/lib/mysql
     healthcheck:
       test: [ "CMD-SHELL", "mysqladmin ping -uroot -pexample_root_password" ]
       interval: 10s
@@ -23,7 +23,7 @@ services:
     container_name: my-app-redis
     restart: unless-stopped
     volumes:
-      - redis_data:/data
+      - my_app_redis_data:/data
 
   my-app-phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -56,8 +56,9 @@ services:
       LETSENCRYPT_EMAIL: ${NGINX_LETSENCRYPT_EMAIL}
     volumes:
       - ../:/app:cached  # mount your source code
-      - static_volume:/app/staticfiles
-      - media_volume:/app/uploads
+      - my_app_static_volume:/app/staticfiles
+      - my_app_media_volume:/app/uploads
+      - my_app_logs_volume:/app/logs
     command: >
       gunicorn ${DJANGO_WSGI}:application
       --bind 0.0.0.0:8000
@@ -80,8 +81,8 @@ services:
     command: celery -A ${CELERY_APP} worker --loglevel=info --concurrency=1
     volumes:
       - ../:/app:cached
-      - static_volume:/app/staticfiles
-      - media_volume:/app/uploads
+      - my_app_static_volume:/app/staticfiles
+      - my_app_media_volume:/app/uploads
     depends_on:
       - my-app-redis
       - my-app-db
@@ -94,9 +95,9 @@ services:
     command: celery -A ${CELERY_APP} beat --loglevel=info --schedule=/app/celerybeat_data/celerybeat-schedule
     volumes:
       - ../:/app:cached
-      - static_volume:/app/staticfiles
-      - media_volume:/app/uploads
-      - ./celerybeat_data:/app/celerybeat-schedule
+      - my_app_static_volume:/app/staticfiles
+      - my_app_media_volume:/app/uploads
+      - my_app_celerybeat_data:/app/celerybeat_data
     depends_on:
       - my-app-redis
       - my-app-db
@@ -109,14 +110,15 @@ services:
       - "80:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx-vhost:/etc/nginx/vhost.d
-      - nginx-html:/usr/share/nginx/html
+      - my_app_nginx_vhost:/etc/nginx/vhost.d
+      - my_app_nginx_html:/usr/share/nginx/html
 
 volumes:
-  nginx-vhost:
-  nginx-html:
-  db_data:
-  redis_data:
-  static_volume:
-  media_volume:
-  celerybeat_data:
+  my_app_nginx_vhost:
+  my_app_nginx_html:
+  my_app_db_data:
+  my_app_redis_data:
+  my_app_static_volume:
+  my_app_media_volume:
+  my_app_logs_volume:
+  my_app_celerybeat_data:

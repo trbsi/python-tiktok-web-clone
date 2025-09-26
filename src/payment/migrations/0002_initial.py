@@ -10,18 +10,19 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('media', '0001_initial'),
+        ('payment', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='media',
+            model_name='balance',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='media_user', to=settings.AUTH_USER_MODEL),
+            field=models.OneToOneField(default=0, on_delete=django.db.models.deletion.CASCADE, related_name='balance', to=settings.AUTH_USER_MODEL),
         ),
-        migrations.AddIndex(
-            model_name='media',
-            index=models.Index(fields=['status'], name='idx_media_status'),
+        migrations.AddField(
+            model_name='paymenthistory',
+            name='user',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
     ]

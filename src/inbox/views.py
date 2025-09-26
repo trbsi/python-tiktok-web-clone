@@ -69,8 +69,10 @@ def list_messages(request: HttpRequest, conversation_id: int) -> HttpResponse:
             'other_user': other_user,
             'current_user_id': user.id,
             'conversation_id': conversation_id,
-            'list_messages_api': reverse_lazy('inbox.api.list_messages',
-                                              kwargs={'conversation_id': '__CONVERSATION_ID__'}),
+            'list_messages_api': reverse_lazy(
+                'inbox.api.list_messages',
+                kwargs={'conversation_id': '__CONVERSATION_ID__'}
+            ),
             'send_message_api': reverse_lazy('inbox.api.send_message'),
         }
     )
@@ -106,7 +108,7 @@ def api_send_message(request: HttpRequest) -> JsonResponse:
         user=request.user,
         messageContent=post.get('message'),
         conversation_id=int(post.get('conversationId')),
-        file=files.get('file')
+        file=files.get('attachment')
     )
 
     return JsonResponse(message)

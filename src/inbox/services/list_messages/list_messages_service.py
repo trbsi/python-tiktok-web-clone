@@ -32,7 +32,7 @@ class ListMessagesService:
                     'id': message.id,
                     'created_at': message.created_at.strftime(settings.DATE_TIME_FORMAT),
                     'message': message.message,
-                    'attachment_url': message.attachment_url,
+                    'attachment_url': message.get_attachment_url(),
                     'sender': {
                         'id': message.sender.id,
                         'profile_picture': message.sender.get_profile_picture(),
