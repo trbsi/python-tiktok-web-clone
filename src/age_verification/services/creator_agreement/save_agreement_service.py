@@ -1,5 +1,5 @@
 from src.age_verification.models import CreatorAgreement
-from src.age_verification.services.post_age_verification_service import PostAgeVerificationService
+from src.age_verification.services.creator_service import CreatorService
 from src.user.models import User
 
 
@@ -13,5 +13,5 @@ class SaveAgreementService():
             user_agent=user_agent,
         )
 
-        service = PostAgeVerificationService()
-        service.post_age_verification(user=user)
+        service = CreatorService()
+        service.become_creator(user=user)

@@ -1,27 +1,48 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.http.response import JsonResponse
+from django.shortcuts import render, redirect
+from django.urls.base import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_POST
 
 from app.log import log
-from src.age_verification.services.save_agreement_service import SaveAgreementService
+from src.age_verification.services.age_verification.age_verification_service import AgeVerificationService
+from src.age_verification.services.creator_agreement.save_agreement_service import SaveAgreementService
+from src.age_verification.services.creator_service import CreatorService
 from src.core.helpers import get_client_ip
 
 
+@require_GET
 @login_required
 def become_creator(request: HttpRequest) -> HttpResponse:
-    return render(request, 'age_verification/become_creator.html')
+    service = CreatorService()
+    return render(
+        request,
+        'become_creator.html',
+        {
+            'is_creator_agreement_completed': service.is_creator_agreement_completed(request.user),
+            'is_age_verification_completed': service.is_age_verification_completed(request.user),
+            'age_verification': service.get_age_verification(request.user)
+        }
+    )
 
 
+@require_GET
 @login_required
 def creator_agreement(request) -> HttpResponse:
+    creator_service = CreatorService()
+    if creator_service.is_creator_agreement_completed(request.user):
+        return redirect(reverse_lazy('age_verification.become_creator'))
+
     if request.method == 'POST':
         post = request.POST
         consent = post.get('consent')
         log.info(f'# TODO consent if {consent}')
         if consent == 'no':
             messages.error(request, 'You have to agree to the terms')
-            return render(request, 'age_verification/creator_agreement.html')
+            return render(request, 'creator_agreement.html')
 
         service = SaveAgreementService()
         service.save_agreement(
@@ -31,10 +52,29 @@ def creator_agreement(request) -> HttpResponse:
         )
         messages.success(request, 'Consent was successfully signed')
 
-    return render(request, 'age_verification/creator_agreement.html')
+    return render(request, 'creator_agreement.html')
 
 
+@require_GET
 @login_required
-def kyc(request: HttpRequest) -> HttpResponse:
-    return render(request, 'age_verification/kyc.html')
-# TODO if performer registered through Twitter, role will not be assigned. Assign it after KYC and performer agreement
+def start_age_verification(request: HttpRequest) -> HttpResponse:
+    creator_service = CreatorService()
+    if creator_service.is_age_verification_completed(request.user):
+        return redirect(reverse_lazy('age_verification.become_creator'))
+
+    service = AgeVerificationService()
+    url = service.start_verification(request.user)
+
+    return redirect(url)
+
+
+@require_POST
+@csrf_exempt
+def webhook_age_verification(request: HttpRequest) -> JsonResponse:
+    service = AgeVerificationService()
+    result = service.finish_verification(request)
+
+    if result:
+        return JsonResponse({})
+
+    return JsonResponse({'result': 'something happened, check logs'}, 400)

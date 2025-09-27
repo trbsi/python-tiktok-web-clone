@@ -35,6 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 APP_ENV = env('APP_ENV')
+APP_URL = env('APP_URL')
 DB_TYPE = env('DB_TYPE')
 DATE_TIME_FORMAT = '%m/%d/%Y %I:%M%p'
 
@@ -175,11 +176,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
@@ -220,10 +218,18 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_ALWAYS_EAGER = False if APP_ENV == 'production' else bool(int(env('CELERY_TASK_ALWAYS_EAGER')))
 CELERY_TASK_EAGER_PROPAGATES = bool(int(env('CELERY_TASK_EAGER_PROPAGATES')))
 
-# Logging
-# settings.py
-import os
+# Age verification
+AGE_VERIFICATION_PROVIDER = env('AGE_VERIFICATION_PROVIDER')
+AGE_VERIFICATION_CONFIG = {
+    'didit': {
+        'base_url': env('AGE_VERIFICATION_DIDIT_BASE_URL'),
+        'api_key': env('AGE_VERIFICATION_DIDIT_API_KEY'),
+        'workflow_id': env('AGE_VERIFICATION_DIDIT_WORKFLOW_ID'),
+        'webhook_secret_key': env('AGE_VERIFICATION_DIDIT_SECRET_KEY'),
+    }
+}
 
+# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # Keep Django’s default loggers
