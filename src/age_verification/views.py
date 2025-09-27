@@ -3,24 +3,25 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
+from app.log import log
 from src.age_verification.services.save_agreement_service import SaveAgreementService
 from src.core.helpers import get_client_ip
 
 
 @login_required
-def become_performer(request: HttpRequest) -> HttpResponse:
-    return render(request, 'age_verification/become_performer.html')
+def become_creator(request: HttpRequest) -> HttpResponse:
+    return render(request, 'age_verification/become_creator.html')
 
 
 @login_required
-def performer_agreement(request) -> HttpResponse:
+def creator_agreement(request) -> HttpResponse:
     if request.method == 'POST':
         post = request.POST
         consent = post.get('consent')
-        print('# TODO ', consent)
+        log.info(f'# TODO consent if {consent}')
         if consent == 'no':
             messages.error(request, 'You have to agree to the terms')
-            return render(request, 'age_verification/performer_agreement.html')
+            return render(request, 'age_verification/creator_agreement.html')
 
         service = SaveAgreementService()
         service.save_agreement(
@@ -30,7 +31,7 @@ def performer_agreement(request) -> HttpResponse:
         )
         messages.success(request, 'Consent was successfully signed')
 
-    return render(request, 'age_verification/performer_agreement.html')
+    return render(request, 'age_verification/creator_agreement.html')
 
 
 @login_required

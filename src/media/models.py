@@ -36,6 +36,9 @@ class Media(models.Model):
     def get_file_url(self):
         return f'{settings.STORAGE_CDN_URL}/{self.file_info.get('file_name')}'
 
+    def get_trailer_url(self):
+        return f'{settings.STORAGE_CDN_URL}/{self.file_trailer.get('file_name')}'
+
     def get_thumbnail_url(self):
         return f'{settings.STORAGE_CDN_URL}/{self.file_thumbnail.get('file_name')}'
 

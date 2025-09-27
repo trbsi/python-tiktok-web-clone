@@ -27,7 +27,7 @@ def profile(request: HttpRequest, username: str) -> HttpResponse:
     if current_user.is_regular_user() and current_user.username != logged_in_user.username:
         raise Http404
 
-    if current_user.is_performer():
+    if current_user.is_creator():
         media_api_url = reverse_lazy('user.api.get_media')
     else:
         media_api_url = reverse_lazy('user.api.get_following')

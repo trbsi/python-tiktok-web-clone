@@ -33,8 +33,8 @@ class User(AbstractUser):
     def is_regular_user(self) -> bool:
         return self.groups.filter(name=UserEnum.ROLE_USER.value).exists()
 
-    def is_performer(self) -> bool:
-        return self.groups.filter(name=UserEnum.ROLE_PERFORMER.value).exists()
+    def is_creator(self) -> bool:
+        return self.groups.filter(name=UserEnum.ROLE_CREATOR.value).exists()
 
 
 class UserProfile(models.Model):

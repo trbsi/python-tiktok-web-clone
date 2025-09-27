@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
-from src.age_verification.models import PerformerAgreement, Kyc
+from src.age_verification.models import CreatorAgreement, Kyc
 from src.media.services.upload_media.upload_media_service import UploadMediaService
 from src.user.models import User
 
@@ -18,8 +18,8 @@ def upload(request: HttpRequest) -> HttpResponse:
     if user.is_regular_user():
         raise PermissionDenied
 
-    if user.is_performer():
-        _can_performer_access(request)
+    if user.is_creator():
+        _can_creator_access(request)
 
     return render(request, 'upload.html')
 
@@ -31,8 +31,8 @@ def do_upload(request: HttpRequest) -> JsonResponse:
     if user.is_regular_user():
         raise PermissionDenied
 
-    if user.is_performer():
-        _can_performer_access(request)
+    if user.is_creator():
+        _can_creator_access(request)
 
     files = request.FILES.get('files')
     service = UploadMediaService()
@@ -41,10 +41,10 @@ def do_upload(request: HttpRequest) -> JsonResponse:
     return JsonResponse({})
 
 
-def _can_performer_access(request: HttpRequest):
-    agreement = PerformerAgreement.objects.filter(user=request.user).exists()
+def _can_creator_access(request: HttpRequest):
+    agreement = CreatorAgreement.objects.filter(user=request.user).exists()
     kyc = Kyc.objects.filter(user=request.user).exists()
 
     if not agreement and not kyc:
-        messages.warning(request, 'You have to sign performer agreement and verify your age')
-        return redirect(reverse_lazy('age_verification.become_performer'))
+        messages.warning(request, 'You have to sign creator agreement and verify your age')
+        return redirect(reverse_lazy('age_verification.become_creator'))

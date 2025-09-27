@@ -1,15 +1,19 @@
 from django.contrib.auth.models import AnonymousUser
 from django.core.paginator import Paginator
 from django.db.models import QuerySet, OuterRef, Exists, Case, Value, When, IntegerField
+from django.db.models.query_utils import Q
 
 from src.engagement.models import Like
 from src.follow.models import Follow
+from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.user.models import User
 
 
 class LoadFeedService:
     PER_PAGE = 25
+    FEED_TYPE_FOLLOW = 'follow'
+    FEED_TYPE_DISCOVER = 'discover'
 
     def get_following_feed(self, page: int, user: User | AnonymousUser, filters: str | None) -> dict:
         include_following_list = self._get_followings(user=user)
@@ -17,12 +21,18 @@ class LoadFeedService:
             current_page=page,
             user=user,
             include_following_list=include_following_list,
-            filters=filters
+            filters=filters,
+            feed_type=self.FEED_TYPE_FOLLOW
         )
 
     def get_discover_feed(self, page: int, user: User | AnonymousUser) -> dict:
         exclude_following_list = self._get_followings(user=user)
-        return self._get_feed_items(current_page=page, user=user, exclude_following_list=exclude_following_list)
+        return self._get_feed_items(
+            current_page=page,
+            user=user,
+            exclude_following_list=exclude_following_list,
+            feed_type=self.FEED_TYPE_DISCOVER
+        )
 
     def _get_followings(self, user: User | AnonymousUser) -> list | None:
         if user.is_authenticated:
@@ -34,6 +44,7 @@ class LoadFeedService:
             self,
             current_page: int,
             user: User | AnonymousUser,
+            feed_type: str,
             include_following_list: list | None = None,
             exclude_following_list: list | None = None,
             filters: str | None = None,
@@ -52,6 +63,7 @@ class LoadFeedService:
             .select_related('user')
             .order_by('-created_at')
             .annotate(liked=Exists(likes), followed=Exists(is_following))
+            .filter(Q(status=MediaEnum.STATUS_FREE.value) | Q(status=MediaEnum.STATUS_PAID.value))
         )
 
         if include_following_list:
@@ -78,10 +90,13 @@ class LoadFeedService:
 
         result = []
         for item in page.object_list:
+            # show trailer for discover feed
+            # show full media for follow feed
+            media_source = item.get_file_url() if feed_type == self.FEED_TYPE_FOLLOW else item.get_trailer_url()
             result.append({
                 'id': item.id,
                 'type': item.file_type,
-                'src': item.get_file_url(),
+                'src': media_source,
                 'like_count': item.like_count,
                 'comments_count': item.comment_count,
                 'description': item.description,

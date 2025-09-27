@@ -10,12 +10,12 @@ class FollowSeeder:
         user_group = Group.objects.get(name=UserEnum.ROLE_USER.value)
         users = user_group.user_set.all()
 
-        performer_group = Group.objects.get(name=UserEnum.ROLE_PERFORMER.value)
-        performers = performer_group.user_set.all()
+        creator_group = Group.objects.get(name=UserEnum.ROLE_CREATOR.value)
+        creators = creator_group.user_set.all()
 
-        for index, performer in enumerate(performers):
+        for index, creator in enumerate(creators):
             if index % 2 == 0:
                 pass
 
             for user in users:
-                Follow.objects.create(follower=user, following=performer)
+                Follow.objects.create(follower=user, following=creator)

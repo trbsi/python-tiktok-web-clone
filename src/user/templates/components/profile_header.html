@@ -14,7 +14,7 @@
     {% endif %}
 
     <div class="flex gap-6 mb-5">
-        {% if logged_in_user.is_performer %}
+        {% if logged_in_user.is_creator %}
         <div class="flex flex-col items-center">
             <span class="font-bold">{{current_user.profile.follower_count}}</span>
             <span class="text-sm text-gray-400">Subscribers</span>
@@ -25,7 +25,7 @@
         </div>
         {% if logged_in_user.username == current_user.username %}
         <div class="flex flex-col items-center">
-            <span class="font-bold">{{current_user.balance.performer_balance}}</span>
+            <span class="font-bold">{{current_user.balance.creator_balance}}</span>
             <span class="text-sm text-gray-400">Earnings</span>
         </div>
         {% endif %}

@@ -14,9 +14,11 @@ class Kyc(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = models.Manager()
 
-class PerformerAgreement(models.Model):
-    FORM_PERFORMER_AGREEMENT = 'performer_agreement'
+
+class CreatorAgreement(models.Model):
+    FORM_CREATOR_AGREEMENT = 'creator_agreement'
 
     id = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -26,3 +28,5 @@ class PerformerAgreement(models.Model):
     user_agent = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()

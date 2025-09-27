@@ -29,7 +29,7 @@ class Balance(models.Model):
 
     objects = models.Manager()
 
-    def performer_balance(self):
+    def creator_balance(self):
         return self.balance / self.COIN_TO_FIAT
 
     def user_balance(self):

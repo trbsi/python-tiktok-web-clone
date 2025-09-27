@@ -1,7 +1,7 @@
 <div class="flex border-b border-gray-800 mb-4">
     <a href="{% url 'user.profile' username=current_user.username %}"
        class="flex-1 py-3 text-center  {% if request.resolver_match.url_name == 'user.profile' %}tab-active{% endif %}">
-        {% if current_user.is_performer %}
+        {% if current_user.is_creator %}
         <i class="ri-grid-line ri-lg"></i>
         <div class="text-sm">Media</div>
         {% else %}
