@@ -4,7 +4,7 @@ from pathlib import Path
 
 from django.core.files.uploadedfile import UploadedFile, TemporaryUploadedFile
 
-from app import settings
+from app.utils import format_datetime
 from src.inbox.models import Message
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
@@ -55,7 +55,7 @@ class SendMessageService:
 
         return {
             'id': message.id,
-            'created_at': message.created_at.strftime(settings.DATE_TIME_FORMAT),
+            'created_at': format_datetime(message.created_at),
             'message': message.message,
             'attachment_url': message.get_attachment_url(),
             'sender': {

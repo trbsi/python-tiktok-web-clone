@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 
-from app import settings
+from app.utils import format_datetime
 from src.inbox.models import Message
 
 
@@ -30,7 +30,7 @@ class ListMessagesService:
             result.append(
                 {
                     'id': message.id,
-                    'created_at': message.created_at.strftime(settings.DATE_TIME_FORMAT),
+                    'created_at': format_datetime(message.created_at),
                     'message': message.message,
                     'attachment_url': message.get_attachment_url(),
                     'sender': {

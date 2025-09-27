@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 
-from app import settings
+from app.utils import format_datetime
 from src.engagement.models import Comment
 from src.media.models import Media
 from src.user.models import User
@@ -17,7 +17,7 @@ class CreateComment():
         return {
             'id': comment.id,
             'text': comment.comment,
-            'created_at': comment.created_at.strftime(settings.DATE_TIME_FORMAT),
+            'created_at': format_datetime(comment.created_at),
             'user': {
                 'username': comment.user.username,
                 'avatar': comment.user.get_profile_picture(),
