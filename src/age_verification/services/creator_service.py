@@ -31,4 +31,4 @@ class CreatorService:
         return CreatorAgreement.objects.filter(user=user).exists()
 
     def get_age_verification(self, user: User) -> AgeVerification | None:
-        return AgeVerification.objects.get(user=user)
+        return AgeVerification.objects.filter(user=user).first()

@@ -7,7 +7,6 @@ from django.urls.base import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from app.log import log
 from src.age_verification.services.age_verification.age_verification_service import AgeVerificationService
 from src.age_verification.services.creator_agreement.save_agreement_service import SaveAgreementService
 from src.age_verification.services.creator_service import CreatorService
@@ -29,7 +28,6 @@ def become_creator(request: HttpRequest) -> HttpResponse:
     )
 
 
-@require_GET
 @login_required
 def creator_agreement(request) -> HttpResponse:
     creator_service = CreatorService()
@@ -39,8 +37,7 @@ def creator_agreement(request) -> HttpResponse:
     if request.method == 'POST':
         post = request.POST
         consent = post.get('consent')
-        log.info(f'# TODO consent if {consent}')
-        if consent == 'no':
+        if consent != 'on':
             messages.error(request, 'You have to agree to the terms')
             return render(request, 'creator_agreement.html')
 
