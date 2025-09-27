@@ -31,8 +31,6 @@ services:
     restart: unless-stopped
     environment:
       PMA_HOST: my-app-db
-      PMA_USER: ${MYSQL_USER}
-      PMA_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "8080:80"
     depends_on:

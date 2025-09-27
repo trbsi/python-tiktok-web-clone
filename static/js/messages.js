@@ -8,7 +8,7 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         attachment: null,
         allLoaded: false,
         currentUserId: currentUserId,
-        sending: false,
+        isSending: false,
 
         async initChat() {
             await this.loadMessages();
@@ -52,14 +52,22 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         startPolling() {
             this.pollingInterval = setInterval(async () => {
                 try {
-                    const lastId = this.getHighestId();
-                    tempListMessagesApi = listMessagesApi.replace('__CONVERSATION_ID__', conversationId)
+                    const lastId = this.getHighestId(); // highest message ID we have
+                    const tempListMessagesApi = listMessagesApi.replace('__CONVERSATION_ID__', conversationId);
                     const res = await fetch(`${tempListMessagesApi}?after_id=${lastId}`);
                     const data = await res.json();
+
                     if (data.results && data.results.length > 0) {
-                        // Insert new messages at the top (since we have slice().reverse() in html template)
-                        this.messagesList = [...data.results, ...this.messagesList];
-                        this.scrollToBottom();
+                        // Filter out any messages we already have
+                        const newMessages = data.results.filter(
+                            newMessage => !this.messagesList.some(messageInList => messageInList.id === newMessage.id)
+                        );
+
+                        if (newMessages.length > 0) {
+                            // Add new messages at the bottom
+                            this.messagesList.push(...newMessages);
+                            this.scrollToBottom();
+                        }
                     }
                 } catch (e) {
                     console.error("Polling failed", e);
@@ -69,14 +77,14 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
 
         getHighestId() {
             if (this.messagesList.length === 0) return 0;
-            return Math.max(...this.messagesList.map(m => m.id));
+            return Math.max(...this.messagesList.map(message => message.id));
         },
 
         async sendMessage() {
             if (!this.newMessage && !this.attachment) return;
 
-            // Set sending state to true
-            this.sending = true;
+            // Set isSending state to true
+            this.isSending = (this.attachment !== null) ? true : false;
 
             // Prepare FormData
             const formData = new FormData();
@@ -96,7 +104,9 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
                 if (!res.ok) throw new Error("Failed to send message");
 
                 const msg = await res.json();
-                this.messagesList.unshift(msg); // add message to list
+                this.messagesList.push(msg); // add message to list
+                console.log(this.messagesList.map(m => m.id));
+
 
                 // Reset input
                 this.newMessage = "";
@@ -108,10 +118,9 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
             } catch (e) {
                 console.error("Send failed", e);
             } finally {
-                this.sending = false; // hide loader
+                this.isSending = false; // hide loader
             }
         },
-
 
         handleFileUpload(event) {
             if (event.target.files.length > 0) {

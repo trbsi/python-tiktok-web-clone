@@ -9,7 +9,7 @@
         {% include "components/loader.html" %}
     </div>
 
-    <template x-for="msg in messagesList.slice().reverse()" :key="msg.id">
+    <template x-for="msg in messagesList" :key="msg.id">
         <div>
             <!-- Received -->
             <template x-if="msg.sender.id !== currentUserId">

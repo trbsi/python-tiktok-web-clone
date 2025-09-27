@@ -1,4 +1,5 @@
 import os
+import uuid
 from pathlib import Path
 
 from celery import shared_task
@@ -22,7 +23,10 @@ def compress_media_task(media_type: str, media_id: int) -> None:
 
     remote_storage_service = RemoteStorageService()
     compress_file_service = CompressFileService()
+
     original_file_info = media.file_info
+    extension = Path(original_file_info.get('file_name')).suffix  # example: .jpg or .mp4
+    new_file_name = f'{media_type}_{media_id}_{uuid.uuid4()}{extension}'
     local_file_path_directory = os.path.join(settings.MEDIA_ROOT, 'temp')
     files_to_remove = []
 
@@ -38,9 +42,7 @@ def compress_media_task(media_type: str, media_id: int) -> None:
         compress_file_service.compress_image(path=local_file_path)
         output_file_path = local_file_path
     elif media.is_video():
-        extension = Path(original_file_info.get('file_name')).suffix  # example: .jpg or .mp4
-        file_name = f'{media.id}_{original_file_info.get('file_id')}{extension}'
-        output_file_path = f'{local_file_path_directory}/{file_name}'
+        output_file_path = f'{local_file_path_directory}/{new_file_name}'
         compress_file_service.compress_video(input_path=local_file_path, output_path=output_file_path)
     else:
         raise Exception('Unknown media type')
@@ -48,7 +50,7 @@ def compress_media_task(media_type: str, media_id: int) -> None:
     # upload to remote and replace
     file_info = remote_storage_service.upload_file(
         local_file_path=output_file_path,
-        remote_file_name=original_file_info.get('file_name')
+        remote_file_name=new_file_name
     )
 
     files_to_remove.append(output_file_path)
@@ -66,3 +68,9 @@ def compress_media_task(media_type: str, media_id: int) -> None:
     for file in files_to_remove:
         if os.path.exists(file):
             os.remove(file)
+
+    # remove remote file
+    remote_storage_service.delete_file(
+        file_id=original_file_info.get('file_id'),
+        file_name=original_file_info.get('file_name')
+    )

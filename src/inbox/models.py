@@ -15,6 +15,7 @@ class Conversation(models.Model):
     deleted_by_recipient = models.BooleanField(default=False)
     read_by_sender = models.BooleanField(default=False)
     read_by_recipient = models.BooleanField(default=False)
+    is_automated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -44,6 +45,7 @@ class Message(models.Model):
     message = models.TextField(null=True)
     file_info = models.JSONField(null=True)
     file_type = models.CharField(max_length=10, null=True, choices=MediaEnum.file_types())
+    is_automated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()

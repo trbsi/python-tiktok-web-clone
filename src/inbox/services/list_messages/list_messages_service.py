@@ -41,6 +41,8 @@ class ListMessagesService:
                 }
             )
 
+        result.reverse()
+
         next_page = page.next_page_number() if page.has_next() else None
 
         return {'result': result, 'next_page': next_page}

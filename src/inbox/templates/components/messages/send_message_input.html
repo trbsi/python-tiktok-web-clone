@@ -2,12 +2,12 @@
      class="fixed bottom-0 left-0 w-full p-4 border-t border-gray-800 bg-black flex items-center justify-center">
 
     <!-- Show loader while sending -->
-    <div x-show="sending" x-cloak class="flex items-center justify-center w-full">
+    <div x-show="isSending" x-cloak class="flex items-center justify-center w-full">
         {% include "components/loader.html" %}
     </div>
 
     <!-- Normal footer when not sending -->
-    <div x-show="!sending" class="flex items-center space-x-2 w-full">
+    <div x-show="!isSending" class="flex items-center space-x-2 w-full">
         <!-- Hidden file input -->
         <input type="file" x-ref="fileInput" class="hidden" @change="handleFileUpload">
 
