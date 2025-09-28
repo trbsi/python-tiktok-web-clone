@@ -420,6 +420,17 @@ docs = ["furo (>=2024.8.6)", "sphinx (>=5.0)", "sphinx-notfound-page"]
 testing = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)", "setuptools (>=71.0.0)"]
 
 [[package]]
+name = "django-log-viewer"
+version = "1.1.8"
+description = "Django log viewer"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django_log_viewer-1.1.8.tar.gz", hash = "sha256:3b70837cc1877356831a5d4831d30426809ccd12a0705b7fb11512ee17f3b50a"},
+]
+
+[[package]]
 name = "faker"
 version = "37.6.0"
 description = "Faker is a Python package that generates fake data for you."
@@ -861,4 +872,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "acad3e664ff7d424f087c35385938772ff131a9402a6636601264bda7f9df048"
+content-hash = "d2bb4a23759764ff15c5a643f61907a6a0eb58f7457bdcaeb69450e30a533f38"

@@ -1,3 +1,5 @@
+from pickle import format_version
+
 from django.contrib.auth.models import Group
 from django.db.models.manager import Manager
 
@@ -7,6 +9,8 @@ from src.user.models import User
 
 
 class CreatorService:
+    CURRENT_AGREEMENT_VERSION = 1
+
     def become_creator(self, user: User):
         age_verification = self.is_age_verification_completed(user)
         creator_agreement = self.is_creator_agreement_completed(user)
@@ -28,7 +32,10 @@ class CreatorService:
                 .exists())
 
     def is_creator_agreement_completed(self, user: User) -> bool:
-        return CreatorAgreement.objects.filter(user=user).exists()
+        return (CreatorAgreement.objects
+                .filter(user=user)
+                .filter(form_version=self.CURRENT_AGREEMENT_VERSION)
+                .exists())
 
     def get_age_verification(self, user: User) -> AgeVerification | None:
-        return AgeVerification.objects.filter(user=user).first()
+        return AgeVerification.objects.filter(user=user).order_by('-id').first()

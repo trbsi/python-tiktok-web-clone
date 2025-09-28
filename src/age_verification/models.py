@@ -8,7 +8,7 @@ class AgeVerification(models.Model):
     STATUS_VERIFIED = 'verified'
 
     id = models.BigAutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     provider = models.CharField(max_length=20)
     provider_session_id = models.CharField(max_length=255)
     status = models.CharField(max_length=20)
@@ -22,7 +22,7 @@ class CreatorAgreement(models.Model):
     FORM_CREATOR_AGREEMENT = 'creator_agreement'
 
     id = models.BigAutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     form_type = models.CharField(max_length=20)
     form_version = models.IntegerField()
     ip_address = models.GenericIPAddressField()

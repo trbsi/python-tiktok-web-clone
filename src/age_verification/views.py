@@ -7,6 +7,8 @@ from django.urls.base import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
+from app import settings
+from app.log import log
 from src.age_verification.services.age_verification.age_verification_service import AgeVerificationService
 from src.age_verification.services.creator_agreement.save_agreement_service import SaveAgreementService
 from src.age_verification.services.creator_service import CreatorService
@@ -16,6 +18,7 @@ from src.core.helpers import get_client_ip
 @require_GET
 @login_required
 def become_creator(request: HttpRequest) -> HttpResponse:
+    log.info(settings.LOG_VIEWER_FILES_DIR)
     service = CreatorService()
     return render(
         request,

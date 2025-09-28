@@ -15,6 +15,7 @@ class AgeVerificationService:
         if self.is_didit():
             service = DiditSessionService()
             result = service.create_session(user)
+            provider = AgeVerification.PROVIDER_DIDIT
         else:
             raise Exception('No available age verification providers')
 
