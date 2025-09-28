@@ -1,3 +1,4 @@
+from auditlog.registry import auditlog
 from django.db import models
 
 from src.user.models import User
@@ -31,3 +32,7 @@ class CreatorAgreement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = models.Manager()
+
+
+auditlog.register(AgeVerification)
+auditlog.register(CreatorAgreement)

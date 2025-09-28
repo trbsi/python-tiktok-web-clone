@@ -7,6 +7,14 @@ from src.media.query_managers import MediaManager
 from src.user.models import User as User
 
 
+class Hashtag(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    hashtag = models.CharField(max_length=100, unique=True)
+    count = models.IntegerField(default=0)
+
+    objects = models.Manager()
+
+
 class Media(models.Model):
     def get_upload_to_path(self, media, filename: str):
         return f'user_profile/{media.user_id}/{filename}'
@@ -24,6 +32,7 @@ class Media(models.Model):
     share_count = models.PositiveIntegerField(default=0)
     is_processed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    hashtags = models.ManyToManyField(Hashtag, through='MediaHashtag', related_name='media_hashtags')
 
     objects = MediaManager()
     all_objects = models.Manager()
@@ -51,6 +60,17 @@ class Media(models.Model):
 
     def is_video(self):
         return self.file_type == MediaEnum.FILE_TYPE_VIDEO.value
+
+
+class MediaHashtag(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    media = models.ForeignKey(Media, on_delete=models.CASCADE)
+    hashtag = models.ForeignKey(Hashtag, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['media', 'hashtag'], name='unique_media_hashtag'),
+        ]
 
 
 auditlog.register(Media)

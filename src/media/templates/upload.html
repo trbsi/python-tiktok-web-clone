@@ -1,38 +1,20 @@
 {% extends "core/layout.html" %}
+{% load static %}
+
+{% block javascript %}
+<script src="{% static 'js/file_uploader.js' %}"></script>
+{% endblock javascript %}
 
 {% block content %}
 <!-- Upload View -->
-<div id="upload-view" class="bg-black h-full">
-    <div class="h-full flex flex-col">
-        <!-- Camera Preview -->
-        <div class="flex-1 relative">
-            <!--            <img-->
-            <!--                    src=""-->
-            <!--                    alt="Camera Preview"-->
-            <!--                    class="w-full h-full object-cover"-->
-            <!--            />-->
+<div id="upload-view" class="bg-black h-full text-white p-4" x-data="fileUploader()">
+    <div class="flex flex-col h-full">
 
-            <!-- Bottom Controls -->
-            <div class="absolute bottom-0 left-0 right-0 p-6">
-                <div class="flex justify-center items-center">
-                    <button
-                            id="record_button"
-                            class="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center"
-                    >
-                        <div class="w-16 h-16 rounded-full bg-primary"></div>
-                    </button>
-                    <input type="files" id="upload_media" name="media" multiple capture="environment" class="hidden">
-                </div>
-            </div>
-        </div>
+        <!-- File List with Preview and Textarea -->
+        {% include "components/file_preview.html" %}
+
+        <!-- Bottom Controls -->
+        {% include "components/bottom_controls.html" %}
     </div>
 </div>
 {% endblock content %}
-
-{% block javascript %}
-<script>
-    const upload_media = document.getElementById("upload_media");
-    const record_button = document.getElementById("record_button");
-    record_button.addEventListener("click", () => upload_media.click())
-</script>
-{% endblock javascript %}
