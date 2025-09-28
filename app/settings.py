@@ -225,7 +225,7 @@ AGE_VERIFICATION_CONFIG = {
         'base_url': env('AGE_VERIFICATION_DIDIT_BASE_URL'),
         'api_key': env('AGE_VERIFICATION_DIDIT_API_KEY'),
         'workflow_id': env('AGE_VERIFICATION_DIDIT_WORKFLOW_ID'),
-        'webhook_secret_key': env('AGE_VERIFICATION_DIDIT_SECRET_KEY'),
+        'webhook_secret_key': env('AGE_VERIFICATION_DIDIT_WEBHOOK_KEY'),
     }
 }
 

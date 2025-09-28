@@ -2,6 +2,11 @@
     display: none !important;
 }
 
+/*---------------------- TOASTR --------------------*/
+.toast {
+    opacity: 1 !important;
+}
+
 /*---------------------- LOCK SCROLLING --------------------*/
 #feed {
     overflow-y: scroll; /* allow programmatic scrolling */

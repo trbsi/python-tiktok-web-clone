@@ -33,13 +33,17 @@ class Media(models.Model):
             models.Index(fields=['status'], name='idx_media_status'),
         ]
 
-    def get_file_url(self):
+    def get_file_url(self) -> str:
         return f'{settings.STORAGE_CDN_URL}/{self.file_info.get('file_name')}'
 
-    def get_trailer_url(self):
+    def get_trailer_url(self) -> str | None:
+        if self.file_trailer is None:
+            return None
         return f'{settings.STORAGE_CDN_URL}/{self.file_trailer.get('file_name')}'
 
-    def get_thumbnail_url(self):
+    def get_thumbnail_url(self) -> str | None:
+        if self.file_thumbnail is None:
+            return None
         return f'{settings.STORAGE_CDN_URL}/{self.file_thumbnail.get('file_name')}'
 
     def is_image(self):

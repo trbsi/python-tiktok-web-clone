@@ -48,6 +48,7 @@ def creator_agreement(request) -> HttpResponse:
             user_agent=request.META.get('HTTP_USER_AGENT')
         )
         messages.success(request, 'Consent was successfully signed')
+        return redirect(reverse_lazy('age_verification.become_creator'))
 
     return render(request, 'creator_agreement.html')
 
