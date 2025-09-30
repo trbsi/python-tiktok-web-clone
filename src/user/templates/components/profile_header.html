@@ -15,31 +15,31 @@
 
     <div class="flex gap-6 mb-5">
         {% if logged_in_user.is_creator %}
-        <div class="flex flex-col items-center">
-            <span class="font-bold">{{current_user.profile.follower_count}}</span>
-            <span class="text-sm text-gray-400">Subscribers</span>
-        </div>
+            <div class="flex flex-col items-center">
+                <span class="font-bold">{{current_user.profile.follower_count}}</span>
+                <span class="text-sm text-gray-400">Subscribers</span>
+            </div>
         <div class="flex flex-col items-center">
             <span class="font-bold">{{current_user.profile.media_count}}</span>
             <span class="text-sm text-gray-400">Media</span>
         </div>
-        {% if logged_in_user.username == current_user.username %}
-        <div class="flex flex-col items-center">
-            <span class="font-bold">{{current_user.balance.creator_balance}}</span>
-            <span class="text-sm text-gray-400">Earnings</span>
-        </div>
-        {% endif %}
+            {% if logged_in_user.username == current_user.username %}
+            <div class="flex flex-col items-center">
+                <span class="font-bold">{{current_user.balance.creator_balance}}</span>
+                <span class="text-sm text-gray-400">Earnings</span>
+            </div>
+            {% endif %}
         {% else %}
-        <div class="flex flex-col items-center">
-            <span class="font-bold">{{current_user.profile.following_count}}</span>
-            <span class="text-sm text-gray-400">Subscriptions</span>
-        </div>
-        {% if logged_in_user.username == current_user.username %}
-        <div class="flex flex-col items-center">
-            <span class="font-bold">{{current_user.balance.user_balance}}</span>
-            <span class="text-sm text-gray-400">Balance</span>
-        </div>
-        {% endif %}
+            <div class="flex flex-col items-center">
+                <span class="font-bold">{{current_user.profile.following_count}}</span>
+                <span class="text-sm text-gray-400">Subscriptions</span>
+            </div>
+            {% if logged_in_user.username == current_user.username %}
+            <div class="flex flex-col items-center">
+                <span class="font-bold">{{current_user.balance.user_balance}}</span>
+                <span class="text-sm text-gray-400">Balance</span>
+            </div>
+            {% endif %}
         {% endif %}
     </div>
 
@@ -48,12 +48,22 @@
         {{ current_user.profile.bio|linebreaksbr|urlize }}
     </p>
     {% endif %}
+
     {% if logged_in_user.username == current_user.username %}
     <a href="{% url 'user.update_profile' %}"
-       class="bg-primary text-white px-5 py-1 rounded-full !rounded-button font-medium"
-    >
-        Edit Profile
-    </a>
+       class="bg-primary text-white px-5 py-1 rounded-full !rounded-button font-medium">Edit Profile</a>
+    {% endif %}
+
+    {% if current_user.is_creator and logged_in_user.username != current_user.username  %}
+    <form method="post" action="{% url 'report.report_content' %}" x-data>
+        {% csrf_token %}
+        <input type="hidden" name="type" value="user">
+        <input type="hidden" name="content_id" value="{{current_user.id}}">
+        <button
+                @click="if(confirm('Are you sure?') === false) $event.preventDefault()"
+                class="bg-primary text-white px-5 py-1 rounded-full !rounded-button font-medium">Report person</button>
+    </form>
+
     {% endif %}
 </div>
 

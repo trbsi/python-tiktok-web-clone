@@ -48,7 +48,8 @@ def api_upload(request: HttpRequest) -> JsonResponse:
 
     return JsonResponse({})
 
-
+@require_GET
+@login_required
 def my_content(request: HttpRequest) -> HttpResponse:
     get = request.GET
     page = int(get.get('page')) if get.get('page') else 1
@@ -64,6 +65,8 @@ def my_content(request: HttpRequest) -> HttpResponse:
         })
 
 
+@require_POST
+@login_required
 def update_my_media(request: HttpRequest) -> HttpResponse:
     post = request.POST
     delete = post.getlist('delete')

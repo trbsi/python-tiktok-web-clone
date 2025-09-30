@@ -195,7 +195,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env('EMAIL_HOST')  # e.g. smtp.gmail.com, smtp.sendgrid.net, etc.
 EMAIL_PORT = env('EMAIL_PORT')  # 587 for TLS, 465 for SSL, 25 (not recommended)
-EMAIL_USE_TLS = env('EMAIL_USE_TLS')  # or EMAIL_USE_SSL = True
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')  # or EMAIL_USE_SSL = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
@@ -216,8 +216,8 @@ CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
-CELERY_TASK_ALWAYS_EAGER = False if APP_ENV == 'production' else bool(int(env('CELERY_TASK_ALWAYS_EAGER')))
-CELERY_TASK_EAGER_PROPAGATES = bool(int(env('CELERY_TASK_EAGER_PROPAGATES')))
+CELERY_TASK_ALWAYS_EAGER = False if APP_ENV == 'production' else env.bool('CELERY_TASK_ALWAYS_EAGER')
+CELERY_TASK_EAGER_PROPAGATES = env.bool('CELERY_TASK_EAGER_PROPAGATES')
 
 # Age verification
 AGE_VERIFICATION_PROVIDER = env('AGE_VERIFICATION_PROVIDER')

@@ -26,4 +26,4 @@ class ReportService:
             template_variables={'type': type, 'reported_by': reported_by, 'id': content_id},
             to=['admins']
         )
-        NotificationService().send_notification(admin_email)
+        NotificationService.send_notification(admin_email)
