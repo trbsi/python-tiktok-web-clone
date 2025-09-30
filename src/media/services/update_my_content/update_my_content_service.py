@@ -6,16 +6,31 @@ from src.user.tasks import delete_user_media
 
 
 class UpdateMyContentService:
-    def update_my_content(self, user: User, delete_list: list, ids: list, descriptions: list):
-        hashtag_service = HashtagService()
-        Media.objects.filter(user=user).filter(id__in=delete_list).update(status=MediaEnum.STATUS_DELETED.value)
+    def __init__(self, hashtag_service=None):
+        self.hashtag_service = hashtag_service or HashtagService()
+
+    def update_my_content(
+            self,
+            user: User,
+            delete_list: list,
+            ids: list,
+            descriptions: list,
+            statuses: list
+    ):
+        if delete_list:
+            Media.objects.filter(user=user).filter(id__in=delete_list).update(status=MediaEnum.STATUS_DELETED.value)
+            return
+
+
 
         for (index, id) in enumerate(ids):
             description = descriptions[index]
+            status = statuses[index]
             media = Media.objects.filter(user=user, id=id).first()
             if media:
                 media.description = description
+                media.status = status
                 media.save()
-                hashtag_service.save_hashtags(media=media, description=description)
+                self.hashtag_service.save_hashtags(media=media, description=description)
 
         delete_user_media.delay(user_id=user.id)

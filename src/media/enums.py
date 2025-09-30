@@ -24,6 +24,14 @@ class MediaEnum(Enum):
         )
 
     @staticmethod
+    def creator_statuses() -> Tuple:
+        return (
+            (MediaEnum.STATUS_PAID.value, 'Paid'),
+            (MediaEnum.STATUS_FREE.value, 'Free'),
+            (MediaEnum.STATUS_PRIVATE.value, 'Private'),
+        )
+
+    @staticmethod
     def file_types() -> Tuple:
         return (
             (MediaEnum.FILE_TYPE_AUDIO.value, 'Audio'),

@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
 from src.age_verification.services.creator_service import CreatorService
+from src.media.enums import MediaEnum
 from src.media.services.my_content.my_content_service import MyContentService
 from src.media.services.update_my_content.update_my_content_service import UpdateMyContentService
 from src.media.services.upload_media.upload_media_service import UploadMediaService
@@ -55,7 +56,12 @@ def my_content(request: HttpRequest) -> HttpResponse:
     service = MyContentService()
     media = service.list_my_content(user=request.user, current_page=page)
 
-    return render(request, 'my_content.html', {'media_list': media})
+    return render(
+        request,
+        'my_content.html', {
+            'media_list': media,
+            'media_statuses': MediaEnum.creator_statuses()
+        })
 
 
 def update_my_media(request: HttpRequest) -> HttpResponse:
@@ -63,9 +69,16 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
     delete = post.getlist('delete')
     ids = post.getlist('media_ids')
     descriptions = post.getlist('descriptions')
+    statuses = post.getlist('statuses')
 
     service = UpdateMyContentService()
-    service.update_my_content(user=request.user, delete_list=delete, ids=ids, descriptions=descriptions)
+    service.update_my_content(
+        user=request.user,
+        delete_list=delete,
+        ids=ids,
+        descriptions=descriptions,
+        statuses=statuses
+    )
 
     messages.success(request, 'Your content has been updated.')
     return redirect('media.my_content')
