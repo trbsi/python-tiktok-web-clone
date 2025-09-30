@@ -8,6 +8,7 @@ from django.views.decorators.http import require_GET, require_POST
 
 from src.age_verification.services.creator_service import CreatorService
 from src.media.services.my_content.my_content_service import MyContentService
+from src.media.services.update_my_content.update_my_content_service import UpdateMyContentService
 from src.media.services.upload_media.upload_media_service import UploadMediaService
 from src.user.models import User
 
@@ -55,6 +56,19 @@ def my_content(request: HttpRequest) -> HttpResponse:
     media = service.list_my_content(user=request.user, current_page=page)
 
     return render(request, 'my_content.html', {'media_list': media})
+
+
+def update_my_media(request: HttpRequest) -> HttpResponse:
+    post = request.POST
+    delete = post.getlist('delete')
+    ids = post.getlist('media_ids')
+    descriptions = post.getlist('descriptions')
+
+    service = UpdateMyContentService()
+    service.update_my_content(user=request.user, delete_list=delete, ids=ids, descriptions=descriptions)
+
+    messages.success(request, 'Your content has been updated.')
+    return redirect('media.my_content')
 
 
 def _can_access_upload(request: HttpRequest) -> bool:

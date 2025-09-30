@@ -2,6 +2,7 @@ from celery import shared_task
 from django.db.models import Q
 
 from src.inbox.models import Message, Conversation
+from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.storage.services.remote_storage_service import RemoteStorageService
 
@@ -9,7 +10,7 @@ from src.storage.services.remote_storage_service import RemoteStorageService
 @shared_task
 def delete_user_media(user_id: int):
     remote_storage_service = RemoteStorageService()
-    media = Media.objects.filter(user_id=user_id)
+    media = Media.objects.filter(user_id=user_id).filter(status=MediaEnum.STATUS_DELETED.value)
 
     for item in media:
         media_item: Media = item
