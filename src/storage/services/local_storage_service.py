@@ -1,7 +1,10 @@
 import os
+import tempfile
+import uuid
+from pathlib import Path
 
 from django.core.files.storage import default_storage
-from django.core.files.uploadedfile import UploadedFile
+from django.core.files.uploadedfile import UploadedFile, TemporaryUploadedFile
 
 from app import settings
 from src.media.enums import MediaEnum
@@ -19,6 +22,25 @@ class LocalStorageService:
 
         return {
             'file_name': file_name,
+        }
+
+    def temp_upload_file(self, uploaded_file: UploadedFile) -> dict:
+        extension = Path(uploaded_file.name).suffix  # .jpg or .mp4
+        remote_file_name = f'{uuid.uuid4()}{extension}'
+        file_type = self.get_file_type(uploaded_file=uploaded_file)
+
+        if isinstance(uploaded_file, TemporaryUploadedFile):
+            local_file_path = uploaded_file.temporary_file_path()
+        else:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=extension) as local_file:
+                for chunk in uploaded_file.chunks():
+                    local_file.write(chunk)
+                local_file_path = local_file.name
+
+        return {
+            'file_type': file_type,
+            'local_file_path': local_file_path,
+            'remote_file_name': remote_file_name,
         }
 
     def delete_file(self, file_path: str) -> None:

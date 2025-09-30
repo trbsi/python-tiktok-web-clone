@@ -1,12 +1,12 @@
 function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, reportContentApi, likeMediaApi, listCommentsApi, filters) {
     return {
-        mediaList: [],                // list of video objects
+        mediaList: [],             // list of video objects
         page: 1,                   // pagination
         loadingMore: false,
         hasMore: true,
         currentIndex: 0,
         observer: null,
-        progressBar: {},              // progress per index (0..100)
+        progressBar: {},           // progress per index (0..100)
         loadingVideo: {},          // buffering flags per index
         commentsOpen: false,
         comments: [],

@@ -1,0 +1,38 @@
+{% extends "core/layout.html" %}
+
+{% block content %}
+<div id="my-content-view" class="p-4">
+
+    <div class="flex-1 overflow-y-auto space-y-4">
+        <form method="post">
+            {% csrf_token %}
+            {% for media in media_list %}
+            <div class="bg-gray-900 p-4 rounded-lg space-y-2">
+                <!-- Preview -->
+                <div class="w-full h-48 rounded overflow-hidden bg-gray-900 flex items-center justify-center">
+                    {% if media.is_image %}
+                    <img src="{{ media.get_file_url }}" class="object-contain w-full h-full" alt="Image Preview">
+                    {% elif media.is_video %}
+                    <video src="{{ media.get_file_url }}" preload="none" poster="{{media.get_thumbnail_url}}"
+                           class="object-contain w-full h-full"
+                           controls></video>
+                    {% endif %}
+                </div>
+
+                <!-- Textarea for file description -->
+                <textarea
+                        rows="5"
+                        placeholder="Add a description and hashtags for better categorization"
+                        class="w-full p-2 rounded bg-gray-700 text-white text-sm"
+                >{{ media.description }}</textarea>
+            </div>
+            {% endfor %}
+
+            {% include "components/my_content_buttons.html" %}
+        </form>
+    </div>
+</div>
+
+{% include "components/pagination.html" with page_obj=media_list %}
+
+{% endblock content %}

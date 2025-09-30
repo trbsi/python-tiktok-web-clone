@@ -23,5 +23,5 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         post_registration_service = PostRegistrationService()
         user = super().save(commit)
-        post_registration_service.register(user)
+        post_registration_service.post_register(user)
         return user

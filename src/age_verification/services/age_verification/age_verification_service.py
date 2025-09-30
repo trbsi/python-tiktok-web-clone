@@ -21,7 +21,7 @@ class AgeVerificationService:
 
         AgeVerification.objects.create(
             user=user,
-            provider=AgeVerification.PROVIDER_DIDIT,
+            provider=provider,
             provider_session_id=result.get('session_id'),
             status=result.get('status'),
         )

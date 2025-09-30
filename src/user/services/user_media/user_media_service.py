@@ -22,7 +22,8 @@ class UserMediaService:
             result.append({
                 'id': media_item.id,
                 'title': '',
-                'thumbnail': str(media_item.get_thumbnail_url()),
+                'thumbnail': str(
+                    media_item.get_thumbnail_url()) if media_item.is_video() else media_item.get_file_url(),
                 'item_type': media_item.file_type,
                 'destination_url': reverse_lazy_with_query(
                     route_name='feed.following',

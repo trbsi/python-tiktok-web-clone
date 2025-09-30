@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
 from src.age_verification.services.creator_service import CreatorService
+from src.media.services.my_content.my_content_service import MyContentService
 from src.media.services.upload_media.upload_media_service import UploadMediaService
 from src.user.models import User
 
@@ -23,12 +24,12 @@ def upload(request: HttpRequest) -> HttpResponse:
         if not _can_access_upload(request):
             return redirect(reverse_lazy('age_verification.become_creator'))
 
-    return render(request, 'upload.html')
+    return render(request, 'upload.html', {'upload_api': reverse_lazy('media.api.upload')})
 
 
 @require_POST
 @login_required
-def do_upload(request: HttpRequest) -> JsonResponse:
+def api_upload(request: HttpRequest) -> JsonResponse:
     user: User = request.user
     if user.is_regular_user():
         raise PermissionDenied
@@ -36,13 +37,24 @@ def do_upload(request: HttpRequest) -> JsonResponse:
     is_creator = user.is_creator()
     if is_creator or is_creator == False:
         if not _can_access_upload(request):
-            return redirect(reverse_lazy('age_verification.become_creator'))
+            return JsonResponse({'error': 'Permission Denied'}, status=403)
 
-    files = request.FILES.get('files')
+    file = request.FILES.get('file')
+    post = request.POST
     service = UploadMediaService()
-    service.upload(files)
+    service.upload(uploaded_file=file, description=post.get('description'))
 
     return JsonResponse({})
+
+
+def my_content(request: HttpRequest) -> HttpResponse:
+    get = request.GET
+    page = int(get.get('page')) if get.get('page') else 1
+
+    service = MyContentService()
+    media = service.list_my_content(user=request.user, current_page=page)
+
+    return render(request, 'my_content.html', {'media_list': media})
 
 
 def _can_access_upload(request: HttpRequest) -> bool:

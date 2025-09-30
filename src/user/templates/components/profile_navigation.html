@@ -16,6 +16,10 @@
 
         <!-- Menu Items -->
         <nav class="mt-4 flex flex-col">
+            <a href="{% url 'media.my_content' %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="ri-multi-image-line"></i> My content
+            </a>
             <a href="{% url 'user.update_email' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
                 <i class="ri-mail-fill"></i> Change email

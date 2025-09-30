@@ -3,8 +3,12 @@ from django.dispatch import receiver
 
 from src.authentication.services.post_registration_service import PostRegistrationService
 
+"""
+After allauth signup
+"""
+
 
 @receiver(user_signed_up)
 def after_signup(request, user, **kwargs):
     service = PostRegistrationService()
-    service.register(user)
+    service.post_register(user)

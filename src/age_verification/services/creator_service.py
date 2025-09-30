@@ -1,7 +1,4 @@
-from pickle import format_version
-
 from django.contrib.auth.models import Group
-from django.db.models.manager import Manager
 
 from src.age_verification.models import AgeVerification, CreatorAgreement
 from src.user.enum import UserEnum
@@ -19,11 +16,8 @@ class CreatorService:
             creator_role = Group.objects.get_or_create(name=UserEnum.ROLE_CREATOR.value)
             user_role = Group.objects.get_or_create(name=UserEnum.ROLE_USER.value)
 
-            creator_role_user_set: Manager[User] = creator_role.user_set
-            user_role_user_set: Manager[User] = user_role.user_set
-
-            creator_role_user_set.add(user)
-            user_role_user_set.remove(user)
+            creator_role.user_set.add(user)
+            user_role.user_set.remove(user)
 
     def is_age_verification_completed(self, user: User) -> bool:
         return (AgeVerification.objects

@@ -2,7 +2,7 @@ const upload_media = document.getElementById("upload_media");
 const record_button = document.getElementById("record_button");
 record_button.addEventListener("click", () => upload_media.click())
 
-function fileUploader() {
+function fileUploader(uploadApi) {
     return {
         files: [],
 
@@ -30,7 +30,7 @@ function fileUploader() {
             formData.append('description', fileData.description);
 
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/api/upload/"); // Replace with your Django endpoint
+            xhr.open("POST", uploadApi);
 
             xhr.upload.addEventListener("progress", (e) => {
                 if (e.lengthComputable) {

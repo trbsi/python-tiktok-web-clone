@@ -1,76 +1,75 @@
 import os
-import uuid
-from pathlib import Path
 
 from celery import shared_task
 
 from app import settings
 from src.inbox.models import Message
 from src.media.models import Media
-from src.storage.services.compress_file_service import CompressFileService
+from src.storage.services.media_manipulation.compress_media_service import CompressMediaService
+from src.storage.services.media_manipulation.thumbnail_service import ThumbnailService
+from src.storage.services.media_manipulation.trailer_service import TrailerService
 from src.storage.services.remote_storage_service import RemoteStorageService
 
 
 @shared_task
-def compress_media_task(media_type: str, media_id: int) -> None:
-    if media_type == 'inbox':
-        media = Message.objects.get(pk=media_id)
-    else:
-        media = Media.objects.get(pk=media_id)
-
+def compress_media_task(
+        media: Message | Media,
+        create_thumbnail: bool = False,
+        create_trailer: bool = False
+) -> None:
     if media.file_info is None:
         return
 
     remote_storage_service = RemoteStorageService()
-    compress_file_service = CompressFileService()
+    compress_service = CompressMediaService()
+    thumbnail_service = ThumbnailService()
+    trailer_service = TrailerService()
 
-    original_file_info = media.file_info
-    extension = Path(original_file_info.get('file_name')).suffix  # example: .jpg or .mp4
-    new_file_name = f'{media_type}_{media_id}_{uuid.uuid4()}{extension}'
     local_file_path_directory = os.path.join(settings.MEDIA_ROOT, 'temp')
     files_to_remove = []
 
     # download file from remote
-    local_file_path = remote_storage_service.download_file(
-        file_id=original_file_info.get('file_id'),
-        file_name=original_file_info.get('file_name'),
+    downloaded_local_file_path = remote_storage_service.download_file(
+        file_id=media.file_info.get('file_id'),
+        file_name=media.file_info.get('file_name'),
         local_file_path_directory=local_file_path_directory
     )
 
     # compress file
-    if media.is_image():
-        compress_file_service.compress_image(path=local_file_path)
-        output_file_path = local_file_path
-    elif media.is_video():
-        output_file_path = f'{local_file_path_directory}/{new_file_name}'
-        compress_file_service.compress_video(input_path=local_file_path, output_path=output_file_path)
-    else:
-        raise Exception('Unknown media type')
-
-    # upload to remote and replace
-    file_info = remote_storage_service.upload_file(
-        local_file_path=output_file_path,
-        remote_file_name=new_file_name
+    compression_result = compress_service.handle_compression(
+        media=media,
+        local_file_path=downloaded_local_file_path,
+        local_file_path_directory=local_file_path_directory
     )
+    output_compressed_file_path = compression_result.get('output_compressed_file_path')
 
-    files_to_remove.append(output_file_path)
-    files_to_remove.append(local_file_path)
+    # create thumbnail
+    if create_thumbnail and media.is_video():
+        thumbnail_result = thumbnail_service.snap_thumbnail(
+            media=media,
+            local_file_path=output_compressed_file_path,
+            local_file_path_directory=local_file_path_directory,
+        )
+        files_to_remove.append(thumbnail_result.get('output_thumbnail_path'))
 
-    # update model
-    if media_type == 'inbox':
-        media.file_info = file_info
-        media.save()
-    else:
-        # TODO save media properly
-        media = Media.objects.get(pk=media_id)
+    # create trailer
+    if create_trailer and media.is_video():
+        trailer_result = trailer_service.make_trailer(
+            media=media,
+            local_file_path=output_compressed_file_path,
+            local_file_path_directory=local_file_path_directory,
+        )
+        files_to_remove.append(trailer_result.get('output_trailer_file_path'))
+        files_to_remove = files_to_remove + trailer_result.get('parts')
 
     # remove local files
+    files_to_remove.append(output_compressed_file_path)
+    files_to_remove.append(downloaded_local_file_path)
     for file in files_to_remove:
         if os.path.exists(file):
             os.remove(file)
 
-    # remove remote file
-    remote_storage_service.delete_file(
-        file_id=original_file_info.get('file_id'),
-        file_name=original_file_info.get('file_name')
-    )
+    # set model as ready
+    if isinstance(media, Media):
+        media.is_processed = True
+        media.save()

@@ -40,7 +40,7 @@ class Conversation(models.Model):
 
 class Message(models.Model):
     id = models.BigAutoField(primary_key=True)
-    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='conversation')
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
     message = models.TextField(null=True)
     file_info = models.JSONField(null=True)

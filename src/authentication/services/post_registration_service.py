@@ -6,7 +6,7 @@ from src.user.models import UserProfile
 
 
 class PostRegistrationService:
-    def register(self, user) -> None:
+    def post_register(self, user) -> None:
         Balance.objects.create(user=user)
         role_user = Group.objects.get_or_create(name=UserEnum.ROLE_USER.value)
         role_user.user_set.add(user)

@@ -1,8 +1,4 @@
-import tempfile
-import uuid
-from pathlib import Path
-
-from django.core.files.uploadedfile import UploadedFile, TemporaryUploadedFile
+from django.core.files.uploadedfile import UploadedFile
 
 from app.utils import format_datetime
 from src.inbox.models import Message
@@ -18,29 +14,21 @@ class SendMessageService:
             user: User,
             conversation_id: int,
             messageContent: str | None,
-            file: UploadedFile | None = None,
+            uploaded_file: UploadedFile | None = None,
     ) -> dict:
         file_info = None
         file_type = None
-        local_storage_service = LocalStorageService()
 
-        if file is not None:
-            extension = Path(file.name).suffix  # .jpg or .mp4
-            remote_file_name = f'msg_{uuid.uuid4()}{extension}'
-            file_type = local_storage_service.get_file_type(uploaded_file=file)
-
-            if isinstance(file, TemporaryUploadedFile):
-                local_file_path = file.temporary_file_path()
-            else:
-                with tempfile.NamedTemporaryFile(delete=False, suffix=extension) as local_file:
-                    for chunk in file.chunks():
-                        local_file.write(chunk)
-                    local_file_path = local_file.name
-
+        if uploaded_file is not None:
+            local_storage_service = LocalStorageService()
             file_upload_service = RemoteStorageService()
+
+            file_data = local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
+            file_type = file_data.get('file_type')
+
             file_info = file_upload_service.upload_file(
-                local_file_path=local_file_path,
-                remote_file_name=remote_file_name
+                local_file_path=file_data.get('local_file_path'),
+                remote_file_name=file_data.get('remote_file_name')
             )
 
         message = Message.objects.create(
@@ -51,7 +39,7 @@ class SendMessageService:
             file_type=file_type,
         )
 
-        compress_media_task.delay(media_type='inbox', media_id=message.id)
+        compress_media_task.delay(media=message)
 
         return {
             'id': message.id,

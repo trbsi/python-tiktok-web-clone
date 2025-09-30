@@ -120,7 +120,7 @@ def delete(request: HttpRequest) -> HttpResponse:
 @login_required
 def do_delete(request: HttpRequest) -> HttpResponse:
     delete_user_service = DeleteUserService()
-    delete_user_service.delete(user=request.user)
+    delete_user_service.delete_user(user=request.user)
     logout(request)
     messages.success(request=request, message='Account deleted successfully')
     return redirect(reverse_lazy('home'))
