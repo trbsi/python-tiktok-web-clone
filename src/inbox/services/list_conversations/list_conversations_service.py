@@ -30,7 +30,8 @@ class ListConversationsService():
         for conversation in page.object_list:
             other_user = conversation.get_other_user(current_user=current_user)
             message = conversation.last_message
-            message = message if len(message) <= self.LAST_MESSAGE_SIZE else message[:self.LAST_MESSAGE_SIZE] + '...',
+            if message and len(message) > self.LAST_MESSAGE_SIZE:
+                message = message[:self.LAST_MESSAGE_SIZE] + '...'
 
             result.append(
                 {

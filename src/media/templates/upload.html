@@ -7,7 +7,7 @@
 
 {% block content %}
 <!-- Upload View -->
-<div id="upload-view" class="bg-black h-full text-white p-4" x-data="fileUploader()">
+<div id="upload-view" class="bg-black h-full text-white p-4" x-data="fileUploader('{{upload_api}}')">
     <div class="flex flex-col h-full">
 
         <!-- File List with Preview and Textarea -->

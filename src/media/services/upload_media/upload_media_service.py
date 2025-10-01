@@ -5,16 +5,17 @@ from src.media.models import Media
 from src.media.services.hashtag.hashtag_service import HashtagService
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
-from src.storage.tasks import compress_media_task
+from src.storage.tasks import compress_media_task, MEDIA_TYPE_MEDIA
+from src.user.models import User
 
 
 class UploadMediaService:
-    def upload(self, uploaded_file: UploadedFile, description: str) -> None:
+    def upload_media(self, user: User, uploaded_file: UploadedFile, description: str) -> None:
         local_storage_service = LocalStorageService()
         remote_storage_service = RemoteStorageService()
         hashtag_service = HashtagService()
 
-        # uploade to temp local storage
+        # upload to temp local storage
         file_data = local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
         remote_file_info = remote_storage_service.upload_file(
             local_file_path=file_data.get('local_file_path'),
@@ -26,10 +27,15 @@ class UploadMediaService:
             file_type=file_data.get('file_type'),
             status=MediaEnum.STATUS_PENDING.value,
             description=description,
+            user=user,
         )
 
         # save hashtags
         hashtag_service.save_hashtags(media=media, description=description)
-
         # compress media
-        compress_media_task.delay(media=media, create_thumbnail=True, create_trailer=True)
+        compress_media_task.delay(
+            media_id=media.id,
+            media_type=MEDIA_TYPE_MEDIA,
+            create_thumbnail=True,
+            create_trailer=True
+        )

@@ -38,3 +38,10 @@ def create_comment(request: HttpRequest) -> JsonResponse:
     )
 
     return JsonResponse(comment)
+
+
+@require_POST
+@login_required
+# TODO finish this
+def delete_comment(request: HttpRequest, media_id: int) -> JsonResponse:
+    return JsonResponse({})

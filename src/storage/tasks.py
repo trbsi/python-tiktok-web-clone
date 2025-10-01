@@ -10,13 +10,22 @@ from src.storage.services.media_manipulation.thumbnail_service import ThumbnailS
 from src.storage.services.media_manipulation.trailer_service import TrailerService
 from src.storage.services.remote_storage_service import RemoteStorageService
 
+MEDIA_TYPE_MEDIA = 'media'
+MEDIA_TYPE_INBOX = 'inbox'
+
 
 @shared_task
 def compress_media_task(
-        media: Message | Media,
+        media_type: str,
+        media_id: int,
         create_thumbnail: bool = False,
         create_trailer: bool = False
 ) -> None:
+    if media_type == MEDIA_TYPE_INBOX:
+        media = Message.objects.get(id=media_id)
+    elif media_type == MEDIA_TYPE_MEDIA:
+        media = Media.objects.get(id=media_id)
+
     if media.file_info is None:
         return
 

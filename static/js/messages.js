@@ -105,8 +105,6 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
 
                 const msg = await res.json();
                 this.messagesList.push(msg); // add message to list
-                console.log(this.messagesList.map(m => m.id));
-
 
                 // Reset input
                 this.newMessage = "";

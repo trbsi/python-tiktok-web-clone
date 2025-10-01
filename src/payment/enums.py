@@ -24,3 +24,7 @@ class PaymentEnum(Enum):
             (PaymentEnum.PROVIDER_SEGPAY.value, 'SegGay'),
             (PaymentEnum.PROVIDER_EPOCH.value, 'Epoch'),
         )
+
+
+class SpendingEnum(Enum):
+    TYPE_MESSAGE = 'message'

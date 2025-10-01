@@ -15,31 +15,31 @@
 
     <div class="flex gap-6 mb-5">
         {% if logged_in_user.is_creator %}
-            <div class="flex flex-col items-center">
-                <span class="font-bold">{{current_user.profile.follower_count}}</span>
-                <span class="text-sm text-gray-400">Subscribers</span>
-            </div>
+        <div class="flex flex-col items-center">
+            <span class="font-bold">{{current_user.profile.follower_count}}</span>
+            <span class="text-sm text-gray-400">Subscribers</span>
+        </div>
         <div class="flex flex-col items-center">
             <span class="font-bold">{{current_user.profile.media_count}}</span>
             <span class="text-sm text-gray-400">Media</span>
         </div>
-            {% if logged_in_user.username == current_user.username %}
-            <div class="flex flex-col items-center">
-                <span class="font-bold">{{current_user.balance.creator_balance}}</span>
-                <span class="text-sm text-gray-400">Earnings</span>
-            </div>
-            {% endif %}
+        {% if is_the_same_user %}
+        <div class="flex flex-col items-center">
+            <span class="font-bold">{{current_user.balance.get_balance_as_number}}</span>
+            <span class="text-sm text-gray-400">Earnings</span>
+        </div>
+        {% endif %}
         {% else %}
-            <div class="flex flex-col items-center">
-                <span class="font-bold">{{current_user.profile.following_count}}</span>
-                <span class="text-sm text-gray-400">Subscriptions</span>
-            </div>
-            {% if logged_in_user.username == current_user.username %}
-            <div class="flex flex-col items-center">
-                <span class="font-bold">{{current_user.balance.user_balance}}</span>
-                <span class="text-sm text-gray-400">Balance</span>
-            </div>
-            {% endif %}
+        <div class="flex flex-col items-center">
+            <span class="font-bold">{{current_user.profile.following_count}}</span>
+            <span class="text-sm text-gray-400">Subscriptions</span>
+        </div>
+        {% if is_the_same_user %}
+        <div class="flex flex-col items-center">
+            <span class="font-bold">{{current_user.balance.get_balance_as_number}}</span>
+            <span class="text-sm text-gray-400">Balance</span>
+        </div>
+        {% endif %}
         {% endif %}
     </div>
 
@@ -49,21 +49,34 @@
     </p>
     {% endif %}
 
-    {% if logged_in_user.username == current_user.username %}
+    {% if is_the_same_user %}
     <a href="{% url 'user.update_profile' %}"
        class="bg-primary text-white px-5 py-1 rounded-full !rounded-button font-medium">Edit Profile</a>
     {% endif %}
 
-    {% if current_user.is_creator and logged_in_user.username != current_user.username  %}
-    <form method="post" action="{% url 'report.report_content' %}" x-data>
-        {% csrf_token %}
-        <input type="hidden" name="type" value="user">
-        <input type="hidden" name="content_id" value="{{current_user.id}}">
-        <button
-                @click="if(confirm('Are you sure?') === false) $event.preventDefault()"
-                class="bg-primary text-white px-5 py-1 rounded-full !rounded-button font-medium">Report person</button>
-    </form>
-
+    {% if current_user.is_creator and is_the_same_user == False %}
+    <div class="flex flex-row">
+        <div>
+            <form method="post" action="{% url 'report.report_content' %}" x-data>
+                {% csrf_token %}
+                <input type="hidden" name="type" value="user">
+                <input type="hidden" name="content_id" value="{{current_user.id}}">
+                <button
+                        @click="if(confirm('Are you sure?') === false) $event.preventDefault()"
+                        class="font-medium">
+                    <i class="ri-flag-line"></i> Report
+                </button>
+            </form>
+        </div>
+        <div class="ml-2">
+            <a
+                    href="{% url 'inbox.create_conversations' username=current_user.username %}"
+                    class="bg-primary text-white p-2 rounded-full !rounded-button font-medium">
+                <i class="ri-chat-1-line"></i>
+                Send message
+            </a>
+        </div>
+    </div>
     {% endif %}
 </div>
 

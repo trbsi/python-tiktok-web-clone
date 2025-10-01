@@ -1,22 +1,25 @@
-const upload_media = document.getElementById("upload_media");
-const record_button = document.getElementById("record_button");
-record_button.addEventListener("click", () => upload_media.click())
-
 function fileUploader(uploadApi) {
     return {
-        files: [],
+        files: [],           // all files in the UI (including uploaded)
+        uploadedFiles: [],   // track files already uploaded
 
         handleFiles(event) {
             const selectedFiles = Array.from(event.target.files);
 
             selectedFiles.forEach(file => {
+                // skip files that are already uploaded
+                if (this.uploadedFiles.some(f => f.name === file.name && f.size === file.size)) return;
+
                 const fileData = {
                     file: file,
                     name: file.name,
+                    size: file.size,
                     type: file.type,
                     preview: URL.createObjectURL(file),
                     progress: 0,
-                    description: ''
+                    description: '',
+                    status: 'pending',          // pending | uploading | finalizing | completed | failed
+                    statusMessage: ''
                 };
                 this.files.push(fileData);
             });
@@ -25,35 +28,58 @@ function fileUploader(uploadApi) {
         },
 
         uploadFile(fileData) {
+            // skip if already uploaded
+            if (fileData.status === 'completed') return;
+
+            fileData.status = 'uploading';
+            fileData.statusMessage = 'Uploading…';
+
             const formData = new FormData();
             formData.append('file', fileData.file);
             formData.append('description', fileData.description);
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", uploadApi);
+            xhr.setRequestHeader("X-CSRFToken", getCsrfToken());
 
             xhr.upload.addEventListener("progress", (e) => {
                 if (e.lengthComputable) {
                     fileData.progress = Math.round((e.loaded / e.total) * 100);
+                    if (fileData.progress === 100) {
+                        fileData.statusMessage = "Finalizing upload…";
+                        fileData.status = 'finalizing';
+                    }
                 }
             });
 
             xhr.onload = () => {
                 if (xhr.status === 200) {
-                    console.log('Upload success:', fileData.name);
+                    fileData.statusMessage = "Upload complete ✅";
+                    fileData.status = 'completed';
+
+                    // add to uploadedFiles array to prevent re-upload
+                    if (!this.uploadedFiles.includes(fileData)) {
+                        this.uploadedFiles.push(fileData);
+                    }
                 } else {
-                    console.error('Upload failed:', fileData.name);
+                    fileData.statusMessage = "Upload failed ❌";
+                    fileData.status = 'failed';
                 }
             };
 
-            xhr.onerror = () => console.error('Upload error:', fileData.name);
+            xhr.onerror = () => {
+                fileData.statusMessage = "Upload error ❌";
+                fileData.status = 'failed';
+            };
 
             xhr.send(formData);
         },
 
         uploadAllFiles() {
             this.files.forEach(file => {
-                this.uploadFile(file);
+                if (file.status !== 'completed') {
+                    this.uploadFile(file);
+                }
             });
         }
     }

@@ -41,6 +41,7 @@ urlpatterns = [
     path('follow/', include('src.follow.urls')),
     path('report/', include('src.report.urls')),
     path('age-verification/', include('src.age_verification.urls')),
+    path('payment/', include('src.payment.urls')),
     path('logs/', include('log_viewer.urls')),
 ]
 

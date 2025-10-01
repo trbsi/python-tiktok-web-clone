@@ -36,7 +36,6 @@ function profileGrid(username, mediaApiUrl) {
 
                 this.page = data.next_page ?? (this.page + 1);
                 this.hasMore = !!data.next_page;
-                console.log(this.mediaList)
             } catch (e) {
                 console.error(e);
             } finally {

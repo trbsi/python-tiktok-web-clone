@@ -44,9 +44,10 @@ def api_upload(request: HttpRequest) -> JsonResponse:
     file = request.FILES.get('file')
     post = request.POST
     service = UploadMediaService()
-    service.upload(uploaded_file=file, description=post.get('description'))
+    service.upload_media(user=request.user, uploaded_file=file, description=post.get('description'))
 
     return JsonResponse({})
+
 
 @require_GET
 @login_required

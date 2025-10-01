@@ -2,6 +2,7 @@ from django.core.management import BaseCommand, call_command, CommandError
 
 from app import settings
 from database.seeders import *
+from database.seeders.balance_seeder import BalanceSeeder
 from database.seeders.follow_seeder import FollowSeeder
 from database.seeders.inbox_seeder import InboxSeeder
 
@@ -25,22 +26,25 @@ class Command(BaseCommand):
         call_command("migrate")
 
         self.write('Seeding groups')
-        GroupSeeder().seed()
+        GroupSeeder.seed()
 
         self.write('Seeding users')
-        UserSeeder().seed()
+        UserSeeder.seed()
 
         self.write('Seeding media')
-        MediaSeeder().seed()
+        MediaSeeder.seed()
 
         self.write('Seeding engagement')
-        EngagementSeeder().seed()
+        EngagementSeeder.seed()
 
         self.write('Seeding inbox')
-        InboxSeeder().seed()
+        InboxSeeder.seed()
 
         self.write('Seeding followers')
-        FollowSeeder().seed()
+        FollowSeeder.seed()
+
+        self.write('Seeding balance')
+        BalanceSeeder.seed()
 
         self.stdout.write(self.style.SUCCESS('Done'))
 

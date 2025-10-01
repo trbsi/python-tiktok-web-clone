@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
+from app.log import log
 from src.user.forms.update_email_form import UpdateEmailForm
 from src.user.forms.update_profile_form import UpdateProfileForm
 from src.user.models import User
@@ -20,6 +21,7 @@ from src.user.services.user_profile.user_profile_service import UserProfileServi
 # ------------------- USER PROFILE HOMEPAGE ------------------------
 @require_GET
 def profile(request: HttpRequest, username: str) -> HttpResponse:
+    log.info('USERNAME: {}'.format(username))
     logged_in_user = request.user
     user_profile_service = UserProfileService()
     current_user: User = user_profile_service.get_user_by_username(username)
@@ -27,12 +29,14 @@ def profile(request: HttpRequest, username: str) -> HttpResponse:
     if current_user.is_regular_user() and current_user.username != logged_in_user.username:
         raise Http404
 
+    is_the_same_user = logged_in_user.id == current_user.id
     if current_user.is_creator():
         media_api_url = reverse_lazy('user.api.get_media')
     else:
         media_api_url = reverse_lazy('user.api.get_following')
 
     return render(request, 'profile.html', {
+        'is_the_same_user': is_the_same_user,
         'current_user': current_user,
         'logged_in_user': logged_in_user,
         'media_api_url': media_api_url

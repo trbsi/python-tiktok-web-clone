@@ -10,5 +10,9 @@ class LikeService():
 
         if like:
             like.delete()
+            media.like_count = media.like_count - 1
         else:
             Like.objects.create(user=user, media=media)
+            media.like_count = media.like_count + 1
+
+        media.save()

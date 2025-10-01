@@ -1,10 +1,10 @@
 from django.core.files.uploadedfile import UploadedFile
 
 from app.utils import format_datetime
-from src.inbox.models import Message
+from src.inbox.models import Message, Conversation
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
-from src.storage.tasks import compress_media_task
+from src.storage.tasks import compress_media_task, MEDIA_TYPE_INBOX
 from src.user.models import User
 
 
@@ -39,7 +39,15 @@ class SendMessageService:
             file_type=file_type,
         )
 
-        compress_media_task.delay(media=message)
+        conversation: Conversation = message.conversation
+        if user == conversation.sender:
+            conversation.read_by_recipient = False
+        else:
+            conversation.read_by_sender = False
+
+        conversation.save()
+
+        compress_media_task.delay(media_id=message.id, media_type=MEDIA_TYPE_INBOX)
 
         return {
             'id': message.id,

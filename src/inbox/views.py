@@ -2,10 +2,11 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, JsonResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
+from src.inbox.services.create_conversation.create_conversation_service import CreateConversationService
 from src.inbox.services.delete_conversation.delete_conversation_service import DeleteConversationService
 from src.inbox.services.list_conversations.list_conversations_service import ListConversationsService
 from src.inbox.services.list_messages.can_user_access_conversation_specification import \
@@ -27,6 +28,14 @@ def list_conversations(request: HttpRequest) -> HttpResponse:
             'delete_conversation_api': reverse_lazy('inbox.api.delete'),
         }
     )
+
+
+@require_GET
+@login_required
+def create_conversations(request: HttpRequest, username: str) -> HttpResponse:
+    service = CreateConversationService()
+    id = service.create_conversation(sender=request.user, username=username)
+    return redirect(reverse_lazy('inbox.messages', kwargs={'conversation_id': id}))
 
 
 @require_GET

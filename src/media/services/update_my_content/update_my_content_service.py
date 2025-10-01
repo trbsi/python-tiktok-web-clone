@@ -21,8 +21,6 @@ class UpdateMyContentService:
             Media.objects.filter(user=user).filter(id__in=delete_list).update(status=MediaEnum.STATUS_DELETED.value)
             return
 
-
-
         for (index, id) in enumerate(ids):
             description = descriptions[index]
             status = statuses[index]

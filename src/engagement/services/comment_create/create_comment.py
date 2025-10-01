@@ -13,6 +13,8 @@ class CreateComment():
 
         media = Media.objects.get(id=media_id)
         comment = Comment.objects.create(user=user, media=media, comment=comment)
+        media.comment_count = media.comment_count + 1
+        media.save()
 
         return {
             'id': comment.id,
