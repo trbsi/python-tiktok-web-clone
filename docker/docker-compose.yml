@@ -83,6 +83,8 @@ services:
       dockerfile: docker/web/Dockerfile
     container_name: my-app-celery_worker
     command: celery -A ${CELERY_APP} worker --loglevel=info --concurrency=1
+    environment:
+      - CELERY_BROKER_URL=redis://my-app-redis:6379/0
     volumes:
       - ../:/app:cached
       - my_app_static_volume:/app/staticfiles
