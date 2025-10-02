@@ -4,12 +4,13 @@
 
             id="slide-menu"
             class="fixed top-0 right-0 h-full w-64 bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300 "
-            :class="open ? 'translate-x-0' : 'translate-x-full'"
+            :class="menuOpen ? 'translate-x-0' : 'translate-x-full'"
             x-cloak
     >
         <!-- Close Button -->
         <div class="flex justify-end p-4">
-            <button @click="open = !open" id="menu-close" class="text-gray-300 hover:text-white text-2xl font-bold">
+            <button @click="menuOpen = !menuOpen" id="menu-close"
+                    class="text-gray-300 hover:text-white text-2xl font-bold">
                 &times;
             </button>
         </div>

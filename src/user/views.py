@@ -39,7 +39,8 @@ def profile(request: HttpRequest, username: str) -> HttpResponse:
         'is_the_same_user': is_the_same_user,
         'current_user': current_user,
         'logged_in_user': logged_in_user,
-        'media_api_url': media_api_url
+        'media_api_url': media_api_url,
+        'report_content_api': reverse_lazy('report.api.report_content'),
     })
 
 

@@ -1,4 +1,9 @@
 {% extends "core/layout.html" %}
+{% load static %}
+
+{% block javascript %}
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock javascript %}
 
 {% block content %}
 
@@ -6,10 +11,10 @@
 <div
         id="profile-view"
         class="bg-black h-full overflow-y-auto pb-16"
-        x-data="{ open: false }"
+        x-data="userProfile('{{report_content_api}}')"
 >
     <!-- Trigger button -->
-    <button @click="open = !open"
+    <button @click="menuOpen = !menuOpen"
             class="absolute top-2 right-2  hover:bg-indigo-500 text-white px-3 py-1 rounded text-white">
         <i class="ri-menu-line ri-lg"></i>
     </button>
@@ -26,6 +31,7 @@
     </div>
 
     {% include "components/profile_navigation.html" %}
+    {% include "report_form.html" %}
 </div>
 
 {% endblock content %}

@@ -1,4 +1,4 @@
-from b2sdk.v2 import FileVersion
+from b2sdk.v2 import B2Api, Bucket, FileVersion
 
 from app import settings
 from src.storage.init_storage import init_remote_storage
@@ -13,14 +13,14 @@ class BackBlazeUploadFileService:
             additional_file_info: dict = {}
     ):
         config = settings.STORAGE_CONFIG['backblaze']
-        b2_api = init_remote_storage()
+        b2_api: B2Api = init_remote_storage()
         bucket_name = config['default_bucket_name'] if bucket_name == 'default' else bucket_name
 
-        bucket = b2_api.get_bucket_by_name(bucket_name)
+        bucket: Bucket = b2_api.get_bucket_by_name(bucket_name)
         result: FileVersion = bucket.upload_local_file(
             local_file=local_file_path,
             file_name=remote_file_name,
-            file_info=additional_file_info,
+            file_info=additional_file_info
         )
 
         return {

@@ -32,6 +32,7 @@ class UploadMediaService:
 
         # save hashtags
         hashtag_service.save_hashtags(media=media, description=description)
+
         # compress media
         compress_media_task.delay(
             media_id=media.id,

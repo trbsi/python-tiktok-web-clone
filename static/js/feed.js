@@ -1,19 +1,22 @@
 function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, reportContentApi, likeMediaApi, listCommentsApi, filters) {
     return {
-        mediaList: [],             // list of video objects
-        page: 1,                   // pagination
+        mediaList: [], // list of video objects
+        page: 1, // pagination
         loadingMore: false,
         hasMore: true,
         currentIndex: 0,
         observer: null,
-        progressBar: {},           // progress per index (0..100)
-        loadingVideo: {},          // buffering flags per index
+        progressBar: {}, // progress per index (0..100)
+        loadingVideo: {}, // buffering flags per index
         commentsOpen: false,
         comments: [],
         commentsLoading: false,
         commentInput: '',
-        activeMedia: null,         // currently opened video for comments
+        activeMedia: null, // currently opened video for comments
         isMuted: true,
+        showReportForm: false,
+        reportDescription: "",
+        reportTarget: null, // store the media being reported
 
         init() {
             // initial load
@@ -79,18 +82,19 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
 
                 var targetScroll = index * $containers.first().outerHeight();
 
-                $feed.stop().animate(
-                    {scrollTop: targetScroll},
+                $feed.stop().animate({
+                        scrollTop: targetScroll
+                    },
                     duration,
                     'swing',
-                    function () {
+                    function() {
                         isAnimating = false;
                     }
                 );
             }
 
             // --- Wheel / desktop ---
-            $feed.on('wheel', function (e) {
+            $feed.on('wheel', function(e) {
                 e.preventDefault();
                 if (isAnimating) return;
 
@@ -100,11 +104,11 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
             });
 
             // --- Touch / mobile ---
-            $feed.on('touchstart', function (e) {
+            $feed.on('touchstart', function(e) {
                 touchStartY = e.originalEvent.touches[0].clientY;
             });
 
-            $feed.on('touchend', function (e) {
+            $feed.on('touchend', function(e) {
                 if (isAnimating) return;
 
                 var touchEndY = e.originalEvent.changedTouches[0].clientY;
@@ -117,7 +121,7 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
             });
 
             // --- Resize ---
-            $(window).on('resize', function () {
+            $(window).on('resize', function() {
                 $feed.scrollTop(index * $containers.first().outerHeight());
             });
 
@@ -138,8 +142,7 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
             if (this.observer) {
                 try {
                     this.getMedia().forEach(el => this.observer.unobserve(el));
-                } catch (e) {
-                }
+                } catch (e) {}
                 this.observer.disconnect();
             }
 
@@ -167,7 +170,9 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
                     // optional: pause
                     this.pauseAtIndex(index)
                 }
-            }, {threshold: [0, 0.25, 0.5, 0.6, 0.75, 1]});
+            }, {
+                threshold: [0, 0.25, 0.5, 0.6, 0.75, 1]
+            });
 
             // observe all current media nodes
             this.getMedia().forEach(el => this.observer.observe(el))
@@ -218,8 +223,7 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
             this.getMedia().forEach(v => {
                 try {
                     v.pause();
-                } catch (e) {
-                }
+                } catch (e) {}
             });
         },
 
@@ -286,7 +290,10 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
                 tempLikeMediaApi = likeMediaApi.replace('__MEDIA_ID__', media.id)
                 const res = await fetch(tempLikeMediaApi, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken(),},
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken(),
+                    },
                     credentials: 'include'
                 });
                 if (!res.ok) throw new Error('Like failed');
@@ -315,9 +322,14 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
 
                 const res = await fetch(followUnfollowApi, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken(),},
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken(),
+                    },
                     credentials: 'include',
-                    body: JSON.stringify({'following': media.user.id})
+                    body: JSON.stringify({
+                        'following': media.user.id
+                    })
                 });
 
                 if (!res.ok) throw new Error('Failed to follow performer.');
@@ -329,8 +341,7 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
                     }
                 });
                 alert('Failed to follow performer.');
-            } finally {
-            }
+            } finally {}
         },
 
         async openComments(media) {
@@ -368,7 +379,10 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
             const temp = {
                 id: 'temp-' + Date.now(),
                 text,
-                user: {username: 'You', avatar: '/path/to/avatar.png'},
+                user: {
+                    username: 'You',
+                    avatar: '/path/to/avatar.png'
+                },
                 created_at: 'just now'
             };
             this.comments.unshift(temp);
@@ -385,7 +399,10 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
                 const res = await fetch(createCommentApi, {
                     method: 'POST',
                     credentials: 'include',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken()},
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
                     body: JSON.stringify(body)
                 });
                 if (!res.ok) throw new Error('Failed to post comment');
@@ -407,11 +424,7 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
         openProfile(user) {
             // open user profile - replace with your routing
             // If you use client-side routing, navigate there instead.
-            window.location.href = ` / user / $
-                {
-                    encodeURIComponent(user.username)
-                }
-                `;
+            window.location.href = `/user/${encodeURIComponent(user.username)}`;
         },
 
         async shareMedia(video) {
@@ -434,25 +447,45 @@ function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, r
             }
         },
 
-        async reportMedia(media) {
-            if (!confirm('Are you sure?')) {
-                return
-            }
+        openReportForm(media) {
+            this.reportTarget = media;
+            this.showReportForm = true;
+        },
+
+        closeReportForm() {
+            this.showReportForm = false;
+            this.reportDescription = '';
+            this.targetMedia = null;
+        },
+
+        async submitReport() {
+            if (!this.reportTarget) return;
 
             try {
                 const res = await fetch(reportContentApi, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken(),},
-                    body: JSON.stringify({'type': 'media', 'content_id': media.id}),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken(),
+                    },
+                    body: JSON.stringify({
+                        type: 'media',
+                        content_id: this.reportTarget.id,
+                        description: this.reportDescription
+                    }),
                     credentials: 'include'
                 });
+
                 if (!res.ok) throw new Error('Report failed');
-                // optionally update counts from server response
-                const data = await res.json();
-                alert('Thanks for your feedback. We’ll review this video shortly.');
+                await res.json();
+
+                alert('Thanks for your feedback. We’ll review this content shortly.');
+                this.showReportForm = false;
+                this.reportDescription = "";
+                this.reportTarget = null;
             } catch (e) {
                 console.error(e);
             }
-        },
+        }
     };
 }
