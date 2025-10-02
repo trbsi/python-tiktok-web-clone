@@ -8,7 +8,12 @@ from src.notification.value_objects.email_value_object import EmailValueObject
 
 class EmailService:
     def send(self, notification: EmailValueObject) -> None:
-        html = render_to_string(notification.template_path, context=notification.template_variables)
+        context = notification.template_variables
+        context = {
+            **context,
+            'APP_NAME': settings.APP_NAME
+        }
+        html = render_to_string(notification.template_path, context=context)
         text = striptags(html)
         to_emails = settings.ADMIN_EMAILS if notification.to[0] == 'admins' else notification.to
 

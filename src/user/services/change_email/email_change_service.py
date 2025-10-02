@@ -26,7 +26,7 @@ class EmailChangeService():
         email = EmailValueObject(
             subject="Confirm your new email",
             template_path='emails/auth/update_email.html',
-            template_variables={'confirm_url': confirm_url},
+            template_variables={'anchor_href': confirm_url, 'anchor_label': 'Click here to confirm your new email'},
             to=[new_email]
         )
         NotificationService.send_notification(email)

@@ -1,7 +1,9 @@
 services:
   my-app-mailhog:
+    networks:
+      - my-network
     image: mailhog/mailhog
-    container_name: mailhog
+    container_name: my-app-mailhog
     ports:
       - "1025:1025"   # SMTP port
       - "8025:8025"   # Web UI

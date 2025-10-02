@@ -28,7 +28,7 @@ class ReportService:
             'type': type,
             'reported_by': reported_by_username,
             'id': content_id,
-            'description': description
+            'description': description,
         }
 
         admin_email = EmailValueObject(

@@ -1,3 +1,15 @@
+{% extends "emails/layout.html" %}
+
+{% block title %}
+Confirm Your New Email Address
+{% endblock title %}
+
+{% block content %}
 Hi,
-<br><br>
-Click here to confirm your new email: <a href="{{confirm_url}}">{{confirm_url}}</a>
+<br>
+<br>
+We received a request to update your email address. Please confirm your new email by clicking the button below.
+<br>
+<br>
+If you did not request this change, you can safely ignore this message.
+{% endblock content %}
