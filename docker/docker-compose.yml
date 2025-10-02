@@ -1,5 +1,7 @@
 services:
   my-app-db:
+    networks:
+      - my-network
     image: mysql:8.0
     container_name: my-app-db
     restart: unless-stopped
@@ -19,6 +21,8 @@ services:
       retries: 10
 
   my-app-redis:
+    networks:
+      - my-network
     image: redis:7
     container_name: my-app-redis
     restart: unless-stopped
@@ -26,38 +30,39 @@ services:
       - my_app_redis_data:/data
 
   my-app-phpmyadmin:
+    networks:
+      - my-network
     image: phpmyadmin/phpmyadmin:latest
     container_name: my-app-phpmyadmin
     restart: unless-stopped
     environment:
       PMA_HOST: my-app-db
       VIRTUAL_HOST: ${PHPMYADMIN_VIRTUAL_HOST}
-    ports:
-      - "${PHPMYADMIN_HOST_PORT}:80"
     depends_on:
       - my-app-db
 
   my-app-web:
+    user: "${UID}:${GID}"
+    networks:
+      - my-network
     build:
       context: ..
       dockerfile: docker/web/Dockerfile
     container_name: my-app-web
     restart: unless-stopped
     environment:
+      # Required by nginx-proxy to proxy to gunicorn
+      VIRTUAL_HOST: ${NGINX_VIRTUAL_HOST} # the domain you will use to access your app (can be myapp.local for local dev).
+      VIRTUAL_PORT: 8000  # Gunicorn port inside the container
+      # Required by nginx-proxy + acme-companion
+      LETSENCRYPT_HOST: ${NGINX_LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${NGINX_LETSENCRYPT_EMAIL}
       DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://redis:6379/0
       # enable debug for dev/live reload
       DEBUG: 1
-      # Required by nginx-proxy + acme-companion
-      VIRTUAL_HOST: ${NGINX_VIRTUAL_HOST}
-      LETSENCRYPT_HOST: ${NGINX_LETSENCRYPT_HOST}
-      LETSENCRYPT_EMAIL: ${NGINX_LETSENCRYPT_EMAIL}
-    volumes:
-      - ../:/app:cached
-      - my_app_static_volume:/app/staticfiles
-      - my_app_media_volume:/app/uploads
-      - ../logs:/app/logs
+    # volumes: are in override
     command: >
       gunicorn ${DJANGO_WSGI}:application
       --bind 0.0.0.0:8000
@@ -69,10 +74,10 @@ services:
         condition: service_healthy
       my-app-redis:
         condition: service_started
-    expose:
-      - 8000 # expose to the Docker network, not the host
 
   my-app-celery_worker:
+    networks:
+      - my-network
     build:
       context: ..
       dockerfile: docker/web/Dockerfile
@@ -87,6 +92,8 @@ services:
       - my-app-db
 
   my-app-celery_beat:
+    networks:
+      - my-network
     build:
       context: ..
       dockerfile: docker/web/Dockerfile
@@ -102,6 +109,8 @@ services:
       - my-app-db
 
   my-app-nginx:
+    networks:
+      - my-network
     image: jwilder/nginx-proxy
     container_name: my-app-nginx
     restart: unless-stopped
@@ -111,6 +120,10 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - my_app_nginx_vhost:/etc/nginx/vhost.d
       - my_app_nginx_html:/usr/share/nginx/html
+
+networks:
+  my-network:
+    external: true
 
 volumes:
   my_app_nginx_vhost:

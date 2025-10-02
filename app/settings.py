@@ -231,14 +231,14 @@ AGE_VERIFICATION_CONFIG = {
 }
 
 # Logging
-LOG_VIEWER_FILES = ["*.log*"]
-LOG_VIEWER_FILES_PATTERN = '*.log*'
+LOG_VIEWER_FILES = ["*.logs*"]
+LOG_VIEWER_FILES_PATTERN = '*.logs*'
 LOG_VIEWER_FILES_DIR = os.path.join(BASE_DIR, "logs/")
-LOG_VIEWER_PAGE_LENGTH = 25  # total log lines per-page
-LOG_VIEWER_MAX_READ_LINES = 1000  # total log lines will be read
-LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE = 25  # Max log files loaded in Datatable per page
+LOG_VIEWER_PAGE_LENGTH = 25  # total logs lines per-page
+LOG_VIEWER_MAX_READ_LINES = 1000  # total logs lines will be read
+LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE = 25  # Max logs files loaded in Datatable per page
 LOG_VIEWER_PATTERNS = ['INFO', 'DEBUG', 'WARNING', 'ERROR', 'CRITICAL']
-LOG_VIEWER_EXCLUDE_TEXT_PATTERN = None  # String regex expression to exclude the log from line
+LOG_VIEWER_EXCLUDE_TEXT_PATTERN = None  # String regex expression to exclude the logs from line
 
 LOGGING = {
     'version': 1,
@@ -254,7 +254,7 @@ LOGGING = {
         'daily_file': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.logs'),
             'when': 'midnight',  # Rotate daily at midnight
             'interval': 1,  # Every 1 day
             'backupCount': 7,  # Keep 7 days of logs

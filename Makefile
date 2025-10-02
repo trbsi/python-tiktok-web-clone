@@ -1,4 +1,4 @@
-.PHONY: makemigrations, migrate, seed-database, docker-build, make-admin, collectstatic
+.PHONY: makemigrations, migrate, seed-database, docker-build, make-admin, collectstatic, create-docker-network
 
 makemigrations:
 	docker exec -it my-app-web python manage.py makemigrations
@@ -17,3 +17,6 @@ docker-build:
 
 make-admin:
 	docker exec -it my-app-web python manage.py createsuperuser
+
+create-docker-network:
+	docker network create my-network

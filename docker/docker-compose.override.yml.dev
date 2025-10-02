@@ -5,3 +5,14 @@ services:
     ports:
       - "1025:1025"   # SMTP port
       - "8025:8025"   # Web UI
+
+  my-app-web:
+    volumes:
+      - ../:/app:cached
+      - ../logs:/app/logs
+      - my_app_static_volume:/app/staticfiles
+      - my_app_media_volume:/app/uploads
+
+  my-app-phpmyadmin:
+    ports:
+      - "8080:80"

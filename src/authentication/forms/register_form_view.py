@@ -14,5 +14,5 @@ class RegisterFormView(FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        messages.success(self.request, 'You can log in now')
+        messages.success(self.request, 'You can logs in now')
         return reverse_lazy('login')
