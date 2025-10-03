@@ -69,6 +69,7 @@ services:
       --workers ${GUNICORN_WORKERS}
       --reload
       --log-level ${GUNICORN_LOG_LEVEL}
+      --timeout 600
     depends_on:
       my-app-db:
         condition: service_healthy

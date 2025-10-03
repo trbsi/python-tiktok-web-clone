@@ -93,7 +93,7 @@ def _can_access_upload(request: HttpRequest) -> bool:
     age_verification = service.is_age_verification_completed(request.user)
     agreement = service.is_creator_agreement_completed(request.user)
 
-    if not age_verification and not agreement:
+    if not age_verification or not agreement:
         messages.warning(request, 'You have to sign creator agreement and verify your age')
         return False
     else:

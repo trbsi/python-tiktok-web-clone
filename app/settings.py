@@ -89,6 +89,11 @@ MIDDLEWARE = [
     'auditlog.middleware.AuditlogMiddleware'
 ]
 
+# settings.py
+DATA_UPLOAD_MAX_MEMORY_SIZE = 262144000  # 250 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 262144000  # 250 MB
+
+
 # Auth
 SESSION_COOKIE_AGE = 86400 * 30
 LOGOUT_REDIRECT_URL = '/'
