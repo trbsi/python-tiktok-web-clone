@@ -18,6 +18,7 @@ class UploadMediaService:
         # upload to temp local storage
         file_data = local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
         remote_file_info = remote_storage_service.upload_file(
+            local_file_type=file_data.get('file_type'),
             local_file_path=file_data.get('local_file_path'),
             remote_file_name=file_data.get('remote_file_name'),
         )

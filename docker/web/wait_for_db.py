@@ -8,7 +8,7 @@ from django.db import connections
 from django.db.utils import OperationalError, ProgrammingError
 
 # configure Django settings module so we can use ORM to check DB
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", os.getenv("DJANGO_SETTINGS_MODULE", "myproject.settings"))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
 
 # number of retries and delay
 RETRIES = int(os.getenv("DB_WAIT_RETRIES", 30))

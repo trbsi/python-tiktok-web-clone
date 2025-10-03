@@ -27,6 +27,7 @@ class SendMessageService:
             file_type = file_data.get('file_type')
 
             file_info = file_upload_service.upload_file(
+                local_file_type=file_type,
                 local_file_path=file_data.get('local_file_path'),
                 remote_file_name=file_data.get('remote_file_name')
             )

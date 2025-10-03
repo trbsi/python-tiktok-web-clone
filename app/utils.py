@@ -1,6 +1,7 @@
 import datetime
 from gettext import ngettext
 
+from django.db.models import Model
 from django.urls import reverse_lazy
 from django.utils.http import urlencode
 
@@ -13,6 +14,32 @@ def reverse_lazy_with_query(route_name, kwargs=None, query_params=None):
         url = url + f'?{urlencode(query_params)}'
 
     return url
+
+
+"""
+# In general:
+admin:appname_modelname_adminroute
+
+# List (changelist)
+reverse_lazy("admin:library_book_changelist")
+
+# Add
+reverse_lazy("admin:library_book_add")
+
+# Change (needs object ID)
+reverse_lazy("admin:library_book_change", args=[1])
+
+# Delete
+reverse_lazy("admin:library_book_delete", args=[1])
+
+# History
+reverse_lazy("admin:library_book_history", args=[1])
+"""
+
+
+def reverse_lazy_admin(object: Model, action: str, args=None):
+    route = f'admin:{object._meta.app_label}_{object._meta.model_name}_{action}'
+    return reverse_lazy(route, args)
 
 
 def format_datetime(date: datetime):

@@ -11,6 +11,7 @@ class CompressMediaService:
     def handle_compression(
             self,
             media: Media | Message,
+            local_file_type: str,
             local_file_path: str,
             local_file_path_directory: str
     ) -> dict:
@@ -18,7 +19,7 @@ class CompressMediaService:
         compress_file_service = CompressFileService()
 
         original_file_info = media.file_info
-        extension = Path(original_file_info.get('file_name')).suffix  # example: .jpg or .mp4
+        extension = Path(original_file_info.get('file_path')).suffix  # example: .jpg or .mp4
         new_file_name = f'{media.__class__.__name__}_{media.id}_{uuid.uuid4()}{extension}'
 
         # compress file
@@ -36,6 +37,7 @@ class CompressMediaService:
 
         # upload to remote and replace
         file_info = remote_storage_service.upload_file(
+            local_file_type=local_file_type,
             local_file_path=output_compressed_file_path,
             remote_file_name=new_file_name
         )
@@ -47,7 +49,7 @@ class CompressMediaService:
         # remove remote file
         remote_storage_service.delete_file(
             file_id=original_file_info.get('file_id'),
-            file_name=original_file_info.get('file_name')
+            file_path=original_file_info.get('file_path')
         )
 
         return {

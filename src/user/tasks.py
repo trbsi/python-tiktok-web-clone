@@ -16,19 +16,19 @@ def delete_user_media(user_id: int):
         media_item: Media = item
         remote_storage_service.delete_file(
             file_id=media_item.file_info.get('file_id'),
-            file_name=media_item.file_info.get('file_name')
+            file_path=media_item.file_info.get('file_path')
         )
 
         if media_item.file_thumbnail is not None:
             remote_storage_service.delete_file(
                 file_id=media_item.file_thumbnail.get('file_id'),
-                file_name=media_item.file_thumbnail.get('file_name')
+                file_path=media_item.file_thumbnail.get('file_name')
             )
 
         if media_item.file_trailer is not None:
             remote_storage_service.delete_file(
                 file_id=media_item.file_trailer.get('file_id'),
-                file_name=media_item.file_trailer.get('file_name')
+                file_path=media_item.file_trailer.get('file_name')
             )
 
         media_item.delete()
@@ -43,7 +43,7 @@ def delete_user_messages(user_id: int):
         message: Message = msg
         remote_storage_service.delete_file(
             file_id=message.file_info.get('file_id'),
-            file_name=message.file_info.get('file_name')
+            file_path=message.file_info.get('file_path')
         )
 
     Conversation.objects.filter(Q(sender_id=user_id) | Q(recipient_id=user_id)).delete()

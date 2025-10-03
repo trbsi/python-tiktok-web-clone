@@ -54,7 +54,7 @@ class Message(models.Model):
         if self.file_info is None:
             return None
 
-        return f'{settings.STORAGE_CDN_URL}/{self.file_info.get('file_name')}'
+        return f'{settings.STORAGE_CDN_URL}/{self.file_info.get('file_path')}'
 
     def is_image(self):
         return self.file_type == MediaEnum.FILE_TYPE_IMAGE.value

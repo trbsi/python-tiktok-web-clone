@@ -1,10 +1,12 @@
 # Deployment
 
+1. Create docker network
 1. Install docker
-2. Run docker
-3. Restart Celery
+1. Run docker
+1. Restart Celery
 
 ``` 
+docker network create my-network
 cd docker
 docker compose --env-file ../.env up -d --build
 docker compose restart my-app-celery_worker

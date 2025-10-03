@@ -40,13 +40,14 @@ def compress_media_task(
     # download file from remote
     downloaded_local_file_path = remote_storage_service.download_file(
         file_id=media.file_info.get('file_id'),
-        file_name=media.file_info.get('file_name'),
+        file_path=media.file_info.get('file_path'),
         local_file_path_directory=local_file_path_directory
     )
 
     # compress file
     compression_result = compress_service.handle_compression(
         media=media,
+        local_file_type=media.file_type,
         local_file_path=downloaded_local_file_path,
         local_file_path_directory=local_file_path_directory
     )
@@ -56,6 +57,7 @@ def compress_media_task(
     if create_thumbnail and media.is_video():
         thumbnail_result = thumbnail_service.snap_thumbnail(
             media=media,
+            local_file_type=media.file_type,
             local_file_path=output_compressed_file_path,
             local_file_path_directory=local_file_path_directory,
         )
@@ -65,6 +67,7 @@ def compress_media_task(
     if create_trailer and media.is_video():
         trailer_result = trailer_service.make_trailer(
             media=media,
+            local_file_type=media.file_type,
             local_file_path=output_compressed_file_path,
             local_file_path_directory=local_file_path_directory,
         )

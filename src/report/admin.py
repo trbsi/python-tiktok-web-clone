@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import reverse_lazy
 from django.utils.html import format_html
 
+from app.utils import reverse_lazy_admin
 from src.media.models import Media
 from src.report.models import Report
 from src.user.models import User
@@ -33,5 +34,9 @@ class ReportAdmin(admin.ModelAdmin):
             if media.is_image():
                 return format_html(f'<img src="{media_url}">')
             if media.is_video():
-                return format_html(f'<video controls><source src="{media_url}" type="video/mp4"></video>')
+                admin_media_url = reverse_lazy_admin(object=media, action='change', args=(media.id,))
+
+                return format_html(
+                    f'<div><a hre="{admin_media_url}" > View media </a></div>'
+                    f' <div> <video controls><source src="{media_url}" type = "video/mp4"></video></div>')
         return ''

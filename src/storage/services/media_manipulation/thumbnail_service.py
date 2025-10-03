@@ -13,6 +13,7 @@ class ThumbnailService:
     def snap_thumbnail(
             self,
             media: Media,
+            local_file_type: str,
             local_file_path: str,
             local_file_path_directory: str,
             time_in_seconds: int = 10
@@ -31,6 +32,7 @@ class ThumbnailService:
 
         remote_file_name = f'{media.__class__.__name__}_{media.id}_thumbnail_{uuid.uuid4()}.jpg'
         file_info = remote_storage_service.upload_file(
+            local_file_type=local_file_type,
             local_file_path=output_thumbnail_path,
             remote_file_name=remote_file_name,
         )

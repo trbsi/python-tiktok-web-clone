@@ -22,16 +22,16 @@ services:
       NGINX_PROXY_CONTAINER: my-app-nginx
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - nginx-certs:/etc/nginx/certs
-      - nginx-vhost:/etc/nginx/vhost.d
-      - nginx-html:/usr/share/nginx/html
+      - my_app_nginx_certs:/etc/nginx/certs
+      - my_app_nginx_vhost:/etc/nginx/vhost.d
+      - my_app_nginx_html:/usr/share/nginx/html
 
   my-app-web:
-    environment:
     # IMPORTANT: don't expose ports in prod, only join proxy network
     expose:
       - 80
     volumes:
+      - ../:/app:cached
       - my_app_logs:/app/logs   # Named volume (safe for prod)
       - my_app_static_volume:/app/staticfiles
       - my_app_media_volume:/app/uploads
@@ -41,10 +41,12 @@ services:
       - 8000 # expose to the Docker network, not the host
 
 volumes:
-  nginx-certs:
-  nginx-vhost:
-  nginx-html:
-  db_data:
-  redis_data:
-  static_volume:
-  media_volume:
+  my_app_nginx_certs:
+  my_app_nginx_vhost:
+  my_app_nginx_html:
+  my_app_db_data:
+  my_app_redis_data:
+  my_app_static_volume:
+  my_app_media_volume:
+  my_app_logs_volume:
+  my_app_celerybeat_data:

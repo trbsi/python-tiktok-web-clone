@@ -152,6 +152,11 @@ STORAGE_CONFIG = {
         'application_key_id': env('BACKBLAZE_APPLICATION_KEY_ID'),
         'application_key': env('BACKBLAZE_APPLICATION_KEY'),
         'bucket_name': env('BACKBLAZE_DEFAULT_BUCKET_NAME'),
+    },
+    'bunny': {
+        'storage_api_key': env('BUNNY_STORAGE_API_KEY'),
+        'base_url': env('BUNNY_BASE_URL'),
+        'storage_zone_name': env('BUNNY_STORAGE_ZONE_NAME'),
     }
 }
 STORAGE_CDN_URL = env('STORAGE_CDN_URL')

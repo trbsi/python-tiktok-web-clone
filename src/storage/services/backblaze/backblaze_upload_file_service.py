@@ -25,7 +25,7 @@ class BackBlazeUploadFileService:
 
         return {
             'file_id': result.id_,
-            'file_name': result.file_name,
+            'file_path': result.file_name,
             'bucket_id': result.bucket_id,
             'bucket_name': bucket_name
         }

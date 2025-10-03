@@ -20,6 +20,7 @@ class TrailerService:
     def make_trailer(
             self,
             media: Media,
+            local_file_type: str,
             local_file_path: str,
             local_file_path_directory: str,
             clip_count=3,
@@ -90,6 +91,7 @@ class TrailerService:
         # upload to remote
         remote_file_name = f'{media.__class__.__name__}_{media.id}_trailer_{uuid.uuid4()}.mp4'
         file_info = remote_storage_service.upload_file(
+            local_file_type=local_file_type,
             local_file_path=output_trailer_file_path,
             remote_file_name=remote_file_name,
         )
