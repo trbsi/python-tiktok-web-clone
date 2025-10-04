@@ -6,6 +6,8 @@ from django.urls import reverse_lazy
 from django.utils.http import urlencode
 
 from app import settings
+from src.inbox.models import Conversation
+from src.media.models import Media
 
 
 def reverse_lazy_with_query(route_name, kwargs=None, query_params=None):
@@ -40,6 +42,14 @@ reverse_lazy("admin:library_book_history", args=[1])
 def reverse_lazy_admin(object: Model, action: str, args: list = None):
     route = f'admin:{object._meta.app_label}_{object._meta.model_name}_{action}'
     return reverse_lazy(route, args=args)
+
+
+def remote_file_path_for_conversation(conversation: Conversation, file_name: str) -> str:
+    return f'conversation/{conversation.id}/{file_name}'
+
+
+def remote_file_path_for_media(media: Media, file_name: str) -> str:
+    return f'{media.file_type}/media/{media.id}/{file_name}'
 
 
 def format_datetime(date: datetime):

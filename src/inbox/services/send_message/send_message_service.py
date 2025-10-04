@@ -1,6 +1,6 @@
 from django.core.files.uploadedfile import UploadedFile
 
-from app.utils import format_datetime
+from app.utils import format_datetime, remote_file_path_for_conversation
 from src.inbox.models import Message, Conversation
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
@@ -18,6 +18,7 @@ class SendMessageService:
     ) -> dict:
         file_info = None
         file_type = None
+        conversation = Conversation.objects.get(id=conversation_id)
 
         if uploaded_file is not None:
             local_storage_service = LocalStorageService()
@@ -25,11 +26,12 @@ class SendMessageService:
 
             file_data = local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
             file_type = file_data.get('file_type')
+            remote_file_path = remote_file_path_for_conversation(conversation, file_data.get('remote_file_name'))
 
             file_info = file_upload_service.upload_file(
                 local_file_type=file_type,
                 local_file_path=file_data.get('local_file_path'),
-                remote_file_name=file_data.get('remote_file_name')
+                remote_file_path=remote_file_path
             )
 
         message = Message.objects.create(
@@ -40,7 +42,6 @@ class SendMessageService:
             file_type=file_type,
         )
 
-        conversation: Conversation = message.conversation
         if user == conversation.sender:
             conversation.read_by_recipient = False
         else:

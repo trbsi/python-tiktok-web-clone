@@ -1,6 +1,7 @@
 import uuid
 from pathlib import Path
 
+from app.utils import remote_file_path_for_conversation, remote_file_path_for_media
 from src.inbox.models import Message
 from src.media.models import Media
 from src.storage.services.media_manipulation.compress_file_service import CompressFileService
@@ -22,6 +23,11 @@ class CompressMediaService:
         extension = Path(original_file_info.get('file_path')).suffix  # example: .jpg or .mp4
         new_file_name = f'{media.__class__.__name__}_{media.id}_{uuid.uuid4()}{extension}'
 
+        if isinstance(media, Message):
+            new_file_path = remote_file_path_for_conversation(media.conversation, new_file_name)
+        elif isinstance(media, Media):
+            new_file_path = remote_file_path_for_media(media, new_file_name)
+
         # compress file
         if media.is_image():
             compress_file_service.compress_image(path=local_file_path)
@@ -39,7 +45,7 @@ class CompressMediaService:
         file_info = remote_storage_service.upload_file(
             local_file_type=local_file_type,
             local_file_path=output_compressed_file_path,
-            remote_file_name=new_file_name
+            remote_file_path=new_file_path
         )
 
         # update model

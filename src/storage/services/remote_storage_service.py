@@ -21,7 +21,7 @@ class RemoteStorageService:
             self,
             local_file_type: str,
             local_file_path: str,
-            remote_file_name: str,
+            remote_file_path: str,
             bucket_name: str = '',
             additional_file_info: dict = {}
     ) -> dict:
@@ -31,7 +31,7 @@ class RemoteStorageService:
 
             result = self.backblaze_upload_file_service.upload_file(
                 local_file_path=local_file_path,
-                remote_file_name=remote_file_name,
+                remote_file_name=remote_file_path,
                 bucket_name=bucket_name,
                 additional_file_info=additional_file_info
             )
@@ -39,7 +39,7 @@ class RemoteStorageService:
             result = self.bunny_upload_file_service.upload_file(
                 local_file_path=local_file_path,
                 remote_file_path=local_file_type,
-                remote_file_name=remote_file_name,
+                remote_file_name=remote_file_path,
             )
         else:
             raise Exception('Storage provider is not defined')

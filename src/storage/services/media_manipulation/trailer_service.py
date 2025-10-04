@@ -1,6 +1,7 @@
 import subprocess
 import uuid
 
+from app.utils import remote_file_path_for_media
 from src.media.models import Media
 from src.storage.services.remote_storage_service import RemoteStorageService
 
@@ -90,10 +91,12 @@ class TrailerService:
 
         # upload to remote
         remote_file_name = f'{media.__class__.__name__}_{media.id}_trailer_{uuid.uuid4()}.mp4'
+        remote_file_path = remote_file_path_for_media(media, remote_file_name)
+
         file_info = remote_storage_service.upload_file(
             local_file_type=local_file_type,
             local_file_path=output_trailer_file_path,
-            remote_file_name=remote_file_name,
+            remote_file_path=remote_file_path,
         )
 
         media.file_trailer = file_info
