@@ -1,5 +1,3 @@
-ARG ENVIRONMENT=prod
-
 # Stage 1: build
 FROM python:latest as builder
 
@@ -28,7 +26,15 @@ RUN poetry install --no-root
 # Stage 2: runtime
 FROM python:latest
 
-RUN addgroup --system my-app-user && adduser --system --ingroup my-app-user my-app-user
+ARG UID=1000
+ARG GID=1000
+ARG ENVIRONMENT=prod
+
+# Create group and user with the same UID/GID as host
+RUN addgroup --gid ${GID} my-app-user \
+    && adduser --uid ${UID} --gid ${GID} --disabled-password --gecos "" my-app-user
+
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     default-libmysqlclient-dev netcat-openbsd curl ffmpeg \
     && rm -rf /var/lib/apt/lists/*
@@ -43,11 +49,10 @@ COPY docker/web/entrypoint.sh /app/entrypoint.sh
 COPY docker/web/wait_for_db.py /app/wait_for_db.py
 RUN chmod +x /app/entrypoint.sh
 
-# Create directories and give permission
-RUN mkdir -p /app/logs && chown -R my-app-user:my-app-user /app/logs
-RUN mkdir -p /app/celerybeat_data && chown -R my-app-user:my-app-user /app/celerybeat_data 
-RUN mkdir -p /app/staticfiles && chown -R my-app-user:my-app-user /app/staticfiles
-RUN mkdir -p /app/uploads && chown -R my-app-user:my-app-user /app/uploads
+# Create directories and give permission to the UID/GID user
+RUN mkdir -p /app/logs /app/celerybeat_data /app/staticfiles /app/uploads \
+    && chown -R ${UID}:${GID} /app/logs /app/celerybeat_data /app/staticfiles /app/uploads
+
 
 USER my-app-user
 

@@ -48,6 +48,9 @@ services:
       - my-network
     build:
       context: ..
+      args:
+        UID: ${UID}
+        GID: ${GID}
       dockerfile: docker/web/Dockerfile
     restart: unless-stopped
     environment:

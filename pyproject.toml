@@ -19,6 +19,7 @@ dependencies = [
     "celery[redis] (>=5.5.3,<6.0.0)",
     "django-auditlog (>=3.2.1,<4.0.0)",
     "django-log-viewer (>=1.1.8,<2.0.0)",
+    "django-unfold (>=0.67.0,<0.68.0)",
 ]
 
 

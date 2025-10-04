@@ -37,9 +37,9 @@ reverse_lazy("admin:library_book_history", args=[1])
 """
 
 
-def reverse_lazy_admin(object: Model, action: str, args=None):
+def reverse_lazy_admin(object: Model, action: str, args: list = None):
     route = f'admin:{object._meta.app_label}_{object._meta.model_name}_{action}'
-    return reverse_lazy(route, args)
+    return reverse_lazy(route, args=args)
 
 
 def format_datetime(date: datetime):

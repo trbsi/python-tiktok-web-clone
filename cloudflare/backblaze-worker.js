@@ -36,10 +36,21 @@ export default {
             authorizationToken
         } = await getB2Auth(env)
 
+
         const url = new URL(request.url)
-        const pathParts = url.pathname.split("/") // split by "/"
-        const fileName = pathParts[pathParts.length - 1] // get last segment
-        const b2Url = `${downloadUrl}/file/${env.BUCKET_NAME}/${fileName}`
+
+        // Base path to strip
+        const basePath = `file/${env.BUCKET_NAME}`;
+
+        // Remove leading "/" if present
+        let filePath = url.pathname.startsWith("/") ? url.pathname.slice(1) : url.pathname;
+
+        // Remove the base path prefix
+        if (filePath.startsWith(basePath)) {
+            filePath = filePath.slice(basePath.length);
+        }
+
+        const b2Url = `${downloadUrl}/${basePath}/${filePath}`
 
         const b2Res = await fetch(b2Url, {
             headers: {
