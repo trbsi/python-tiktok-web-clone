@@ -31,7 +31,6 @@ class RemoteStorageService:
 
             result = self.backblaze_upload_file_service.upload_file(
                 local_file_path=local_file_path,
-                local_file_type=local_file_type,
                 remote_file_name=remote_file_name,
                 bucket_name=bucket_name,
                 additional_file_info=additional_file_info

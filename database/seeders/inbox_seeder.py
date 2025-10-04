@@ -30,7 +30,7 @@ class InboxSeeder():
                     file_type = None
                     if i % 5 == 0:
                         file_info: dict = random.choice(media_list)
-                        extension = Path(file_info.get('file_name')).suffix
+                        extension = Path(file_info.get('file_path')).suffix
                         file_type = MediaEnum.FILE_TYPE_IMAGE.value if extension == '.jpg' else MediaEnum.FILE_TYPE_VIDEO.value
 
                     Message.objects.create(
