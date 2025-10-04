@@ -50,6 +50,8 @@ export default {
             filePath = filePath.slice(basePath.length);
         }
 
+        // Again remove leading "/" if present
+        filePath = url.pathname.startsWith("/") ? url.pathname.slice(1) : url.pathname;
         const b2Url = `${downloadUrl}/${basePath}/${filePath}`
 
         const b2Res = await fetch(b2Url, {

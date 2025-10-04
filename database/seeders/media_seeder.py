@@ -23,7 +23,7 @@ class MediaSeeder:
             for i in range(10):
                 rand_media = random.choice(media_list)
                 random_thumbnail = random.choice(thumbnail_list)
-                extension = Path(rand_media.get('file_name')).suffix
+                extension = Path(rand_media.get('file_path')).suffix
                 file_type = 'video' if extension == '.mp4' else 'image'
 
                 Media.objects.create(
