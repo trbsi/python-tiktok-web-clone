@@ -33,8 +33,9 @@ class Media(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     hashtags = models.ManyToManyField(Hashtag, through='MediaHashtag', related_name='media_hashtags')
 
-    # objects_active = MediaManager()
     objects = models.Manager()
+
+    # objects_active = MediaManager()
 
     class Meta:
         indexes = [
