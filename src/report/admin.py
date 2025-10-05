@@ -39,6 +39,6 @@ class ReportAdmin(ModelAdmin):
                 admin_media_url = reverse_lazy_admin(object=media, action='change', args=[media.id])
                 return format_html(
                     f'<div class="flex mb-5"><a href="{admin_media_url}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">View media</a></div>'
-                    f'<div> <video controls><source src="{media_url}" type = "video/mp4"></video></div>'
+                    f'<div> <video controls><source src="{media_url}"></video></div>'
                 )
         return ''

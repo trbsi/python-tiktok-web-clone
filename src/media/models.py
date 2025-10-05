@@ -3,7 +3,6 @@ from django.db import models
 
 from app import settings
 from src.media.enums import MediaEnum
-from src.media.query_managers import MediaManager
 from src.user.models import User as User
 
 
@@ -26,7 +25,7 @@ class Media(models.Model):
     file_trailer = models.JSONField(null=True, blank=True)
     file_type = models.CharField(max_length=20, choices=MediaEnum.file_types())
     status = models.CharField(max_length=20, choices=MediaEnum.statuses())
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
     like_count = models.PositiveIntegerField(default=0)
     comment_count = models.PositiveIntegerField(default=0)
     share_count = models.PositiveIntegerField(default=0)
@@ -34,7 +33,7 @@ class Media(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     hashtags = models.ManyToManyField(Hashtag, through='MediaHashtag', related_name='media_hashtags')
 
-    objects_active = MediaManager()
+    # objects_active = MediaManager()
     objects = models.Manager()
 
     class Meta:

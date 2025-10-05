@@ -78,6 +78,8 @@ INSTALLED_APPS = [
 
     'auditlog',
     'log_viewer',
+
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
