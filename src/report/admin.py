@@ -27,7 +27,7 @@ class ReportAdmin(ModelAdmin):
         if report.is_user():
             user = User.objects.get(id=report.content_id)
             href = reverse_lazy('user.profile', kwargs={'username': user.username})
-            return format_html(f'<a href="{href}">View user</a>', )
+            return format_html(f'<a class="underline" href="{href}">View user</a>', )
 
         if report.is_media():
             media: Media = Media.objects.get(id=report.content_id)

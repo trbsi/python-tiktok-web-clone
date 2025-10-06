@@ -10,7 +10,7 @@ from src.media.models import Media
 
 @admin.register(Media)
 class AdminMedia(ModelAdmin):
-    list_filter = ["created_at"]
+    list_filter = ['created_at', 'status']
     list_display = ('id', 'user', 'file_type', 'status', 'created_at')
     fields = (
         'user',
@@ -23,6 +23,7 @@ class AdminMedia(ModelAdmin):
         'thumbnail',
     )
     readonly_fields = ('created_at', 'file', 'trailer', 'thumbnail')
+    search_fields = ('user__username',)
 
     actions_submit_line = ["mark_as_deleted"]
 
