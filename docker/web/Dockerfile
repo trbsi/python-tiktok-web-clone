@@ -28,7 +28,6 @@ FROM python:latest
 
 ARG UID=1000
 ARG GID=1000
-ARG ENVIRONMENT=prod
 
 # Create group and user with the same UID/GID as host
 RUN addgroup --gid ${GID} my-app-user \
