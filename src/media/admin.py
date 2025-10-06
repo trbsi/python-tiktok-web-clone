@@ -63,7 +63,3 @@ class AdminMedia(ModelAdmin):
         media.status = MediaEnum.STATUS_DELETED.value
         media.save()
         messages.success(request, "Media deleted")
-
-    # def delete_media(self, request: HttpRequest, media_id: int) -> HttpResponse:
-    #
-    #     return redirect(reverse_lazy_admin(media, 'change', [media_id]))

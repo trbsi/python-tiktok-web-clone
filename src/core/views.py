@@ -27,7 +27,7 @@ def content_moderation_policy(request: HttpRequest) -> HttpResponse:
 def send_test_email(request: HttpRequest) -> HttpResponse:
     email = EmailValueObject(
         subject='Test Email',
-        template_path='',
+        template_path='emails/test_email.html',
         template_variables={'anchor_href': 'www.test.com', 'anchor_label': 'Click here to confirm your new email'},
         to=['admins']
     )
