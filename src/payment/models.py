@@ -1,4 +1,6 @@
 from auditlog.registry import auditlog
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from src.payment.enums import PaymentEnum
@@ -23,8 +25,10 @@ class Spending(models.Model):
     by_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spent_by_user')
     on_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spent_on_user')
     amount = models.DecimalField(decimal_places=2, max_digits=10)
-    action_type = models.CharField(max_length=20)
-    content_id = models.BigIntegerField()
+    # These two are required for GenericForeignKey
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

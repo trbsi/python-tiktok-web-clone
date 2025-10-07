@@ -1,7 +1,9 @@
 from django.core.files.uploadedfile import UploadedFile
+from django.db import transaction
 
 from app.utils import format_datetime, remote_file_path_for_conversation
 from src.inbox.models import Message, Conversation
+from src.payment.services.spendings.spend_service import SpendService
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
 from src.storage.tasks import compress_media_task, MEDIA_TYPE_INBOX
@@ -9,11 +11,15 @@ from src.user.models import User
 
 
 class SendMessageService:
+    def __init__(self, spend_service: SpendService | None = None):
+        self.spend_service = spend_service or SpendService()
+
+    @transaction.atomic
     def send_message(
             self,
             user: User,
             conversation_id: int,
-            messageContent: str | None,
+            message_content: str | None,
             uploaded_file: UploadedFile | None = None,
     ) -> dict:
         file_info = None
@@ -37,7 +43,7 @@ class SendMessageService:
         message = Message.objects.create(
             sender=user,
             conversation_id=conversation_id,
-            message=messageContent,
+            message=message_content,
             file_info=file_info,
             file_type=file_type,
         )
@@ -48,7 +54,7 @@ class SendMessageService:
             conversation.read_by_sender = False
 
         conversation.save()
-
+        self.spend_service.message(user, message)
         compress_media_task.delay(media_id=message.id, media_type=MEDIA_TYPE_INBOX)
 
         return {

@@ -11,26 +11,25 @@ from src.user.models import User
 
 @admin.register(Report)
 class ReportAdmin(ModelAdmin):
-    list_display = ('content_id', 'status', 'type', 'created_at')
+    list_display = ('content_object', 'status', 'created_at')
     fields = (
-        'content_id',
+        'content_object',
         'description',
-        'type',
         'status',
         'reported_by',
         'get_content',
     )
-    readonly_fields = ('get_content',)
+    readonly_fields = ('get_content', 'content_object')
 
     @admin.display(description="Content")
     def get_content(self, report: Report):
         if report.is_user():
-            user = User.objects.get(id=report.content_id)
+            user: User = report.content_object
             href = reverse_lazy('user.profile', kwargs={'username': user.username})
             return format_html(f'<a class="underline" href="{href}">View user</a>', )
 
         if report.is_media():
-            media: Media = Media.objects.get(id=report.content_id)
+            media: Media = report.content_object
             media_url = media.get_file_url()
 
             if media.is_image():

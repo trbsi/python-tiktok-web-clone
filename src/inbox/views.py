@@ -115,7 +115,7 @@ def api_send_message(request: HttpRequest) -> JsonResponse:
     service = SendMessageService()
     message = service.send_message(
         user=request.user,
-        messageContent=post.get('message'),
+        message_content=post.get('message'),
         conversation_id=int(post.get('conversationId')),
         uploaded_file=files.get('attachment')
     )

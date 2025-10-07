@@ -26,8 +26,8 @@ class PaymentHistoryAdmin(ModelAdmin):
 
 @admin.register(Spending)
 class SpendingAdmin(ModelAdmin):
-    list_display = ('id', 'by_user', 'on_user', 'amount_in_coins', 'amount_in_fiat', 'action_type')
-    readonly_fields = ('amount_in_fiat',)
+    list_display = ('id', 'by_user', 'on_user', 'amount_in_coins', 'amount_in_fiat', 'content_object')
+    readonly_fields = ('amount_in_fiat', 'content_object')
 
     @admin.display(description='Amount in fiat')
     def amount_in_fiat(self, spending: Spending):

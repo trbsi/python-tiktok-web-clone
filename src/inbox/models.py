@@ -37,6 +37,13 @@ class Conversation(models.Model):
 
         return self.read_by_recipient
 
+    def get_creator(self) -> User:
+        sender: User = self.sender
+        if sender.is_creator():
+            return self.sender
+
+        return self.recipient
+
 
 class Message(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -61,6 +68,9 @@ class Message(models.Model):
 
     def is_video(self):
         return self.file_type == MediaEnum.FILE_TYPE_VIDEO.value
+
+    def is_media_message(self):
+        return self.is_image() or self.is_video()
 
 
 auditlog.register(Conversation)
