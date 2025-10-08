@@ -55,22 +55,18 @@ class Balance(models.Model):
     objects = models.Manager()
 
     def get_balance_as_number(self) -> Decimal | int:
-        if self.user.is_creator():
-            return self._creator_balance()
+        user: User = self.user
+        if user.is_creator():
+            return get_creator_balance(amount_in_coins=self.balance)
 
-        return self._user_balance()
+        return self.balance
 
     def get_balance_as_string(self) -> str:
-        if self.user.is_creator():
+        user: User = self.user
+        if user.is_creator():
             return f'${self.get_balance_as_number()}'
         else:
             return f'{self.get_balance_as_number()} coins'
-
-    def _creator_balance(self) -> Decimal:
-        return get_creator_balance(amount_in_coins=self.balance)
-
-    def _user_balance(self) -> Decimal:
-        return self.balance
 
 
 class Package(models.Model):
@@ -80,6 +76,16 @@ class Package(models.Model):
     bonus = models.DecimalField(decimal_places=2, max_digits=10, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
+
+
+class Payout(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(decimal_places=2, max_digits=10)
+    provider = models.CharField(max_length=10, choices=PaymentEnum.providers())
+    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
 
