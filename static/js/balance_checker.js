@@ -19,7 +19,7 @@ function balanceChecker(balanceEndpoint) {
 
                 if (data.status === 'low_balance') {
                     this.open = true;
-                } else if (data.status === 'not_authenticated') {
+                } else if (data.status === 'hide') {
                     this.stopPolling();
                 }
 

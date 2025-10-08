@@ -9,7 +9,7 @@ from src.payment.models import Spending, Balance, Package
 from src.user.models import User as User
 
 
-class BalanceSeeder:
+class PaymentSeeder:
     @staticmethod
     def seed():
         faker = Faker()
@@ -19,16 +19,22 @@ class BalanceSeeder:
 
         for user in users:
             balance = Balance.objects.get(user=user)
-            balance.balance = faker.random_int()
+            balance.balance = 0
             balance.save()
 
+            spending = 0
             for user1 in users:
+                amount = faker.random_int()
+                spending += amount
                 Spending.objects.create(
                     by_user=user1,
                     on_user=user,
-                    amount=faker.random_int(),
+                    amount=amount,
                     content_object=random.choice(objects),
                 )
+
+            balance.balance = spending
+            balance.save()
 
         packages = [
             {'price': '0.99', 'amount': 100, 'bonus': None},

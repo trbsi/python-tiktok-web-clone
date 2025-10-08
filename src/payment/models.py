@@ -1,9 +1,12 @@
+from decimal import Decimal
+
 from auditlog.registry import auditlog
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from src.payment.enums import PaymentEnum
+from src.payment.utils import get_creator_balance
 from src.user.models import User
 
 
@@ -35,7 +38,7 @@ class Spending(models.Model):
     objects = models.Manager()
 
     def amount_for_creator(self):
-        amount = round(self.amount / Balance.COIN_TO_FIAT, 2)
+        amount = get_creator_balance(amount_in_coins=self.amount)
         return f'{amount} $'
 
     def amount_for_user(self):
@@ -43,8 +46,6 @@ class Spending(models.Model):
 
 
 class Balance(models.Model):
-    COIN_TO_FIAT = 100  # 100 coins = 1$
-
     id = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='balance')
     balance = models.DecimalField(decimal_places=2, max_digits=10, default=0.0)
@@ -53,7 +54,7 @@ class Balance(models.Model):
 
     objects = models.Manager()
 
-    def get_balance_as_number(self) -> float | int:
+    def get_balance_as_number(self) -> Decimal | int:
         if self.user.is_creator():
             return self._creator_balance()
 
@@ -61,16 +62,14 @@ class Balance(models.Model):
 
     def get_balance_as_string(self) -> str:
         if self.user.is_creator():
-            suffix = '$'
+            return f'${self.get_balance_as_number()}'
         else:
-            suffix = 'coins'
+            return f'{self.get_balance_as_number()} coins'
 
-        return f'{self.get_balance_as_number()} {suffix}'
+    def _creator_balance(self) -> Decimal:
+        return get_creator_balance(amount_in_coins=self.balance)
 
-    def _creator_balance(self):
-        return round(self.balance / self.COIN_TO_FIAT, 2)
-
-    def _user_balance(self):
+    def _user_balance(self) -> Decimal:
         return self.balance
 
 

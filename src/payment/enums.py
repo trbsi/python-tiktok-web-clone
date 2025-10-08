@@ -3,6 +3,9 @@ from typing import Tuple
 
 
 class PaymentEnum(Enum):
+    COIN_TO_FIAT = 100  # 100 coins = 1$
+    COMMISSION_PERCENTAGE = 0.2
+
     PROVIDER_SEGPAY = 'segpay'
     PROVIDER_EPOCH = 'epoch'
 

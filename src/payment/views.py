@@ -11,7 +11,7 @@ from src.user.models import User
 
 @require_GET
 @login_required
-def my_payments(request: HttpRequest) -> HttpResponse:
+def my_spendings(request: HttpRequest) -> HttpResponse:
     get = request.GET
     page = int(get.get('page', 1))
     user = request.user
@@ -22,11 +22,11 @@ def my_payments(request: HttpRequest) -> HttpResponse:
 
     return render(
         request,
-        'my_payments.html',
+        'my_spendings.html',
         {
             'spendings': spendings,
             'balance': balance,
-            'user': user
+            'current_user': user
         },
     )
 
@@ -35,8 +35,8 @@ def my_payments(request: HttpRequest) -> HttpResponse:
 @require_GET
 def api_get_balance(request: HttpRequest) -> JsonResponse:
     user: User | AnonymousUser = request.user
-    if user.is_anonymous:
-        return JsonResponse({'balance': None, 'status': 'not_authenticated'})
+    if user.is_anonymous or user.is_creator():
+        return JsonResponse({'balance': None, 'status': 'hide'})
 
     balance: Balance = Balance.objects.get(user=user)
     balance.balance = 3

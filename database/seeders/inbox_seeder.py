@@ -25,7 +25,9 @@ class InboxSeeder():
                     sender=user,
                     last_message=faker.text(),
                 )
-                for i in range(100):
+
+                # create messages
+                for i in range(50):
                     file_info = None
                     file_type = None
                     if i % 5 == 0:
