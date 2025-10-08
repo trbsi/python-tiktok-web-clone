@@ -4,7 +4,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
-from src.payment.models import Balance
+from src.payment.models import Balance, Package
 from src.payment.services.my_payments.my_payments_service import MyPaymentsService
 from src.user.models import User
 
@@ -31,13 +31,26 @@ def my_payments(request: HttpRequest) -> HttpResponse:
     )
 
 
+# no need for @login_required here
 @require_GET
-@login_required
 def api_get_balance(request: HttpRequest) -> JsonResponse:
     user: User | AnonymousUser = request.user
     if user.is_anonymous:
-        return JsonResponse({"balance": None})
+        return JsonResponse({'balance': None, 'status': 'not_authenticated'})
 
     balance: Balance = Balance.objects.get(user=user)
+    balance.balance = 3
+    status = 'ok'
+    if balance.balance < 100:
+        status = 'low_balance'
 
-    return JsonResponse({"balance": balance.balance})
+    return JsonResponse({'balance': balance.balance, 'status': status})
+
+
+@require_GET
+@login_required
+def buy_packages(request: HttpRequest) -> HttpResponse:
+    context = {
+        'packages': Package.objects.all(),
+    }
+    return render(request, 'buy_packages.html', context)
