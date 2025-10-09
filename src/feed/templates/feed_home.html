@@ -9,7 +9,7 @@
 
 <!-- Video Feed View -->
 <div
-        x-data="mediaFeed('{{type}}', '{{media_api_url}}', '{{follow_unfollow_api}}', '{{create_comment_api}}', '{{report_content_api}}', '{{like_media_api}}', '{{list_comments_api}}', '{{filters}}')"
+        x-data="mediaFeed('{{type}}', '{{media_api_url}}', '{{follow_unfollow_api}}', '{{create_comment_api}}', '{{report_content_api}}', '{{like_media_api}}', '{{list_comments_api}}', '{{unlock_media_api}}', '{{filters}}')"
         x-init="init()"
         class="min-h-screen bg-black text-white"
 >
@@ -32,7 +32,7 @@
         <!-- skeleton loader cards while loading more -->
         <template x-if="loadingMore">
             <div class="col-span-3 flex justify-center py-4">
-                {% include "components/loader.html" %}
+                {% include "components/elements/loader.html" %}
             </div>
         </template>
 

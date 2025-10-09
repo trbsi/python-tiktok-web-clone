@@ -1,4 +1,14 @@
-function mediaFeed(feedType, mediaApiUrl, followUnfollowApi, createCommentApi, reportContentApi, likeMediaApi, listCommentsApi, filters) {
+function mediaFeed(
+    feedType,
+    mediaApiUrl,
+    followUnfollowApi,
+    createCommentApi,
+    reportContentApi,
+    likeMediaApi,
+    listCommentsApi,
+    unlockMediaApi,
+    filters
+) {
     return {
         mediaList: [], // list of video objects
         page: 1, // pagination

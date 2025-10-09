@@ -19,6 +19,7 @@ def discover(request: HttpRequest) -> HttpResponse:
             'report_content_api': reverse_lazy('report.api.report_content'),
             'like_media_api': reverse_lazy('engagement.api.like_media', kwargs={'media_id': '__MEDIA_ID__'}),
             'list_comments_api': reverse_lazy('engagement.api.list_comments', kwargs={'media_id': '__MEDIA_ID__'}),
+            'unlock_media_api': reverse_lazy('media.api.unlock'),
         }
     )
 
@@ -48,6 +49,7 @@ def following(request: HttpRequest) -> HttpResponse:
             'report_content_api': reverse_lazy('report.api.report_content'),
             'like_media_api': reverse_lazy('engagement.api.like_media', kwargs={'media_id': '__MEDIA_ID__'}),
             'list_comments_api': reverse_lazy('engagement.api.list_comments', kwargs={'media_id': '__MEDIA_ID__'}),
+            'unlock_media_api': reverse_lazy('media.api.unlock'),
         }
     )
 

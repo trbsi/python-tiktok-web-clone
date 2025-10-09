@@ -6,7 +6,7 @@
 >
     <!-- Loading indicator at the top for older messages -->
     <div x-show="loading" class="flex justify-center py-2">
-        {% include "components/loader.html" %}
+        {% include "components/elements/loader.html" %}
     </div>
 
     <template x-for="msg in messagesList" :key="msg.id">

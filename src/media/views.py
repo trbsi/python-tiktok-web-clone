@@ -9,6 +9,7 @@ from django.views.decorators.http import require_GET, require_POST
 from src.age_verification.services.creator_service import CreatorService
 from src.media.enums import MediaEnum
 from src.media.services.my_content.my_content_service import MyContentService
+from src.media.services.unlock.unlock_service import UnlockService
 from src.media.services.update_my_content.update_my_content_service import UpdateMyContentService
 from src.media.services.upload_media.upload_media_service import UploadMediaService
 from src.user.models import User
@@ -86,6 +87,16 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
 
     messages.success(request, 'Your content has been updated.')
     return redirect('media.my_content')
+
+
+@require_POST
+@login_required
+def api_unlock(request: HttpRequest) -> JsonResponse:
+    post = request.POST
+    service = UnlockService()
+    result = service.unlock(user=request.user, media_id=int(post.get('media_id')))
+
+    return JsonResponse(result)
 
 
 def _can_access_upload(request: HttpRequest) -> bool:

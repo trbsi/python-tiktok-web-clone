@@ -25,7 +25,7 @@ class TrailerService:
             local_file_path: str,
             local_file_path_directory: str,
             clip_count=3,
-            min_length=15,
+            min_length=7,
             max_length=60,
             percentage=0.15
     ):

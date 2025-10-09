@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from src.engagement.models import Comment
 from src.inbox.models import Message
 from src.media.models import Media
@@ -12,32 +14,34 @@ class SpendService:
     TEXT_MESSAGE_COINS = 10  # 0.1$
     MEDIA_MESSAGE_COINS = 100  # 1$
 
-    def comment(self, user: User, comment: Comment):
-        self._spend(spender=user, recipient=comment.media.user.id, amount=self.COMMENT_COINS, object=comment)
+    def comment(self, user: User, comment: Comment) -> Decimal:
+        return self._spend(spender=user, recipient=comment.media.user.id, amount=Decimal(self.COMMENT_COINS),
+                           object=comment)
 
-    def media_unlock(self, user: User, media: Media):
+    def media_unlock(self, user: User, media: Media) -> Decimal:
         if media.is_image():
             amount = self.IMAGE_COINS
         elif media.is_video():
             amount = self.VIDEO_COINS
 
-        self._spend(spender=user, recipient=media.user.id, amount=amount, object=media)
+        return self._spend(spender=user, recipient=media.user.id, amount=Decimal(amount), object=media)
 
-    def message(self, user: User, message: Message):
+    def message(self, user: User, message: Message) -> Decimal:
         if message.is_media_message():
             amount = self.MEDIA_MESSAGE_COINS
         else:
             amount = self.TEXT_MESSAGE_COINS
 
-        self._spend(spender=user, recipient=message.conversation.get_creator(), amount=amount, object=message)
+        return self._spend(spender=user, recipient=message.conversation.get_creator(), amount=Decimal(amount),
+                           object=message)
 
     def _spend(
             self,
             spender: User,
             recipient: User,
-            amount: float,
+            amount: Decimal,
             object: Message | Media | Comment
-    ):
+    ) -> Decimal:
         if spender.is_creator():
             return
 
@@ -59,3 +63,5 @@ class SpendService:
             amount=amount,
             content_object=object
         )
+
+        return amount

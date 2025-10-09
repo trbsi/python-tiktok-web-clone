@@ -31,7 +31,7 @@
                  class="flex items-center p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800"
                  role="alert">
                 <p x-text="file.statusMessage" class="mr-5"></p>
-                {% include "components/loader.html" %}
+                {% include "components/elements/loader.html" %}
             </div>
             <div x-text="file.statusMessage" x-show="file.status === 'failed'"
                  class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"

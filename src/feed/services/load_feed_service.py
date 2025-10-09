@@ -4,6 +4,7 @@ from django.db.models import QuerySet, OuterRef, Exists, Case, Value, When, Inte
 from django.db.models.query_utils import Q
 
 from src.engagement.models import Like
+from src.feed.services.unlocked_media_service import UnlockedMediaService
 from src.follow.models import Follow
 from src.media.enums import MediaEnum
 from src.media.models import Media
@@ -14,6 +15,9 @@ class LoadFeedService:
     PER_PAGE = 25
     FEED_TYPE_FOLLOW = 'follow'
     FEED_TYPE_DISCOVER = 'discover'
+
+    def __init__(self, unlocked_media_service: UnlockedMediaService | None = None):
+        self.unlocked_media_service = unlocked_media_service or UnlockedMediaService()
 
     def get_following_feed(self, page: int, user: User | AnonymousUser, filters: str | None) -> dict:
         include_following_list = self._get_followings(user=user)
@@ -76,6 +80,7 @@ class LoadFeedService:
         if filters is not None:
             filters = filters.split(',')
             for index, value in enumerate(filters):
+                # filter feed by content of specific creator
                 if value == 'uid':
                     items = items.filter(user_id=filters[index + 1])
                 elif value == 'mid':
@@ -85,18 +90,18 @@ class LoadFeedService:
                         output_field=IntegerField()
                     )).order_by('is_target_media')
 
+        # TODO check if it is unlocked or not
+        # unlocked_media_set=self.unlocked_media_service.get_unlocked_media(user=user,media_ids=)
+
         paginator = Paginator(object_list=items, per_page=self.PER_PAGE)
         page = paginator.page(current_page)
 
         result = []
         for item in page.object_list:
-            # show trailer for discover feed
-            # show full media for follow feed
-            media_source = item.get_file_url() if feed_type == self.FEED_TYPE_FOLLOW else item.get_trailer_url()
             result.append({
                 'id': item.id,
                 'type': item.file_type,
-                'src': media_source,
+                'src': item.get_trailer_url(),
                 'like_count': item.like_count,
                 'comments_count': item.comment_count,
                 'description': item.description,
