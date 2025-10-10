@@ -6,7 +6,7 @@ from src.media.services.hashtag.hashtag_service import HashtagService
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
 from src.storage.tasks import compress_media_task, MEDIA_TYPE_MEDIA
-from src.user.models import User
+from src.user.models import User, UserProfile
 
 
 class UploadMediaService:
@@ -37,6 +37,11 @@ class UploadMediaService:
 
         # save hashtags
         hashtag_service.save_hashtags(media=media, description=description)
+
+        # Increase count
+        profile:UserProfile = user.profile
+        profile.media_count +=1
+        profile.save()
 
         # compress media
         compress_media_task.delay(

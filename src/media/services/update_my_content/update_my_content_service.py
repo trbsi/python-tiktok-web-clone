@@ -1,7 +1,7 @@
 from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.media.services.hashtag.hashtag_service import HashtagService
-from src.user.models import User
+from src.user.models import User, UserProfile
 from src.user.tasks import delete_user_media
 
 
@@ -19,6 +19,9 @@ class UpdateMyContentService:
     ):
         if delete_list:
             Media.objects.filter(user=user).filter(id__in=delete_list).update(status=MediaEnum.STATUS_DELETED.value)
+            profile:UserProfile = user.profile
+            profile.media_count = profile.media_count - len(delete_list)
+            profile.save()
             return
 
         for (index, id) in enumerate(ids):
