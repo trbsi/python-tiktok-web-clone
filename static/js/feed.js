@@ -7,6 +7,7 @@ function mediaFeed(
     likeMediaApi,
     listCommentsApi,
     unlockMediaApi,
+    recordViewsApi,
     isAuthenticated,
     filters
 ) {
@@ -177,12 +178,17 @@ function mediaFeed(
 
                 // find index for the entry target
                 const index = parseInt(best.target.getAttribute('data-index'));
+                const mediaElement = best.target;
+                const mediaData = this.mediaList[index];
                 if (best.intersectionRatio >= 0.6) {
                     // pause other videos, play this one
                     this.currentIndex = index;
 
                     // Blur media
-                    this.handleBlurOnActiveMedia(index);
+                    this.handleBlurOnActiveMedia(index, mediaData);
+
+                    // Track views
+                    this.trackMediaView(mediaElement, mediaData);
 
                     // Play video
                     this.playAtIndex(index);
@@ -564,7 +570,6 @@ function mediaFeed(
                 // Hide the overlay visually
                 if (overlayEl) overlayEl.style.display = 'none';
             } catch (e) {
-            console.log(e);
                 toastr.error(e.error)
             } finally {
                 buttonEl.disabled = false;
@@ -573,7 +578,7 @@ function mediaFeed(
             }
         },
 
-        handleBlurOnActiveMedia(index) {
+        handleBlurOnActiveMedia(index, media) {
             // Clear any pending blur timers
             if (this._blurTimer) clearTimeout(this._blurTimer);
 
@@ -582,16 +587,69 @@ function mediaFeed(
                 if (m.lock.is_locked) m.showBlur = false;
             });
 
-            const current = this.mediaList[index];
-            if (!current || !current.lock.is_locked) return;
+            if (!media || !media.lock.is_locked) return;
 
             // Wait 5 seconds before showing blur
             this._blurTimer = setTimeout(() => {
                 // Make sure user hasn't swiped away yet
-                if (this.currentIndex === index && current.lock.is_locked && !current.unlocked) {
-                    current.showBlur = true;
+                if (this.currentIndex === index && media.lock.is_locked && !media.unlocked) {
+                    media.showBlur = true;
                 }
             }, 5000);
         },
+
+        async function trackMediaView(mediaElement, media) {
+            const isVideo = media.type === 'video';
+            const isImage = media.type === 'image';
+
+            if (isImage) {
+                // For images, wait 2 seconds before sending view
+                setTimeout(async () => {
+                    try {
+                        await fetch(recordViewsApi, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                            credentials: 'include',
+                            body: JSON.stringify({ media_id: media.id })
+                        });
+                    } catch (e) {
+                        console.error('Failed to record image view', e);
+                    }
+                }, 2000);
+            }
+
+            if (isVideo) {
+                // For videos, track watch percentage
+                const percentageToTrack = 50; // 50% of video duration
+                const duration = mediaElement.duration;
+
+                if (!duration || duration === Infinity) {
+                    console.warn('Video duration not available yet, delaying tracking...');
+                    return;
+                }
+
+                const targetTime = (percentageToTrack / 100) * duration;
+
+                const onTimeUpdate = async () => {
+                    if (mediaElement.currentTime >= targetTime) {
+                        mediaElement.removeEventListener('timeupdate', onTimeUpdate);
+
+                        try {
+                            await fetch(recordViewsApi, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                                credentials: 'include',
+                                body: JSON.stringify({ media_id: media.id })
+                            });
+                        } catch (e) {
+                            console.error('Failed to record video view', e);
+                        }
+                    }
+                };
+
+                mediaElement.addEventListener('timeupdate', onTimeUpdate);
+            }
+        }
+
     };
 }

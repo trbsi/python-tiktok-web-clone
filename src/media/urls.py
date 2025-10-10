@@ -8,4 +8,5 @@ urlpatterns = [
     path('my-content', views.my_content, name='media.my_content'),
     path('update-my-media', views.update_my_media, name='media.update_my_media'),
     path('api/unlock', views.api_unlock, name='media.api.unlock'),
+    path('api/record-views', views.record_views, name='media.api.record_views'),
 ]

@@ -14,6 +14,7 @@ from src.media.services.my_content.my_content_service import MyContentService
 from src.media.services.unlock.unlock_service import UnlockService
 from src.media.services.update_my_content.update_my_content_service import UpdateMyContentService
 from src.media.services.upload_media.upload_media_service import UploadMediaService
+from src.media.services.views.views_service import ViewsService
 from src.user.models import User
 
 
@@ -102,6 +103,15 @@ def api_unlock(request: HttpRequest) -> JsonResponse:
         return JsonResponse({'error': str(e)}, status=402)
 
     return JsonResponse(result)
+
+# no need for login_required
+@require_POST
+def record_views(request: HttpRequest) -> JsonResponse:
+    body = json.loads(request.body)
+    service = ViewsService()
+    service.record_view(user=request.user, media_id=int(body.get('media_id')))
+    return JsonResponse({})
+
 
 
 def _can_access_upload(request: HttpRequest) -> bool:
