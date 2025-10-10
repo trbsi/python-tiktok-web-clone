@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 
 from src.authentication.services.post_registration_service import PostRegistrationService
+from src.core.utils import get_client_ip
 from src.user.models import User as User
 
 alphanumeric = RegexValidator(
@@ -16,6 +17,10 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField()
     accept_tos = forms.BooleanField(required=True, label='I accept Terms Of Use')
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)  # extract request
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'accept_tos']
@@ -23,5 +28,8 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         post_registration_service = PostRegistrationService()
         user = super().save(commit)
-        post_registration_service.post_register(user)
+
+        ip = get_client_ip(self.request)
+        post_registration_service.post_register(user, ip)
+
         return user

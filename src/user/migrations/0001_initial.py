@@ -3,10 +3,11 @@
 import django.contrib.auth.validators
 import django.db.models.deletion
 import django.utils.timezone
-import src.user.models
-import src.user.query_managers
 from django.conf import settings
 from django.db import migrations, models
+
+import src.user.models
+import src.user.query_managers
 
 
 class Migration(migrations.Migration):
@@ -64,6 +65,7 @@ class Migration(migrations.Migration):
                 ('following_count', models.IntegerField(default=0)),
                 ('media_count', models.IntegerField(default=0)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),
+                ('timezone', models.CharField(blank=True, max_length=30, null=True)),
             ],
         ),
     ]

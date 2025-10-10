@@ -9,6 +9,14 @@ class RegisterFormView(FormView):
     form_class = RegisterForm
     template_name = 'register.html'
 
+    def get_form_kwargs(self):
+        """
+        Add `request` to form kwargs so the form can access it.
+        """
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
     def form_valid(self, form: RegisterForm):
         form.save()
         return super().form_valid(form)
