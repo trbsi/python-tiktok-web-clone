@@ -7,6 +7,7 @@ function mediaFeed(
     likeMediaApi,
     listCommentsApi,
     unlockMediaApi,
+    isAuthenticated,
     filters
 ) {
     return {
@@ -26,7 +27,8 @@ function mediaFeed(
         isMuted: true,
         showReportForm: false,
         reportDescription: "",
-        reportTarget: null, // store the media being reported
+        reportTarget: null, // store the media being reported,
+        isAuthenticated,
 
         init() {
             // initial load
@@ -52,7 +54,15 @@ function mediaFeed(
 
                 // expected response shape: { results: [...], next_page: 2/null }
                 const items = data.results || data;
-                this.mediaList = this.mediaList.concat(items);
+                this.mediaList = this.mediaList.concat(
+                    items.map(media => ({
+                        ...media,
+                        showBlur: false,
+                        unlocked: false,
+                        unlocking: false,
+                    }))
+                );
+
                 this.page = data.next_page ?? (this.page + 1);
                 this.hasMore = !!data.next_page;
             } catch (e) {
@@ -170,9 +180,15 @@ function mediaFeed(
                 if (best.intersectionRatio >= 0.6) {
                     // pause other videos, play this one
                     this.currentIndex = index;
+
+                    // Blur media
+                    this.handleBlurOnActiveMedia(index);
+
+                    // Play video
                     this.playAtIndex(index);
+
                     // if we are 5th before end, load more
-                    if (this.mediaList.length - index <= 5) {
+                    if (this.mediaList.length - index < 5) {
                         this.loadMore();
                     }
                 } else {
@@ -213,7 +229,6 @@ function mediaFeed(
                         console.error(e);
                     }
                 }
-
             });
         },
 
@@ -496,6 +511,87 @@ function mediaFeed(
             } catch (e) {
                 console.error(e);
             }
-        }
+        },
+
+        async handleUnlock(media, index) {
+            const overlayEl = document.getElementById(`blur_media_${media.id}`);
+            const buttonEl = overlayEl?.querySelector('button');
+            const textEl = overlayEl?.querySelector('p');
+
+            if (!isAuthenticated) {
+                window.location.href = '/auth/login/';
+                return;
+            }
+
+            // Visual loading feedback
+            buttonEl.disabled = true;
+            textEl.style.display = 'block';
+            media.unlocking = true;
+
+            try {
+                const res = await fetch(unlockMediaApi, {
+                    method: 'POST',
+                    body: JSON.stringify({'media_id': media.id}),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken(),
+                    },
+                    credentials: 'include',
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw data;
+                }
+
+                // Replace the media file (video or image)
+                const el = this.getSingleMedia(index);
+                if (el) {
+                    if (el.tagName.toLowerCase() === 'video') {
+                        el.src = data.full_url;
+                        el.play();
+                    } else if (el.tagName.toLowerCase() === 'img') {
+                        el.src = data.full_url;
+                    }
+                }
+
+                // Update reactive state
+                media.lock.is_locked = false;
+                media.unlocked = true;
+                media.showBlur = false;
+
+                // Hide the overlay visually
+                if (overlayEl) overlayEl.style.display = 'none';
+            } catch (e) {
+            console.log(e);
+                toastr.error(e.error)
+            } finally {
+                buttonEl.disabled = false;
+                textEl.style.display = 'none';
+                media.unlocking = false;
+            }
+        },
+
+        handleBlurOnActiveMedia(index) {
+            // Clear any pending blur timers
+            if (this._blurTimer) clearTimeout(this._blurTimer);
+
+            // Reset blur for all items first
+            this.mediaList.forEach(m => {
+                if (m.lock.is_locked) m.showBlur = false;
+            });
+
+            const current = this.mediaList[index];
+            if (!current || !current.lock.is_locked) return;
+
+            // Wait 5 seconds before showing blur
+            this._blurTimer = setTimeout(() => {
+                // Make sure user hasn't swiped away yet
+                if (this.currentIndex === index && current.lock.is_locked && !current.unlocked) {
+                    current.showBlur = true;
+                }
+            }, 5000);
+        },
     };
 }

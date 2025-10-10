@@ -20,6 +20,7 @@ def discover(request: HttpRequest) -> HttpResponse:
             'like_media_api': reverse_lazy('engagement.api.like_media', kwargs={'media_id': '__MEDIA_ID__'}),
             'list_comments_api': reverse_lazy('engagement.api.list_comments', kwargs={'media_id': '__MEDIA_ID__'}),
             'unlock_media_api': reverse_lazy('media.api.unlock'),
+            'is_authenticated': 1 if request.user.is_authenticated else 0,
         }
     )
 
@@ -50,6 +51,7 @@ def following(request: HttpRequest) -> HttpResponse:
             'like_media_api': reverse_lazy('engagement.api.like_media', kwargs={'media_id': '__MEDIA_ID__'}),
             'list_comments_api': reverse_lazy('engagement.api.list_comments', kwargs={'media_id': '__MEDIA_ID__'}),
             'unlock_media_api': reverse_lazy('media.api.unlock'),
+            'is_authenticated': 1 if request.user.is_authenticated else 0,
         }
     )
 

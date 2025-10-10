@@ -3,6 +3,7 @@ from django.db import transaction
 
 from app.utils import format_datetime, remote_file_path_for_conversation
 from src.inbox.models import Message, Conversation
+from src.inbox.tasks import auto_reply
 from src.payment.services.spendings.spend_service import SpendService
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
@@ -55,7 +56,9 @@ class SendMessageService:
 
         conversation.save()
         self.spend_service.message(user, message)
+
         compress_media_task.delay(media_id=message.id, media_type=MEDIA_TYPE_INBOX)
+        auto_reply.delay(message_id=message.id)
 
         return {
             'id': message.id,

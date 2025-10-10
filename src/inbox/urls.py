@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/list-conversations', views.api_list_conversations, name='inbox.api.list_conversations'),
     path('api/conversations/<conversation_id>/list-messages', views.api_list_messages, name='inbox.api.list_messages'),
     path('api/send-message', views.api_send_message, name='inbox.api.send_message'),
+    path('api/toggle-auto-reply', views.api_toggle_auto_reply, name='inbox.api.toggle_auto_reply'),
 ]

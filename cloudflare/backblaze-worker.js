@@ -1,72 +1,91 @@
-let cachedAuth = null
-let cachedAt = 0
+let cachedAuth = null;
+let cachedAt = 0;
 
+// Get (and cache) Backblaze account authorization
 async function getB2Auth(env) {
-    const now = Date.now()
-    // If cached token is less than 22h old, reuse it
-    if (cachedAuth && (now - cachedAt < 22 * 60 * 60 * 1000)) {
-        return cachedAuth
-    }
+    const now = Date.now();
+    if (cachedAuth && now - cachedAt < 22 * 60 * 60 * 1000) return cachedAuth;
 
-    // Otherwise, reauthorize
     const res = await fetch("https://api.backblazeb2.com/b2api/v2/b2_authorize_account", {
         headers: {
-            Authorization: "Basic " + btoa(env.B2_KEY_ID + ":" + env.B2_KEY)
+            Authorization: "Basic " + btoa(`${env.B2_KEY_ID}:${env.B2_KEY}`)
         }
-    })
-    const data = await res.json()
+    });
 
-    cachedAuth = data
-    cachedAt = now
-    return cachedAuth
+    if (!res.ok) throw new Error("Failed to authorize B2 account");
+
+    const data = await res.json();
+    cachedAuth = data;
+    cachedAt = now;
+    return data;
+}
+
+// Generate signed download URL for a single file
+async function getSignedUrl(env, fileName) {
+    const auth = await getB2Auth(env);
+    const apiUrl = `${auth.apiUrl}/b2api/v2/b2_get_download_authorization`;
+
+    const res = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+            Authorization: auth.authorizationToken,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            bucketId: env.BUCKET_ID,
+            fileNamePrefix: fileName,
+            validDurationInSeconds: 3600
+        })
+    });
+
+    if (!res.ok) {
+        const err = await res.text();
+        throw new Error(`Failed to get signed URL: ${err}`);
+    }
+
+    const data = await res.json();
+    return `${auth.downloadUrl}/file/${env.BUCKET_NAME}/${fileName}?Authorization=${data.authorizationToken}`;
 }
 
 export default {
-    async fetch(request, env) {
-    // # TODO fix some day since even unregistered users can access app
-//        const cookie = request.headers.get("Cookie") || ""
-//        if (!cookie.includes("sessionId")) {
-//            return new Response("Unauthorized", {
-//                status: 401
-//            })
-//        }
+    async fetch(request, env, ctx) {
+        try {
+            const url = new URL(request.url);
+            const basePath = `file/${env.BUCKET_NAME}`;
 
-        const {
-            downloadUrl,
-            authorizationToken
-        } = await getB2Auth(env)
-
-
-        const url = new URL(request.url)
-
-        // Base path to strip
-        const basePath = `file/${env.BUCKET_NAME}`;
-
-        // Remove leading "/" if present
-        let filePath = url.pathname.startsWith("/") ? url.pathname.slice(1) : url.pathname;
-
-        // Remove the base path prefix
-        if (filePath.startsWith(basePath)) {
-            filePath = filePath.slice(basePath.length);
-        }
-
-        // Again remove leading "/" if present
-        filePath = url.pathname.startsWith("/") ? url.pathname.slice(1) : url.pathname;
-        const b2Url = `${downloadUrl}/${basePath}/${filePath}`
-
-        const b2Res = await fetch(b2Url, {
-            headers: {
-                Authorization: authorizationToken
+            // Remove basePath prefix
+            let filePath = url.pathname.startsWith("/") ? url.pathname.slice(1) : url.pathname;
+            if (!filePath.startsWith(basePath)) {
+                return new Response("Bad request: file path does not match bucket", {
+                    status: 400
+                });
             }
-        })
+            filePath = filePath.slice(basePath.length);
+            filePath = filePath.startsWith("/") ? filePath.slice(1) : filePath; // remove leading slash if any
 
-        // Copy B2 headers dynamically
-        const newHeaders = new Headers(b2Res.headers)
-        newHeaders.set("Cache-Control", "public, max-age=31536000") // add CDN caching
+            const cache = caches.default;
+            let response = await cache.match(request);
+            if (response) return response;
 
-        return new Response(b2Res.body, {
-            headers: newHeaders,
-            status: b2Res.status
-        })
+            const signedUrl = await getSignedUrl(env, filePath);
+            const b2Res = await fetch(signedUrl);
+
+            if (!b2Res.ok) {
+                return new Response(`Error fetching from Backblaze: ${b2Res.statusText}`, {
+                    status: b2Res.status
+                });
+            }
+
+            response = new Response(b2Res.body, b2Res);
+            response.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+
+            ctx.waitUntil(cache.put(request, response.clone()));
+            return response;
+
+        } catch (err) {
+            return new Response("Error: " + err.message, {
+                status: 500
+            });
+        }
     }
-}
+};

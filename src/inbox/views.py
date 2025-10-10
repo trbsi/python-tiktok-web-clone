@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest, HttpResponse, JsonResponse, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -8,24 +9,33 @@ from django.views.decorators.http import require_GET, require_POST
 
 from src.inbox.services.create_conversation.create_conversation_service import CreateConversationService
 from src.inbox.services.delete_conversation.delete_conversation_service import DeleteConversationService
+from src.inbox.services.inbox_settings.inbox_settings_service import InboxSettingsService
 from src.inbox.services.list_conversations.list_conversations_service import ListConversationsService
 from src.inbox.services.list_messages.can_user_access_conversation_specification import \
     CanUserAccessConversationSpecification
 from src.inbox.services.list_messages.list_messages_service import ListMessagesService
 from src.inbox.services.list_messages.read_messages_service import ReadConversationService
 from src.inbox.services.send_message.send_message_service import SendMessageService
+from src.user.models import User
 
 
 # --------------------------------- CONVERSATIONS -------------------------------
 @require_GET
 @login_required
 def list_conversations(request: HttpRequest) -> HttpResponse:
+    user: User = request.user
+    inbox_settings_service = InboxSettingsService()
+    auto_reply_active = inbox_settings_service.is_auto_reply_active(user)
+
     return render(
         request,
         'inbox_conversations.html',
         {
+            'auto_reply_active': auto_reply_active,
+            'is_creator': user.is_creator(),
             'list_conversations_api': reverse_lazy('inbox.api.list_conversations'),
             'delete_conversation_api': reverse_lazy('inbox.api.delete'),
+            'toggle_auto_reply_api': reverse_lazy('inbox.api.toggle_auto_reply'),
         }
     )
 
@@ -121,3 +131,19 @@ def api_send_message(request: HttpRequest) -> JsonResponse:
     )
 
     return JsonResponse(message)
+
+
+@require_POST
+@login_required
+def api_toggle_auto_reply(request: HttpRequest) -> JsonResponse:
+    user: User | AnonymousUser = request.user
+    if user.is_anonymous or user.is_regular_user():
+        return JsonResponse({})
+
+    body = json.loads(request.body)
+    print(body)
+    auto_reply_active = bool(body.get('auto_reply_active'))
+    service = InboxSettingsService()
+    settings = service.update_settings(user=user, auto_reply_active=auto_reply_active)
+
+    return JsonResponse({'auto_reply_active': settings.auto_reply_active})

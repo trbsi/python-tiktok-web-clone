@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -92,9 +94,12 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
 @require_POST
 @login_required
 def api_unlock(request: HttpRequest) -> JsonResponse:
-    post = request.POST
-    service = UnlockService()
-    result = service.unlock(user=request.user, media_id=int(post.get('media_id')))
+    post = json.loads(request.body)
+    try:
+        service = UnlockService()
+        result = service.unlock(user=request.user, media_id=int(post.get('media_id')))
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=402)
 
     return JsonResponse(result)
 

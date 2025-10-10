@@ -39,9 +39,12 @@ function conversationsComponent(listConversationsApi, deleteConversationApi) {
             try {
                 // Send delete request to API
                 const response = await fetch(deleteConversationApi, {
-                    method: "POST", headers: {
-                        "Content-Type": "application/json", "X-CSRFToken": getCsrfToken()
-                    }, body: JSON.stringify({conversation_ids: this.selectedIds})
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCsrfToken()
+                    },
+                    body: JSON.stringify({conversation_ids: this.selectedIds})
                 });
 
                 if (!response.ok) throw new Error("Failed to delete conversations");
@@ -61,4 +64,20 @@ function conversationsComponent(listConversationsApi, deleteConversationApi) {
             }
         }
     };
+}
+
+$('#auto_reply_messages').change(function() {
+    var value = $(this).is(':checked');
+    toggleAutoReply(value);
+});
+
+async function toggleAutoReply(isChecked) {
+    const response = await fetch(toggle_auto_reply_api, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCsrfToken()
+        },
+        body: JSON.stringify({auto_reply_active: isChecked})
+    });
 }

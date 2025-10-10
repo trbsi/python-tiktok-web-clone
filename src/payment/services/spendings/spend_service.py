@@ -14,6 +14,21 @@ class SpendService:
     TEXT_MESSAGE_COINS = 10  # 0.1$
     MEDIA_MESSAGE_COINS = 100  # 1$
 
+    def get_price_per_object(self, object: Media | Comment | Message):
+        if isinstance(object, Media):
+            if object.is_image():
+                return self.IMAGE_COINS
+            if object.is_video():
+                return self.VIDEO_COINS
+
+        if isinstance(object, Comment):
+            return self.COMMENT_COINS
+
+        if isinstance(object, Message):
+            return self.TEXT_MESSAGE_COINS
+
+        return 0
+
     def comment(self, user: User, comment: Comment) -> Decimal:
         return self._spend(spender=user, recipient=comment.media.user.id, amount=Decimal(self.COMMENT_COINS),
                            object=comment)
@@ -24,7 +39,7 @@ class SpendService:
         elif media.is_video():
             amount = self.VIDEO_COINS
 
-        return self._spend(spender=user, recipient=media.user.id, amount=Decimal(amount), object=media)
+        return self._spend(spender=user, recipient=media.user, amount=Decimal(amount), object=media)
 
     def message(self, user: User, message: Message) -> Decimal:
         if message.is_media_message():
@@ -32,8 +47,10 @@ class SpendService:
         else:
             amount = self.TEXT_MESSAGE_COINS
 
-        return self._spend(spender=user, recipient=message.conversation.get_creator(), amount=Decimal(amount),
-                           object=message)
+        return self._spend(
+            spender=user,
+            recipient=message.conversation.get_creator(), amount=Decimal(amount),
+            object=message)
 
     def _spend(
             self,
@@ -42,9 +59,6 @@ class SpendService:
             amount: Decimal,
             object: Message | Media | Comment
     ) -> Decimal:
-        if spender.is_creator():
-            return
-
         spender_balance = Balance.objects.get(user=spender)
         recipient_balance = Balance.objects.get(user=recipient)
 
@@ -54,12 +68,12 @@ class SpendService:
         spender_balance.balance = spender_balance.balance - amount
         spender_balance.save()
 
-        recipient_balance = recipient_balance.balance + amount
+        recipient_balance.balance = recipient_balance.balance + amount
         recipient_balance.save()
 
         Spending.objects.create(
             by_user=spender,
-            on_user=recipient_balance,
+            on_user=recipient,
             amount=amount,
             content_object=object
         )

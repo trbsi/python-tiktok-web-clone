@@ -39,7 +39,6 @@ def api_get_balance(request: HttpRequest) -> JsonResponse:
         return JsonResponse({'balance': None, 'status': 'hide'})
 
     balance: Balance = Balance.objects.get(user=user)
-    balance.balance = 3
     status = 'ok'
     if balance.balance < 100:
         status = 'low_balance'
