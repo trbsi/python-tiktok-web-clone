@@ -78,6 +78,11 @@ services:
         condition: service_healthy
       my-app-redis:
         condition: service_started
+    volumes:
+      - ../:/app:cached
+      - ../logs:/app/logs
+      - my_app_static_volume:/app/staticfiles
+      - my_app_media_volume:/app/uploads
 
   my-app-celery_worker:
     container_name: my-app-celery_worker
@@ -122,8 +127,6 @@ services:
       - "80:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - my_app_nginx_vhost:/etc/nginx/vhost.d
-      - my_app_nginx_html:/usr/share/nginx/html
       - ./nginx/nginx_config.conf:/etc/nginx/conf.d/nginx_config.conf:ro
 
 networks:
@@ -131,8 +134,6 @@ networks:
     external: true
 
 volumes:
-  my_app_nginx_vhost:
-  my_app_nginx_html:
   my_app_db_data:
   my_app_redis_data:
   my_app_static_volume:

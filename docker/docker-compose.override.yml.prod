@@ -8,42 +8,20 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - nginx-certs:/etc/nginx/certs
-      - nginx-vhost:/etc/nginx/vhost.d
-      - nginx-html:/usr/share/nginx/html
-
-  # ACME companion for automatic Let's Encrypt
-  my-app-acme-companion:
-    image: nginxproxy/acme-companion
-    restart: unless-stopped
-    depends_on:
-      - my-app-nginx
-    environment:
-      NGINX_PROXY_CONTAINER: my-app-nginx
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - my_app_nginx_certs:/etc/nginx/certs
-      - my_app_nginx_vhost:/etc/nginx/vhost.d
-      - my_app_nginx_html:/usr/share/nginx/html
+      - ./nginx/nginx_config.conf:/etc/nginx/conf.d/nginx_config.conf:ro
+      # Certificates folder on the host → inside the container
+      - ./nginx/certs:/etc/nginx/certs:ro
 
   my-app-web:
     # IMPORTANT: don't expose ports in prod, only join proxy network
     expose:
       - 80
-    volumes:
-      - ../:/app:cached
-      - my_app_logs:/app/logs   # Named volume (safe for prod)
-      - my_app_static_volume:/app/staticfiles
-      - my_app_media_volume:/app/uploads
 
   my-app-phpmyadmin:
     expose:
       - 8000 # expose to the Docker network, not the host
 
 volumes:
-  my_app_nginx_certs:
-  my_app_nginx_vhost:
-  my_app_nginx_html:
   my_app_db_data:
   my_app_redis_data:
   my_app_static_volume:

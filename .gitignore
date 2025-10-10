@@ -8,6 +8,7 @@ __pycache__
 db.sqlite3
 docker/docker-compose.override.yml
 docker/.env
+docker/nginx/certs
 
 # Backup files #
 *.bak
