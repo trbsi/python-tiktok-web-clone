@@ -1,4 +1,6 @@
-import requests
+import geoip2.database
+
+from app import settings
 
 
 def get_client_ip(request) -> str:
@@ -11,16 +13,29 @@ def get_client_ip(request) -> str:
     return ip
 
 
-def get_timezone_from_ip(ip: str | None = None):
+def get_ip_data(ip: str | None = None):
     """
     Detects timezone based on IP address using ipinfo.io API.
     If no IP is provided, it will auto-detect your current public IP.
     """
-    url = f"https://ipinfo.io/{ip}/json" if ip else "https://ipinfo.io/json"
+    data = {
+        'timezone': None,
+        'country': None,
+        'state': None,
+    }
+    if not ip:
+        return data
+
     try:
-        response = requests.get(url)
-        data = response.json()
-        timezone = data.get("timezone")
-        return timezone
+        reader = geoip2.database.Reader(settings.IP_DATABASE_PATH)
+        response = reader.city(ip)
+        data = {
+            'timezone': response.location.time_zone,
+            'country': response.country.iso_code,
+            'state': response.subdivisions.most_specific.iso_code
+        }
+        reader.close()
+
+        return data
     except Exception as e:
-        return None
+        return data

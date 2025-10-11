@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group
 
-from src.core.utils import get_timezone_from_ip
+from src.core.utils import get_ip_data
 from src.payment.models import Balance
 from src.user.enum import UserEnum
 from src.user.models import UserProfile, User
@@ -13,9 +13,11 @@ class PostRegistrationService:
         role_user = Group.objects.get_or_create(name=UserEnum.ROLE_USER.value)
         role_user.user_set.add(user)
 
-        timezone = get_timezone_from_ip(ip)
+        ip_data = get_ip_data(ip)
+        timezone = ip_data.get('timezone')
+
         try:
-            profile = user.profile
+            profile: UserProfile = user.profile
             profile.timezone = timezone
             profile.save()
         except UserProfile.DoesNotExist:
