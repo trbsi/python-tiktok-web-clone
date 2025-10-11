@@ -51,7 +51,9 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
+        MAXMIND_LICENSE_KEY: ${MAXMIND_LICENSE_KEY}
       dockerfile: docker/web/Dockerfile
+    image: my-app-web-image
     restart: unless-stopped
     environment:
       # Required by nginx-proxy to proxy to gunicorn
@@ -78,19 +80,20 @@ services:
         condition: service_healthy
       my-app-redis:
         condition: service_started
+    expose:
+      - 8000
     volumes:
       - ../:/app:cached
       - ../logs:/app/logs
       - my_app_static_volume:/app/staticfiles
       - my_app_media_volume:/app/uploads
+      - geoip_volume:/app/geoip
 
   my-app-celery_worker:
     container_name: my-app-celery_worker
     networks:
       - my-network
-    build:
-      context: ..
-      dockerfile: docker/web/Dockerfile
+    image: my-app-web-image
     command: celery -A ${CELERY_APP} worker --loglevel=info --concurrency=1
     environment:
       - CELERY_BROKER_URL=redis://my-app-redis:6379/0
@@ -100,14 +103,13 @@ services:
     depends_on:
       - my-app-redis
       - my-app-db
+      - my-app-web
 
   my-app-celery_beat:
     container_name: my-app-celery_beat
     networks:
       - my-network
-    build:
-      context: ..
-      dockerfile: docker/web/Dockerfile
+    image: my-app-web-image
     command: celery -A ${CELERY_APP} beat --loglevel=info --schedule=/app/celerybeat_data/celerybeat-schedule
     volumes:
       - ../:/app:cached
@@ -116,12 +118,13 @@ services:
     depends_on:
       - my-app-redis
       - my-app-db
+      - my-app-web
 
   my-app-nginx:
     container_name: my-app-nginx
     networks:
       - my-network
-    image: jwilder/nginx-proxy
+    image: jwilder/nginx-proxy:latest
     restart: unless-stopped
     ports:
       - "80:80"
@@ -140,3 +143,4 @@ volumes:
   my_app_media_volume:
   my_app_logs_volume:
   my_app_celerybeat_data:
+  geoip_volume:

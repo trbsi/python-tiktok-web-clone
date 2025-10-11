@@ -13,7 +13,7 @@ seed-database:
 	docker exec -it my-app-web python manage.py seed_database local --truncate
 
 docker-build:
-	cd docker && docker compose --env-file ../.env  up -d --build
+	cd docker && docker compose --env-file ../.env build my-app-web && docker compose --env-file ../.env  up -d --build
 
 createsuperuser:
 	docker exec -it my-app-web python manage.py createsuperuser

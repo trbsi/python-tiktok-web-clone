@@ -9,6 +9,7 @@ db.sqlite3
 docker/docker-compose.override.yml
 docker/.env
 docker/nginx/certs
+geoip/
 
 # Backup files #
 *.bak

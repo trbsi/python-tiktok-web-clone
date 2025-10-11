@@ -26,8 +26,9 @@ RUN poetry install --no-root
 # Stage 2: runtime
 FROM python:latest
 
-ARG UID=1000
-ARG GID=1000
+ARG UID
+ARG GID
+ARG MAXMIND_LICENSE_KEY
 
 # Create group and user with the same UID/GID as host
 RUN addgroup --gid ${GID} my-app-user \
@@ -49,11 +50,15 @@ COPY docker/web/wait_for_db.py /app/wait_for_db.py
 RUN chmod +x /app/entrypoint.sh
 
 # Create directories and give permission to the UID/GID user
-RUN mkdir -p /app/logs /app/celerybeat_data /app/staticfiles /app/uploads \
-    && chown -R ${UID}:${GID} /app/logs /app/celerybeat_data /app/staticfiles /app/uploads
-
+RUN mkdir -p /app/logs /app/celerybeat_data /app/staticfiles /app/uploads /app/geoip \
+    && chown -R ${UID}:${GID} /app/logs /app/celerybeat_data /app/staticfiles /app/uploads /app/geoip
 
 USER my-app-user
+
+# Download GeoLite2 City database
+RUN mkdir -p /app/geoip
+RUN curl -L "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz" \
+    | tar --strip-components=1 -xz -C /app/geoip
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1

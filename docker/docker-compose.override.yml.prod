@@ -12,11 +12,6 @@ services:
       # Certificates folder on the host → inside the container
       - ./nginx/certs:/etc/nginx/certs:ro
 
-  my-app-web:
-    # IMPORTANT: don't expose ports in prod, only join proxy network
-    expose:
-      - 80
-
   my-app-phpmyadmin:
     expose:
       - 8000 # expose to the Docker network, not the host
@@ -28,3 +23,4 @@ volumes:
   my_app_media_volume:
   my_app_logs_volume:
   my_app_celerybeat_data:
+  geoip_volume:

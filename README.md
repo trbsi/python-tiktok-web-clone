@@ -6,11 +6,13 @@
 1. Restart Celery
 
 ``` 
-docker network create my-network
-cd docker
-docker compose --env-file ../.env up -d --build
+make create-docker-network
+make docker-build
 docker compose restart my-app-celery_worker
 ```
+
+*Note*: First build web image because celery worker and celery beat depend on it because of "image: my-app-web-image".
+As you can see in "make docker-build"
 
 # Celery logs
 

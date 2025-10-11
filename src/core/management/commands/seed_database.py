@@ -1,6 +1,7 @@
 from django.core.management import BaseCommand, call_command, CommandError
 
 from app import settings
+from database.seeders.age_verification_seeder import AgeVerificationSeeder
 from database.seeders.engagement_seeder import EngagementSeeder
 from database.seeders.follow_seeder import FollowSeeder
 from database.seeders.group_seeder import GroupSeeder
@@ -27,6 +28,9 @@ class Command(BaseCommand):
 
             self.write('Seeding groups')
             GroupSeeder.seed()
+
+            self.write('Seeding Age verification countries')
+            AgeVerificationSeeder.seed()
 
             return
 
@@ -61,6 +65,9 @@ class Command(BaseCommand):
 
         self.write('Seeding balance')
         PaymentSeeder.seed()
+
+        self.write('Seeding Age verification countries')
+        AgeVerificationSeeder.seed()
 
         self.stdout.write(self.style.SUCCESS('Done'))
 

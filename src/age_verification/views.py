@@ -78,3 +78,8 @@ def webhook_age_verification(request: HttpRequest) -> JsonResponse:
         return JsonResponse({})
 
     return JsonResponse({'result': 'Something happened, check logs'}, 400)
+
+
+@require_GET
+def country_restricted(request: HttpRequest) -> HttpResponse:
+    return render(request, 'country_restricted.html')

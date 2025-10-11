@@ -14,11 +14,10 @@ class PostRegistrationService:
         role_user.user_set.add(user)
 
         ip_data = get_ip_data(ip)
-        timezone = ip_data.get('timezone')
 
         try:
             profile: UserProfile = user.profile
-            profile.timezone = timezone
+            profile.timezone = ip_data.timezone
             profile.save()
         except UserProfile.DoesNotExist:
-            UserProfile.objects.create(user=user, timezone=timezone)
+            UserProfile.objects.create(user=user, timezone=ip_data.timezone)
