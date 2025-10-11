@@ -1,4 +1,4 @@
-mediaFeed(
+function mediaFeed(
     feedType,
     mediaApiUrl,
     followUnfollowApi,
@@ -94,7 +94,7 @@ mediaFeed(
             var duration = 150; // animation duration in ms
             var touchStartY = 0;
 
-            goTo(targetIndex) {
+            function goTo(targetIndex) {
                 targetIndex = Math.max(0, Math.min(total - 1, targetIndex));
                 if (isAnimating || targetIndex === index) return;
 
@@ -651,5 +651,5 @@ mediaFeed(
             }
         }
 
-    };
+    }
 }
