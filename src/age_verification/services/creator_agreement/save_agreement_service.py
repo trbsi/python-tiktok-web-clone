@@ -1,5 +1,4 @@
 from src.age_verification.models import CreatorAgreement
-from src.age_verification.services.creator_service import CreatorService
 from src.user.models import User
 
 
@@ -12,6 +11,3 @@ class SaveAgreementService():
             ip_address=ip,
             user_agent=user_agent,
         )
-
-        service = CreatorService()
-        service.become_creator(user=user)

@@ -29,11 +29,15 @@ class SpendService:
 
         return 0
 
-    def comment(self, user: User, comment: Comment) -> Decimal:
-        return self._spend(spender=user, recipient=comment.media.user.id, amount=Decimal(self.COMMENT_COINS),
-                           object=comment)
+    def spend_comment(self, user: User, comment: Comment) -> Decimal:
+        return self._spend(
+            spender=user,
+            recipient=comment.media.user,
+            amount=Decimal(self.COMMENT_COINS),
+            object=comment
+        )
 
-    def media_unlock(self, user: User, media: Media) -> Decimal:
+    def spend_media_unlock(self, user: User, media: Media) -> Decimal:
         if media.is_image():
             amount = self.IMAGE_COINS
         elif media.is_video():
@@ -41,7 +45,7 @@ class SpendService:
 
         return self._spend(spender=user, recipient=media.user, amount=Decimal(amount), object=media)
 
-    def message(self, user: User, message: Message) -> Decimal:
+    def spend_message(self, user: User, message: Message) -> Decimal:
         if message.is_media_message():
             amount = self.MEDIA_MESSAGE_COINS
         else:
@@ -49,8 +53,10 @@ class SpendService:
 
         return self._spend(
             spender=user,
-            recipient=message.conversation.get_creator(), amount=Decimal(amount),
-            object=message)
+            recipient=message.conversation.get_creator(),
+            amount=Decimal(amount),
+            object=message
+        )
 
     def _spend(
             self,
@@ -59,6 +65,11 @@ class SpendService:
             amount: Decimal,
             object: Message | Media | Comment
     ) -> Decimal:
+
+        # TODO what if people start registering as creators and do things for free?
+        if spender.is_creator():
+            return Decimal(0)
+
         spender_balance = Balance.objects.get(user=spender)
         recipient_balance = Balance.objects.get(user=recipient)
 

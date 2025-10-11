@@ -16,7 +16,7 @@ class UnlockService():
     @transaction.atomic
     def unlock(self, user: User, media_id: int) -> dict:
         media: Media = Media.objects.get(id=media_id)
-        amount = self.spend_service.media_unlock(user=user, media=media)
+        amount = self.spend_service.spend_media_unlock(user=user, media=media)
         Unlock.objects.create(
             user=user,
             media=media,

@@ -1,20 +1,36 @@
 from django.core.management import BaseCommand, call_command, CommandError
 
 from app import settings
-from database.seeders import *
+from database.seeders.engagement_seeder import EngagementSeeder
 from database.seeders.follow_seeder import FollowSeeder
+from database.seeders.group_seeder import GroupSeeder
 from database.seeders.inbox_seeder import InboxSeeder
+from database.seeders.media_seeder import MediaSeeder
+from database.seeders.packages_seeder import PackagesSeeder
 from database.seeders.payment_seeder import PaymentSeeder
+from database.seeders.user_seeder import UserSeeder
 
 
 class Command(BaseCommand):
     help = 'Seeds the database'
 
     def add_arguments(self, parser):
+        parser.add_argument("env", type=str, help="local or prod")
         parser.add_argument("--truncate", action="store_true", default=False)
 
     def handle(self, *args, **options):
-        if settings.APP_ENV != 'local':
+        env = options["env"]
+
+        if env == 'prod':
+            self.write('Seeding packages')
+            PackagesSeeder.seed()
+
+            self.write('Seeding groups')
+            GroupSeeder.seed()
+
+            return
+
+        if settings.APP_ENV != 'local' and env != 'local':
             raise CommandError('You are not in local env')
 
         should_truncate = options["truncate"]

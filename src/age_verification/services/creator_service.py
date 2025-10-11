@@ -8,7 +8,10 @@ from src.user.models import User
 class CreatorService:
     CURRENT_AGREEMENT_VERSION = 1
 
-    def become_creator(self, user: User):
+    def become_creator(self, user: User) -> None:
+        if user.is_creator():
+            return
+
         age_verification = self.is_age_verification_completed(user)
         creator_agreement = self.is_creator_agreement_completed(user)
 

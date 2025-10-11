@@ -55,7 +55,7 @@ class SendMessageService:
             conversation.read_by_sender = False
 
         conversation.save()
-        self.spend_service.message(user, message)
+        self.spend_service.spend_message(user, message)
 
         compress_media_task.delay(media_id=message.id, media_type=MEDIA_TYPE_INBOX)
         auto_reply.delay(message_id=message.id)

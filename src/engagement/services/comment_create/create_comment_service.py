@@ -22,7 +22,7 @@ class CreateComment():
         media.comment_count = media.comment_count + 1
         media.save()
 
-        self.spend_service.comment(user, comment)
+        self.spend_service.spend_comment(user, comment)
 
         return {
             'id': comment.id,

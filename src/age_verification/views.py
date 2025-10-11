@@ -7,8 +7,6 @@ from django.urls.base import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from app import settings
-from app.log import log
 from src.age_verification.services.age_verification.age_verification_service import AgeVerificationService
 from src.age_verification.services.creator_agreement.save_agreement_service import SaveAgreementService
 from src.age_verification.services.creator_service import CreatorService
@@ -18,8 +16,9 @@ from src.core.utils import get_client_ip
 @require_GET
 @login_required
 def become_creator(request: HttpRequest) -> HttpResponse:
-    log.info(settings.LOG_VIEWER_FILES_DIR)
     service = CreatorService()
+    service.become_creator(user=request.user)
+
     return render(
         request,
         'become_creator.html',
@@ -78,4 +77,4 @@ def webhook_age_verification(request: HttpRequest) -> JsonResponse:
     if result:
         return JsonResponse({})
 
-    return JsonResponse({'result': 'something happened, check logs'}, 400)
+    return JsonResponse({'result': 'Something happened, check logs'}, 400)
