@@ -10,7 +10,7 @@ collectstatic:
 	docker exec -it my-app-web python manage.py collectstatic
 
 seed-database:
-	docker exec -it my-app-web python manage.py seed_database --truncate
+	docker exec -it my-app-web python manage.py seed_database local --truncate
 
 docker-build:
 	cd docker && docker compose --env-file ../.env  up -d --build

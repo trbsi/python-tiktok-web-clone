@@ -55,12 +55,9 @@ export default {
 
             // Remove basePath prefix
             let filePath = url.pathname.startsWith("/") ? url.pathname.slice(1) : url.pathname;
-            if (!filePath.startsWith(basePath)) {
-                return new Response("Bad request: file path does not match bucket", {
-                    status: 400
-                });
+            if (filePath.startsWith(basePath)) {
+                filePath = filePath.slice(basePath.length);
             }
-            filePath = filePath.slice(basePath.length);
             filePath = filePath.startsWith("/") ? filePath.slice(1) : filePath; // remove leading slash if any
 
             const cache = caches.default;

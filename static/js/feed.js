@@ -29,7 +29,9 @@ function mediaFeed(
         showReportForm: false,
         reportDescription: "",
         reportTarget: null, // store the media being reported,
+        currentActiveIndex: 0,
         isAuthenticated,
+
 
         init() {
             // initial load
@@ -59,6 +61,7 @@ function mediaFeed(
                     items.map(media => ({
                         ...media,
                         showBlur: false,
+                        _blurTimer: null,
                         unlocked: false,
                         unlocking: false,
                     }))
@@ -180,12 +183,14 @@ function mediaFeed(
                 const index = parseInt(best.target.getAttribute('data-index'));
                 const mediaElement = best.target;
                 const mediaData = this.mediaList[index];
-                if (best.intersectionRatio >= 0.6) {
+                if (best.intersectionRatio >= 0.8 && this.currentActiveIndex !== best.target.dataset.index) {
+                    this.currentActiveIndex = best.target.dataset.index;
+
                     // pause other videos, play this one
                     this.currentIndex = index;
 
                     // Blur media
-                    this.handleBlurOnActiveMedia(index, mediaData);
+                    this.handleBlurOnActiveMedia(index, mediaData, mediaElement);
 
                     // Track views
                     this.trackMediaView(mediaElement, mediaData);
@@ -240,7 +245,9 @@ function mediaFeed(
 
         pauseAtIndex(index) {
             const video = this.getSingleMedia(index)
-            if (!video) return;
+            const media = this.mediaList[index]
+
+            if (!video || media.type !== 'video') return;
 
             try {
                 video.pause();
@@ -578,25 +585,42 @@ function mediaFeed(
             }
         },
 
-        handleBlurOnActiveMedia(index, media) {
-            // Clear any pending blur timers
-            if (this._blurTimer) clearTimeout(this._blurTimer);
-
-            // Reset blur for all items first
-            this.mediaList.forEach(m => {
-                if (m.lock.is_locked) m.showBlur = false;
-            });
-
+        handleBlurOnActiveMedia(index, media, mediaElement) {
             if (!media || !media.lock.is_locked) return;
 
-            // Wait 5 seconds before showing blur
-            this._blurTimer = setTimeout(() => {
-                // Make sure user hasn't swiped away yet
-                if (this.currentIndex === index && media.lock.is_locked && !media.unlocked) {
-                    media.showBlur = true;
-                }
-            }, 5000);
+            // Reset blur for this media only
+            media.showBlur = false;
+
+            // Clear previous timer for this media
+            clearTimeout(media._blurTimer);
+            media._blurTimer = null;
+
+            // Determine delay based on media type
+            const delay = media.type === 'video' ? 7000 : media.type === 'image' ? 3000 : 0;
+            if (delay === 0) return; // unsupported media type
+
+            if (media.type === 'image') {
+                // Start blur timer immediately for images
+                media._blurTimer = setTimeout(() => {
+                    if (this.currentIndex === index && media.lock.is_locked && !media.unlocked) {
+                        media.showBlur = true;
+                    }
+                }, delay);
+
+            } else if (media.type === 'video') {
+                // Clear previous event handlers
+                mediaElement.onplay = null;
+                mediaElement.onplay = () => {
+                    // Start blur timer 10s after play
+                    media._blurTimer = setTimeout(() => {
+                        if (this.currentIndex === index && media.lock.is_locked && !media.unlocked) {
+                            media.showBlur = true;
+                        }
+                    }, delay);
+                };
+            }
         },
+
 
         async trackMediaView(mediaElement, media) {
             const isVideo = media.type === 'video';

@@ -22,3 +22,9 @@ docker compose restart my-app-celery_worker
 docker exec -it my-app-web poetry add ...
 docker compose restart my-app-web
 ```
+
+# Backblaze and Cloudflare
+
+Deliver Public Backblaze B2 Content Through Cloudflare CDN
+
+https://www.backblaze.com/docs/cloud-storage-deliver-public-backblaze-b2-content-through-cloudflare-cdn
