@@ -12,10 +12,6 @@ services:
       # Certificates folder on the host → inside the container
       - ./nginx/certs:/etc/nginx/certs:ro
 
-  my-app-phpmyadmin:
-    expose:
-      - 8000 # expose to the Docker network, not the host
-
 volumes:
   my_app_db_data:
   my_app_redis_data:

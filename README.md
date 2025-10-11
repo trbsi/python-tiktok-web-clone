@@ -11,6 +11,15 @@ make docker-build
 docker compose restart my-app-celery_worker
 ```
 
+For local dev add to hosts:
+
+```
+# used in NGINX_VIRTUAL_HOST
+127.0.0.1 myapp.loc
+# used in PHPMYADMIN_VIRTUAL_HOST
+127.0.0.1 databasemyapp.loc
+```
+
 *Note*: First build web image because celery worker and celery beat depend on it because of "image: my-app-web-image".
 As you can see in "make docker-build"
 

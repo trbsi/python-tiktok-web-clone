@@ -40,6 +40,8 @@ services:
       VIRTUAL_HOST: ${PHPMYADMIN_VIRTUAL_HOST}
     depends_on:
       - my-app-db
+    expose:
+      - 8000
 
   my-app-web:
     container_name: my-app-web
@@ -59,14 +61,11 @@ services:
       # Required by nginx-proxy to proxy to gunicorn
       VIRTUAL_HOST: ${NGINX_VIRTUAL_HOST}
       VIRTUAL_PORT: 8000  # Gunicorn port inside the container
-      LETSENCRYPT_HOST: ${NGINX_LETSENCRYPT_HOST}
-      LETSENCRYPT_EMAIL: ${NGINX_LETSENCRYPT_EMAIL}
       DJANGO_SETTINGS_MODULE: "app.settings"
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://my-app-redis:6379/0
       # enable debug for dev/live reload
       DEBUG: 1
-    #volumes: are in override
     #app.wsgi is path to app/wsgi.py
     command: >
       gunicorn app.wsgi:application
