@@ -31,7 +31,7 @@ function mediaFeed(
         reportTarget: null, // store the media being reported,
         isAuthenticated,
 
-        init() {
+        function init() {
             // initial load
             this.loadMore();
 
@@ -42,7 +42,7 @@ function mediaFeed(
             });
         },
 
-        async loadMore() {
+        async function loadMore() {
             if (this.loadingMore || !this.hasMore) {
                 return;
             }
@@ -84,7 +84,7 @@ function mediaFeed(
             }
         },
 
-        handleScroll() {
+        function handleScroll() {
             var $feed = $('#feed');
             var $containers = $feed.find('.media-container');
             var total = $containers.length;
@@ -150,15 +150,15 @@ function mediaFeed(
             $feed.scrollTop(0);
         },
 
-        getMedia() {
+        function getMedia() {
             return this.$root.querySelectorAll('[x-ref="media"]');
         },
 
-        getSingleMedia(index) {
+        function getSingleMedia(index) {
             return this.$root.querySelectorAll('[x-ref="media"]')[index];
         },
 
-        setupObserver() {
+        function setupObserver() {
             // clean up if exists
             if (this.observer) {
                 try {
@@ -210,7 +210,7 @@ function mediaFeed(
             this.getMedia().forEach(el => this.observer.observe(el))
         },
 
-        playAtIndex(index) {
+        function playAtIndex(index) {
             // pause all
             this.getMedia().forEach((media, i) => {
                 const type = media.dataset.type;
@@ -238,7 +238,7 @@ function mediaFeed(
             });
         },
 
-        pauseAtIndex(index) {
+        function pauseAtIndex(index) {
             const video = this.getSingleMedia(index)
             if (!video) return;
 
@@ -250,7 +250,7 @@ function mediaFeed(
             }
         },
 
-        pauseAll() {
+        function pauseAll() {
             this.getMedia().forEach(v => {
                 try {
                     v.pause();
@@ -258,7 +258,7 @@ function mediaFeed(
             });
         },
 
-        muteAll() {
+        function muteAll() {
             if (!this.getMedia()) return;
             this.getMedia().forEach(video => {
                 video.muted = true;
@@ -266,7 +266,7 @@ function mediaFeed(
             this.isMuted = true;
         },
 
-        unmuteAll() {
+        function unmuteAll() {
             if (!this.getMedia()) return;
             this.getMedia().forEach(video => {
                 video.muted = false;
@@ -274,28 +274,28 @@ function mediaFeed(
             this.isMuted = false
         },
 
-        playCurrent() {
+        function playCurrent() {
             this.playAtIndex(this.currentIndex || 0);
         },
 
-        updateProgress(index, event) {
+        function updateProgress(index, event) {
             const video = event.target;
             if (!video.duration) return;
             this.progressBar[index] = Math.round((video.currentTime / video.duration) * 100);
         },
 
-        onVideoLoaded(index) {
+        function onVideoLoaded(index) {
             // called when metadata/frames loaded; hide spinner if set
             this.loadingVideo[index] = false;
         },
 
-        formatCount(n) {
+        function formatCount(n) {
             if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
             if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
             return n;
         },
 
-        togglePlay(index) {
+        function togglePlay(index) {
             var video = this.getSingleMedia(index)
             if (!video) {
                 return;
@@ -310,7 +310,7 @@ function mediaFeed(
             }
         },
 
-        async toggleLike(media, index) {
+        async function toggleLike(media, index) {
             // Optimistic UI
             const previousLiked = media.liked;
             const previousLikes = media.like_count;
@@ -340,7 +340,7 @@ function mediaFeed(
             }
         },
 
-        async follow_unfollow(media) {
+        async function follow_unfollow(media) {
             previousFollow = media.followed
             futureFollow = !media.followed
 
@@ -375,7 +375,7 @@ function mediaFeed(
             } finally {}
         },
 
-        async openComments(media) {
+        async function openComments(media) {
             this.commentsOpen = true;
             this.activeMedia = media;
             this.comments = [];
@@ -396,12 +396,12 @@ function mediaFeed(
             }
         },
 
-        closeComments() {
+        function closeComments() {
             this.commentsOpen = false;
             this.activeMedia = null;
         },
 
-        async submitComment() {
+        async function submitComment() {
             if (!this.activeMedia) return;
             const text = this.commentInput.trim();
             if (!text) return;
@@ -452,13 +452,13 @@ function mediaFeed(
             }
         },
 
-        openProfile(user) {
+        function openProfile(user) {
             // open user profile - replace with your routing
             // If you use client-side routing, navigate there instead.
             window.location.href = `/user/${encodeURIComponent(user.username)}`;
         },
 
-        async shareMedia(video) {
+        async function shareMedia(video) {
             const shareData = {
                 title: 'Check out this video',
                 text: video.description || '',
@@ -478,18 +478,18 @@ function mediaFeed(
             }
         },
 
-        openReportForm(media) {
+        function openReportForm(media) {
             this.reportTarget = media;
             this.showReportForm = true;
         },
 
-        closeReportForm() {
+        function closeReportForm() {
             this.showReportForm = false;
             this.reportDescription = '';
             this.targetMedia = null;
         },
 
-        async submitReport() {
+        async function submitReport() {
             if (!this.reportTarget) return;
 
             try {
@@ -519,7 +519,7 @@ function mediaFeed(
             }
         },
 
-        async handleUnlock(media, index) {
+        async function handleUnlock(media, index) {
             const overlayEl = document.getElementById(`blur_media_${media.id}`);
             const buttonEl = overlayEl?.querySelector('button');
             const textEl = overlayEl?.querySelector('p');
@@ -578,7 +578,7 @@ function mediaFeed(
             }
         },
 
-        handleBlurOnActiveMedia(index, media) {
+        function handleBlurOnActiveMedia(index, media) {
             // Clear any pending blur timers
             if (this._blurTimer) clearTimeout(this._blurTimer);
 
