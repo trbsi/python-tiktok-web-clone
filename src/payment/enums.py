@@ -2,6 +2,14 @@ from enum import Enum
 from typing import Tuple
 
 
+class SpendEnum(Enum):
+    COMMENT_COINS = 20  # 0.2$
+    VIDEO_COINS = 100  # 1$
+    IMAGE_COINS = 50  # 0.5$
+    TEXT_MESSAGE_COINS = 10  # 0.1$
+    MEDIA_MESSAGE_COINS = 100  # 1$
+
+
 class PaymentEnum(Enum):
     COIN_TO_FIAT = 100  # 100 coins = 1$
     COMMISSION_PERCENTAGE = 0.2
@@ -27,7 +35,3 @@ class PaymentEnum(Enum):
             (PaymentEnum.PROVIDER_SEGPAY.value, 'SegGay'),
             (PaymentEnum.PROVIDER_EPOCH.value, 'Epoch'),
         )
-
-
-class SpendingEnum(Enum):
-    TYPE_MESSAGE = 'message'

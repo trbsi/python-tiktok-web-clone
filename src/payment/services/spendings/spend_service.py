@@ -3,29 +3,25 @@ from decimal import Decimal
 from src.engagement.models import Comment
 from src.inbox.models import Message
 from src.media.models import Media
+from src.payment.enums import SpendEnum
+from src.payment.exceptions import BalanceTooLowException
 from src.payment.models import Balance, Spending
 from src.user.models import User
 
 
 class SpendService:
-    COMMENT_COINS = 20  # 0.2$
-    VIDEO_COINS = 100  # 1$
-    IMAGE_COINS = 50  # 0.5$
-    TEXT_MESSAGE_COINS = 10  # 0.1$
-    MEDIA_MESSAGE_COINS = 100  # 1$
-
     def get_price_per_object(self, object: Media | Comment | Message):
         if isinstance(object, Media):
             if object.is_image():
-                return self.IMAGE_COINS
+                return SpendEnum.IMAGE_COINS.value
             if object.is_video():
-                return self.VIDEO_COINS
+                return SpendEnum.VIDEO_COINS.value
 
         if isinstance(object, Comment):
-            return self.COMMENT_COINS
+            return SpendEnum.COMMENT_COINS.value
 
         if isinstance(object, Message):
-            return self.TEXT_MESSAGE_COINS
+            return SpendEnum.TEXT_MESSAGE_COINS.value
 
         return 0
 
@@ -33,23 +29,23 @@ class SpendService:
         return self._spend(
             spender=user,
             recipient=comment.media.user,
-            amount=Decimal(self.COMMENT_COINS),
+            amount=Decimal(SpendEnum.COMMENT_COINS.value),
             object=comment
         )
 
     def spend_media_unlock(self, user: User, media: Media) -> Decimal:
         if media.is_image():
-            amount = self.IMAGE_COINS
+            amount = SpendEnum.IMAGE_COINS.value
         elif media.is_video():
-            amount = self.VIDEO_COINS
+            amount = SpendEnum.VIDEO_COINS.value
 
         return self._spend(spender=user, recipient=media.user, amount=Decimal(amount), object=media)
 
     def spend_message(self, user: User, message: Message) -> Decimal:
         if message.is_media_message():
-            amount = self.MEDIA_MESSAGE_COINS
+            amount = SpendEnum.MEDIA_MESSAGE_COINS.value
         else:
-            amount = self.TEXT_MESSAGE_COINS
+            amount = SpendEnum.TEXT_MESSAGE_COINS.value
 
         return self._spend(
             spender=user,
@@ -74,7 +70,7 @@ class SpendService:
         recipient_balance = Balance.objects.get(user=recipient)
 
         if spender_balance.balance < amount:
-            raise Exception('Balance too low')
+            raise BalanceTooLowException('Balance too low.')
 
         spender_balance.balance = spender_balance.balance - amount
         spender_balance.save()

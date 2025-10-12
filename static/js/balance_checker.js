@@ -1,4 +1,4 @@
-function balanceChecker(balanceEndpoint) {
+function balanceChecker(balanceEndpoint, isAuthenticated) {
     return {
         balance: null,
         open: false,
@@ -7,6 +7,9 @@ function balanceChecker(balanceEndpoint) {
         defaultRate: 10000,
 
         async balancePolling() {
+            if (!isAuthenticated) {
+                return
+            }
             await this.fetchBalance();
             this.startPolling();
         },

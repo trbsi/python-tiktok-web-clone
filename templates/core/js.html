@@ -1,6 +1,7 @@
 <script>
-    toastr.options.closeDuration = 7000;
+    toastr.options.closeDuration = 10000;
     toastr.options.progressBar = true;
+    toastr.options.escapeHtml = false;
 
     {% if messages %}
         {% for message in messages %}

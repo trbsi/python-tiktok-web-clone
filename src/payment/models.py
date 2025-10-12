@@ -68,6 +68,10 @@ class Balance(models.Model):
         else:
             return f'{self.get_balance_as_number()} coins'
 
+    @staticmethod
+    def get_user_balance(user: User):
+        return Balance.objects.get(user=user)
+
 
 class Package(models.Model):
     id = models.BigAutoField(primary_key=True)

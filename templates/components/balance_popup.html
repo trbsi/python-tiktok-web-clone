@@ -4,7 +4,8 @@
 {% endblock javascript %}
 
 <!-- Balance Popup Component -->
-<div x-cloak x-data="balanceChecker('{{TEMPLATE_BAlANCE_ENDPOINT}}')" x-init="balancePolling()" class="relative z-100">
+<div x-cloak x-data="balanceChecker('{{TEMPLATE_BAlANCE_ENDPOINT}}', {{TEMPLATE_IS_AUTHENTICATED}})"
+     x-init="balancePolling()" class="relative z-100">
     <!-- Popup overlay -->
     <div
             x-show="open"

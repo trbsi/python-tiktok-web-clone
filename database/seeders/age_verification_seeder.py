@@ -35,7 +35,7 @@ class AgeVerificationSeeder:
                 AgeVerificationCountry.objects.create(
                     country_code='US',
                     country_name='United States',
-                    county_name=lines[0],
-                    county_code=lines[1],
+                    state_name=lines[0],
+                    state_code=lines[1],
                     is_age_verification_required=bool(int(lines[2])),
                 )

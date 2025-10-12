@@ -15,6 +15,7 @@ from src.media.services.unlock.unlock_service import UnlockService
 from src.media.services.update_my_content.update_my_content_service import UpdateMyContentService
 from src.media.services.upload_media.upload_media_service import UploadMediaService
 from src.media.services.views.views_service import ViewsService
+from src.payment.exceptions import BalanceTooLowException
 from src.user.models import User
 
 
@@ -99,10 +100,18 @@ def api_unlock(request: HttpRequest) -> JsonResponse:
     try:
         service = UnlockService()
         result = service.unlock(user=request.user, media_id=int(post.get('media_id')))
+    except BalanceTooLowException as e:
+        return JsonResponse(
+            {
+                'error': f'Your balance is too low. <a href="{reverse_lazy('payment.buy_packages')}" class="underline">Click here to buy more coins.</a>'
+            },
+            status=402
+        )
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=402)
 
     return JsonResponse(result)
+
 
 # no need for login_required
 @require_POST
@@ -111,7 +120,6 @@ def record_views(request: HttpRequest) -> JsonResponse:
     service = ViewsService()
     service.record_view(user=request.user, media_id=int(body.get('media_id')))
     return JsonResponse({})
-
 
 
 def _can_access_upload(request: HttpRequest) -> bool:

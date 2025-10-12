@@ -42,7 +42,7 @@ function conversationsComponent(listConversationsApi, deleteConversationApi) {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRFToken": getCsrfToken()
+                        "X-CSRFToken": this.$utils.getCsrfToken()
                     },
                     body: JSON.stringify({conversation_ids: this.selectedIds})
                 });
@@ -76,7 +76,7 @@ async function toggleAutoReply(isChecked) {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": getCsrfToken()
+            "X-CSRFToken": this.$utils.getCsrfToken()
         },
         body: JSON.stringify({auto_reply_active: isChecked})
     });

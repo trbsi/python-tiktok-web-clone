@@ -330,7 +330,7 @@ function mediaFeed(
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken(),
+                        'X-CSRFToken': this.$utils.getCsrfToken(),
                     },
                     credentials: 'include'
                 });
@@ -362,7 +362,7 @@ function mediaFeed(
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken(),
+                        'X-CSRFToken': this.$utils.getCsrfToken(),
                     },
                     credentials: 'include',
                     body: JSON.stringify({
@@ -413,6 +413,12 @@ function mediaFeed(
             const text = this.commentInput.trim();
             if (!text) return;
 
+            result = await this.$utils.canSpend('comment');
+            if (result['ok'] === false) {
+                toastr.warning(result['error']);
+                return;
+            }
+
             // optimistic add
             const temp = {
                 id: 'temp-' + Date.now(),
@@ -439,7 +445,7 @@ function mediaFeed(
                     credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken()
+                        'X-CSRFToken': this.$utils.getCsrfToken()
                     },
                     body: JSON.stringify(body)
                 });
@@ -504,7 +510,7 @@ function mediaFeed(
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken(),
+                        'X-CSRFToken': this.$utils.getCsrfToken(),
                     },
                     body: JSON.stringify({
                         type: 'media',
@@ -536,6 +542,20 @@ function mediaFeed(
                 return;
             }
 
+            switch(media.type) {
+                case 'image':
+                    type = 'media_image';
+                    break;
+                case 'video':
+                    type = 'media_video';
+                    break;
+            }
+            result = await this.$utils.canSpend(type);
+            if (result['ok'] === false) {
+                toastr.warning(result['error']);
+                return;
+            }
+
             // Visual loading feedback
             buttonEl.disabled = true;
             textEl.style.display = 'block';
@@ -547,7 +567,7 @@ function mediaFeed(
                     body: JSON.stringify({'media_id': media.id}),
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCsrfToken(),
+                        'X-CSRFToken': this.$utils.getCsrfToken(),
                     },
                     credentials: 'include',
                 });
@@ -632,7 +652,7 @@ function mediaFeed(
                     try {
                         await fetch(recordViewsApi, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.$utils.getCsrfToken() },
                             credentials: 'include',
                             body: JSON.stringify({ media_id: media.id })
                         });
@@ -661,7 +681,7 @@ function mediaFeed(
                         try {
                             await fetch(recordViewsApi, {
                                 method: 'POST',
-                                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+                                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.$utils.getCsrfToken() },
                                 credentials: 'include',
                                 body: JSON.stringify({ media_id: media.id })
                             });

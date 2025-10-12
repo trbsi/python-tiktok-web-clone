@@ -83,6 +83,17 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         async sendMessage() {
             if (!this.newMessage && !this.attachment) return;
 
+            if (this.attachment) {
+                type = 'media_message';
+            } else {
+                type = 'text_message'
+            }
+            result = await this.$utils.canSpend(type);
+            if (result['ok'] === false) {
+                toastr.warning(result['error']);
+                return;
+            }
+
             // Set isSending state to true
             this.isSending = (this.attachment !== null) ? true : false;
 
@@ -97,7 +108,7 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
                     method: "POST",
                     body: formData,
                     headers: {
-                        'X-CSRFToken': getCsrfToken(),
+                        'X-CSRFToken': this.$utils.getCsrfToken(),
                         'Accept': 'application/json'
                     }
                 });

@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, Page
 
-from src.payment.models import Balance, Spending
+from src.payment.models import Spending
 from src.user.models import User
 
 
@@ -20,6 +20,3 @@ class MyPaymentsService:
         page = paginator.page(current_page)
 
         return page
-
-    def get_balance(self, user: User) -> Balance:
-        return Balance.objects.get(user=user)

@@ -1,11 +1,15 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.views.decorators.http import require_GET
+from django.urls.base import reverse_lazy
+from django.views.decorators.http import require_GET, require_POST
 
 from src.payment.models import Balance, Package
 from src.payment.services.my_payments.my_payments_service import MyPaymentsService
+from src.payment.services.spendings.can_spend_service import CanSpendService
 from src.user.models import User
 
 
@@ -18,7 +22,7 @@ def my_spendings(request: HttpRequest) -> HttpResponse:
 
     service = MyPaymentsService()
     spendings = service.get_my_spendings(user=user, current_page=page)
-    balance = service.get_balance(user=user)
+    balance = Balance.get_user_balance(user)
 
     return render(
         request,
@@ -31,13 +35,10 @@ def my_spendings(request: HttpRequest) -> HttpResponse:
     )
 
 
-# no need for @login_required here
 @require_GET
+@login_required
 def api_get_balance(request: HttpRequest) -> JsonResponse:
-    user: User | AnonymousUser = request.user
-    if user.is_anonymous or user.is_creator():
-        return JsonResponse({'balance': None, 'status': 'hide'})
-
+    user: User = request.user
     balance: Balance = Balance.objects.get(user=user)
     status = 'ok'
     if balance.balance < 100:
@@ -53,3 +54,24 @@ def buy_packages(request: HttpRequest) -> HttpResponse:
         'packages': Package.objects.all(),
     }
     return render(request, 'buy_packages.html', context)
+
+
+@require_POST
+def api_can_purchase(request: HttpRequest) -> JsonResponse:
+    user: User | AnonymousUser = request.user
+    if user.is_anonymous:
+        return JsonResponse({'error': 'You are not authorized'}, status=401)
+
+    body = json.loads(request.body)
+    service = CanSpendService()
+    result = service.can_spend(user=user, type=body.get('type'))
+
+    if result == False:
+        return JsonResponse(
+            {
+                'error': f'Your balance is too low. <a href="{reverse_lazy('payment.buy_packages')}" class="underline">Click here to buy more coins.</a>'
+            },
+            status=402
+        )
+    
+    return JsonResponse({})
