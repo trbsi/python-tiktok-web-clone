@@ -18,6 +18,13 @@ class PostRegistrationService:
         try:
             profile: UserProfile = user.profile
             profile.timezone = ip_data.timezone
+            profile.country_code = ip_data.country_code
+            profile.state_code = ip_data.state_code
             profile.save()
         except UserProfile.DoesNotExist:
-            UserProfile.objects.create(user=user, timezone=ip_data.timezone)
+            UserProfile.objects.create(
+                user=user,
+                timezone=ip_data.timezone,
+                country_code=ip_data.country_code,
+                state_code=ip_data.state_code,
+            )
