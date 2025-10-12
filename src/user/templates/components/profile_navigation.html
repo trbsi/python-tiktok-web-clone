@@ -17,11 +17,11 @@
 
         <!-- Menu Items -->
         <nav class="mt-4 flex flex-col">
+            {% if TEMPLATE_IS_CREATOR == 0 %}
             <a href="{% url 'age_verification.become_creator' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
                 <i class="ri-coins-line"></i> Become a creator
             </a>
-            {% if TEMPLATE_IS_CREATOR == False %}
             <a href="{% url 'payment.buy_packages' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
                 <i class="ri-id-card-line"></i> Buy coins
@@ -30,9 +30,9 @@
             <a href="{% url 'payment.my_spendings' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
                 <i class="ri-money-dollar-circle-line"></i>
-                {% if TEMPLATE_IS_CREATOR == True %} My earnings {% else %} My spendings {% endif %}
+                {% if TEMPLATE_IS_CREATOR == 1 %} My earnings {% else %} My spendings {% endif %}
             </a>
-            {% if TEMPLATE_IS_CREATOR == True %}
+            {% if TEMPLATE_IS_CREATOR == 1 %}
             <a href="{% url 'media.my_content' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
                 <i class="ri-multi-image-line"></i> My content

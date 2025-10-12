@@ -1,11 +1,13 @@
 <div class="mt-4 flex justify-between items-center">
     <!-- Select / Capture Button -->
-    <div class="w-full pr-2">
+    <div class="w-full">
         <button
                 @click="$refs.fileInput.click()"
                 class="w-full px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-lg "
         >
-            <i class="ri-video-on-line ri-lg"></i> <span class="text-xs">Record/Choose</span>
+            <i class="ri-video-on-line ri-lg"></i>
+            <br>
+            <span class="text-xs">Record/Choose</span>
         </button>
         <input
                 id="upload_media"
@@ -22,10 +24,25 @@
     <!-- Upload All Button -->
     <div class="w-full pl-2">
         <button
-                @click="uploadAllFiles()"
+                @click="uploadAllFiles('post_now')"
                 class="w-full px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-lg"
         >
-            <i class="ri-upload-cloud-line ri-lg"></i> <span class="text-xs">Upload</span>
+            <i class="ri-upload-cloud-line ri-lg"></i>
+            <br>
+            <span class="text-xs">Post Now</span>
         </button>
     </div>
+
+    <div class="w-full pl-2">
+        <button
+                @click="uploadAllFiles('schedule')"
+                class="w-full px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-lg"
+        >
+            <i class="ri-calendar-line ri-lg"></i>
+            <br>
+            <span class="text-xs">Schedule</span>
+        </button>
+    </div>
+
+
 </div>

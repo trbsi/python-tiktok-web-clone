@@ -27,7 +27,7 @@ function fileUploader(uploadApi) {
             event.target.value = '';
         },
 
-        uploadFile(fileData) {
+        uploadFile(fileData, postType) {
             // skip if already uploaded
             if (fileData.status === 'completed') return;
 
@@ -35,6 +35,7 @@ function fileUploader(uploadApi) {
             fileData.statusMessage = 'Uploading…';
 
             const formData = new FormData();
+            formData.append('postType', postType);
             formData.append('file', fileData.file);
             formData.append('description', fileData.description);
 
@@ -75,10 +76,10 @@ function fileUploader(uploadApi) {
             xhr.send(formData);
         },
 
-        uploadAllFiles() {
+        uploadAllFiles(postType) {
             this.files.forEach(file => {
                 if (file.status !== 'completed') {
-                    this.uploadFile(file);
+                    this.uploadFile(file, postType);
                 }
             });
         }

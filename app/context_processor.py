@@ -17,5 +17,5 @@ def environment_variables(request):
         'TEMPLATE_SUPPORT_EMAIL': os.getenv('SUPPORT_EMAIL'),
         'TEMPLATE_BAlANCE_ENDPOINT': reverse_lazy('payment.api.get_balance'),
         'TEMPLATE_IS_AUTHENTICATED': 1 if is_authenticated else 0,
-        'TEMPLATE_IS_CREATOR': is_creator
+        'TEMPLATE_IS_CREATOR': 1 if is_creator else 0,
     }
