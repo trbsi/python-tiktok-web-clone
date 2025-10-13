@@ -32,7 +32,7 @@ class MediaSeeder:
                     file_type=file_type,
                     file_trailer=rand_media if file_type == 'video' else None,
                     file_thumbnail=random_thumbnail if file_type == 'video' else None,
-                    status=MediaEnum.STATUS_FREE.value,
+                    status=MediaEnum.STATUS_PAID.value,
                     description=fake.text(),
                     created_at=datetime.now(),
                     share_count=random.randint(1, 1000),

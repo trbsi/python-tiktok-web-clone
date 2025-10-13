@@ -89,6 +89,7 @@ class Unlock(models.Model):
 
     objects = models.Manager()
 
+
 class Views(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -96,5 +97,21 @@ class Views(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
+
+
+# Track when did creator published media last time
+class MediaScheduler(models.Model):
+    SLOT_MORNING = 'morning'
+    SLOT_NOON = 'noon'
+    SLOT_AFTERNOON = 'afternoon'
+
+    id = models.BigAutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    last_published_at = models.DateTimeField(null=True, blank=True)
+    number_of_scheduled_media = models.PositiveIntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = models.Manager()
+
 
 auditlog.register(Media)

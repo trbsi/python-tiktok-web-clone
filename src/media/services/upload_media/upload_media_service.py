@@ -1,7 +1,7 @@
 from django.core.files.uploadedfile import UploadedFile
 
 from src.media.enums import MediaEnum
-from src.media.models import Media
+from src.media.models import Media, MediaScheduler
 from src.media.services.hashtag.hashtag_service import HashtagService
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
@@ -10,37 +10,60 @@ from src.user.models import User, UserProfile
 
 
 class UploadMediaService:
-    def upload_media(self, user: User, uploaded_file: UploadedFile, description: str) -> None:
-        local_storage_service = LocalStorageService()
-        remote_storage_service = RemoteStorageService()
-        hashtag_service = HashtagService()
+    def __init__(
+            self,
+            remote_storage_service: RemoteStorageService | None = None,
+            local_storage_service: LocalStorageService | None = None,
+            hashtag_service: HashtagService | None = None,
+    ):
+        self.remote_storage_service = remote_storage_service or RemoteStorageService()
+        self.local_storage_service = local_storage_service or LocalStorageService()
+        self.hashtag_service = hashtag_service or HashtagService()
+
+    def upload_media(self, user: User, uploaded_file: UploadedFile, description: str, post_type: str) -> None:
+        """
+        post_type: post_now|schedule
+        """
 
         # upload to temp local storage
-        file_data = local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
+        file_data = self.local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
         remote_file_name = file_data.get('remote_file_name')
         file_type = file_data.get('file_type')
         remote_file_path = f'{file_type}/media/{user.id}/{remote_file_name}'
 
-        remote_file_info = remote_storage_service.upload_file(
+        remote_file_info = self.remote_storage_service.upload_file(
             local_file_type=file_type,
             local_file_path=file_data.get('local_file_path'),
             remote_file_path=remote_file_path
         )
 
+        match post_type:
+            case 'post_now':
+                status = MediaEnum.STATUS_PAID
+            case 'schedule':
+                status = MediaEnum.STATUS_SCHEDULE
+            case _:
+                status = MediaEnum.STATUS_SCHEDULE
+
         media = Media.objects.create(
             file_info=remote_file_info,
             file_type=file_data.get('file_type'),
-            status=MediaEnum.STATUS_PENDING.value,
+            status=status.value,
             description=description,
             user=user,
         )
 
+        if status.is_schedule_status():
+            creator_publish: MediaScheduler = MediaScheduler.objects.get_or_create(user=user)
+            creator_publish.number_of_scheduled_media += 1
+            creator_publish.save()
+
         # save hashtags
-        hashtag_service.save_hashtags(media=media, description=description)
+        self.hashtag_service.save_hashtags(media=media, description=description)
 
         # Increase count
-        profile:UserProfile = user.profile
-        profile.media_count +=1
+        profile: UserProfile = user.profile
+        profile.media_count += 1
         profile.save()
 
         # compress media

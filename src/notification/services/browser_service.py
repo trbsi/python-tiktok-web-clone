@@ -3,5 +3,5 @@ from src.notification.value_objects.browser_value_object import BrowserValueObje
 
 class BrowserService:
     def send(self, notification: BrowserValueObject) -> None:
-        # TODO add browser push notification
+        # @TODO add browser push notification
         return

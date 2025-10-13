@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator, Page
-from django.db.models import QuerySet, Q
+from django.db.models import QuerySet
 
 from app.utils import reverse_lazy_with_query
 from src.engagement.models import Like
@@ -13,10 +13,11 @@ class UserMediaService:
 
     def get_user_media(self, username: str, current_page: int) -> dict:
         user: User = User.objects.get(username=username)
-        media: QuerySet[Media] = (Media.objects
-                                  .filter(Q(status=MediaEnum.STATUS_FREE.value) | Q(status=MediaEnum.STATUS_PAID.value))
-                                  .filter(user=user).order_by('-created_at')
-                                  )
+        media: QuerySet[Media] = (
+            Media.objects
+            .filter(status=MediaEnum.STATUS_PAID.value)
+            .filter(user=user).order_by('-created_at')
+        )
 
         paginator = Paginator(object_list=media, per_page=self.PER_PAGE)
         page: Page = paginator.page(current_page)

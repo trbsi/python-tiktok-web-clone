@@ -3,11 +3,13 @@ from typing import Tuple
 
 
 class MediaEnum(Enum):
-    STATUS_FREE = 'free'
     STATUS_PAID = 'paid'
+    STATUS_SCHEDULE = 'schedule'
+    STATUS_DELETED = 'deleted'
+    # not used at the moment
+    STATUS_FREE = 'free'
     STATUS_PENDING = 'pending'
     STATUS_PRIVATE = 'private'
-    STATUS_DELETED = 'deleted'
 
     FILE_TYPE_AUDIO = 'audio'
     FILE_TYPE_VIDEO = 'video'
@@ -23,9 +25,13 @@ class MediaEnum(Enum):
             (MediaEnum.STATUS_FREE.value, 'Free'),
             (MediaEnum.STATUS_PAID.value, 'Paid'),
             (MediaEnum.STATUS_PRIVATE.value, 'Private'),
+            (MediaEnum.STATUS_SCHEDULE.value, 'Schedule'),
             (MediaEnum.STATUS_PENDING.value, 'Pending'),
             (MediaEnum.STATUS_DELETED.value, 'Deleted'),
         )
+
+    def is_schedule_status(self) -> bool:
+        return MediaEnum.STATUS_SCHEDULE == self
 
     @staticmethod
     def creator_statuses() -> Tuple:

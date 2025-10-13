@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, Page
 from django.db.models import QuerySet, OuterRef, Exists, Case, Value, When, IntegerField
-from django.db.models.query_utils import Q
 from django.urls import reverse_lazy
 
 from src.engagement.models import Like
@@ -74,7 +73,7 @@ class LoadFeedService:
             .select_related('user')
             .order_by('-created_at')
             .annotate(liked=Exists(likes), followed=Exists(is_following))
-            .filter(Q(status=MediaEnum.STATUS_FREE.value) | Q(status=MediaEnum.STATUS_PAID.value))
+            .filter(status=MediaEnum.STATUS_PAID.value)
         )
 
         if include_following_list:
@@ -83,27 +82,21 @@ class LoadFeedService:
         if exclude_following_list:
             items = items.exclude(user_id__in=exclude_following_list)
 
-        # filters: uid,12,mid,55 -> comma separated
-        if filters is not None:
-            filters = filters.split(',')
-            for index, value in enumerate(filters):
-                # filter feed by content of specific creator
-                if value == 'uid':
-                    items = items.filter(user_id=filters[index + 1])
-                elif value == 'mid':
-                    items = items.annotate(is_target_media=Case(
-                        When(id=filters[index + 1], then=Value(0)),
-                        default=Value(1),
-                        output_field=IntegerField()
-                    )).order_by('is_target_media')
+        items = self._apply_filters(items, filters)
 
         paginator = Paginator(object_list=items, per_page=self.PER_PAGE)
-        page = paginator.page(current_page)
+        page: Page = paginator.page(current_page)
 
         # Handle unlocked media
         ids = page.object_list.values_list('id', flat=True)
         unlocked_media_set = self.unlocked_media_service.get_unlocked_media(user=user, media_ids=ids)
 
+        result = self._prepare_result(page, unlocked_media_set)
+        next_page = page.next_page_number() if page.has_next() else None
+
+        return {'result': result, 'next_page': next_page}
+
+    def _prepare_result(self, page: Page, unlocked_media_set: set) -> list:
         result = []
         for item in page.object_list:
             is_locked = (item.id in unlocked_media_set) == False
@@ -129,6 +122,23 @@ class LoadFeedService:
                 }
             })
 
-        next_page = page.next_page_number() if page.has_next() else None
+        return result
 
-        return {'result': result, 'next_page': next_page}
+    def _apply_filters(self, items: QuerySet, filters: str | None = None):
+        # filters: uid,12,mid,55 -> comma separated
+        if filters is None:
+            return items
+
+        filters = filters.split(',')
+        for index, value in enumerate(filters):
+            # filter feed by content of specific creator
+            if value == 'uid':
+                items = items.filter(user_id=filters[index + 1])
+            elif value == 'mid':
+                items = items.annotate(is_target_media=Case(
+                    When(id=filters[index + 1], then=Value(0)),
+                    default=Value(1),
+                    output_field=IntegerField()
+                )).order_by('is_target_media')
+
+        return items

@@ -62,7 +62,7 @@ class SpendService:
             object: Message | Media | Comment
     ) -> Decimal:
 
-        # TODO what if people start registering as creators and do things for free?
+        # @TODO what if people start registering as creators and do things for free?
         if spender.is_creator():
             return Decimal(0)
 
