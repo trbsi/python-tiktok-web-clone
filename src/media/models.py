@@ -102,16 +102,27 @@ class Views(models.Model):
 # Track when did creator published media last time
 class MediaScheduler(models.Model):
     SLOT_MORNING = 'morning'
-    SLOT_NOON = 'noon'
     SLOT_AFTERNOON = 'afternoon'
+    SLOT_EVENING = 'evening'
 
     id = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    timezone = models.CharField(max_length=64)
     last_published_at = models.DateTimeField(null=True, blank=True)
     number_of_scheduled_media = models.PositiveIntegerField(default=0)
+    last_slot = models.CharField(max_length=15, null=True, blank=True)
+    current_slot = models.CharField(max_length=15, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = models.Manager()
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=['number_of_scheduled_media', 'timezone', 'last_slot'],
+                name='idx_number_of_scheduled_media_timezone_last_slot'
+            ),
+        ]
 
 
 auditlog.register(Media)

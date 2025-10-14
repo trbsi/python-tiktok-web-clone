@@ -53,8 +53,14 @@ class UploadMediaService:
             user=user,
         )
 
+        profile: UserProfile = user.profile
+
         if status.is_schedule_status():
-            creator_publish: MediaScheduler = MediaScheduler.objects.get_or_create(user=user)
+            creator_publish: MediaScheduler = MediaScheduler.objects.get_or_create(
+                user=user,
+                defaults={'timezone': 'UTC'}
+            )
+            creator_publish.timezone = profile.timezone
             creator_publish.number_of_scheduled_media += 1
             creator_publish.save()
 
@@ -62,7 +68,6 @@ class UploadMediaService:
         self.hashtag_service.save_hashtags(media=media, description=description)
 
         # Increase count
-        profile: UserProfile = user.profile
         profile.media_count += 1
         profile.save()
 
