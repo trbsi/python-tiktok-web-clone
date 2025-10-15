@@ -1,11 +1,13 @@
 from django.core.files.uploadedfile import UploadedFile
+from django.utils import timezone
 
 from src.media.enums import MediaEnum
 from src.media.models import Media, MediaScheduler
 from src.media.services.hashtag.hashtag_service import HashtagService
+from src.storage.crons.compress_media_task.compress_media_task import CompressMediaTask
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
-from src.storage.tasks import compress_media_task, MEDIA_TYPE_MEDIA
+from src.storage.tasks import compress_media_task
 from src.user.models import User, UserProfile
 
 
@@ -43,7 +45,7 @@ class UploadMediaService:
             case 'schedule':
                 status = MediaEnum.STATUS_SCHEDULE
             case _:
-                status = MediaEnum.STATUS_SCHEDULE
+                status = MediaEnum.STATUS_PAID
 
         media = Media.objects.create(
             file_info=remote_file_info,
@@ -55,14 +57,16 @@ class UploadMediaService:
 
         profile: UserProfile = user.profile
 
+        # Update media scheduler
+        media_scheduler: MediaScheduler = MediaScheduler.objects.get_or_create(
+            user=user,
+            defaults={'timezone': 'UTC'}
+        )
         if status.is_schedule_status():
-            creator_publish: MediaScheduler = MediaScheduler.objects.get_or_create(
-                user=user,
-                defaults={'timezone': 'UTC'}
-            )
-            creator_publish.timezone = profile.timezone
-            creator_publish.number_of_scheduled_media += 1
-            creator_publish.save()
+            media_scheduler.number_of_scheduled_media += 1
+        media_scheduler.timezone = profile.timezone
+        media_scheduler.last_published_at = timezone.now()
+        media_scheduler.save()
 
         # save hashtags
         self.hashtag_service.save_hashtags(media=media, description=description)
@@ -74,7 +78,7 @@ class UploadMediaService:
         # compress media
         compress_media_task.delay(
             media_id=media.id,
-            media_type=MEDIA_TYPE_MEDIA,
+            media_type=CompressMediaTask.MEDIA_TYPE_MEDIA,
             create_thumbnail=True,
             create_trailer=True
         )

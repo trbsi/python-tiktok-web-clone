@@ -101,10 +101,6 @@ class Views(models.Model):
 
 # Track when did creator published media last time
 class MediaScheduler(models.Model):
-    SLOT_MORNING = 'morning'
-    SLOT_AFTERNOON = 'afternoon'
-    SLOT_EVENING = 'evening'
-
     id = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     timezone = models.CharField(max_length=64)
@@ -118,10 +114,21 @@ class MediaScheduler(models.Model):
 
     class Meta:
         indexes = [
+            # for update creator timezone
+            models.Index(
+                fields=['timezone'],
+                name='idx_media_schedule_timezone'
+            ),
+            # for publish scheduled media
             models.Index(
                 fields=['number_of_scheduled_media', 'timezone', 'last_slot'],
                 name='idx_number_of_scheduled_media_timezone_last_slot'
             ),
+            # for recycle media
+            models.Index(
+                fields=['number_of_scheduled_media', 'last_published_at', 'current_slot'],
+                name='idx_number_of_scheduled_media_last_published_at_current_slot'
+            )
         ]
 
 

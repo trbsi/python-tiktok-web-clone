@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 
-from src.authentication.services.post_registration_service import PostRegistrationService
+from src.authentication.services.post_auth.post_registration_service import PostRegistrationService
 from src.core.utils import get_client_ip
 from src.user.models import User as User
 

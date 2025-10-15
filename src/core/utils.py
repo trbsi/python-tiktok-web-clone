@@ -14,15 +14,11 @@ def get_client_ip(request) -> str:
     return ip
 
 
-def get_ip_data(ip: str | None = None) -> IpData:
+def get_ip_data(ip: str) -> IpData:
     """
     Detects timezone based on IP address using ipinfo.io API.
     If no IP is provided, it will auto-detect your current public IP.
     """
-    data = IpData()
-    if not ip:
-        return data
-
     try:
         reader = geoip2.database.Reader(settings.IP_DATABASE_PATH)
         response = reader.city(ip)
@@ -35,4 +31,4 @@ def get_ip_data(ip: str | None = None) -> IpData:
 
         return data
     except Exception as e:
-        return data
+        return IpData()
