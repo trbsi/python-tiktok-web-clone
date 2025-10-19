@@ -50,8 +50,8 @@ COPY docker/web/wait_for_db.py /app/wait_for_db.py
 RUN chmod +x /app/entrypoint.sh
 
 # Create directories and give permission to the UID/GID user
-RUN mkdir -p /app/geoip \
-    && chown -R ${UID}:${GID} /app/logs /app/staticfiles /app/uploads /app/geoip
+RUN mkdir -p /app/logs /app/staticfiles /app/uploads /app/geoip /app/celerybeat_data \
+    && chown -R ${UID}:${GID} /app/logs /app/staticfiles /app/uploads /app/geoip /app/celerybeat_data
 
 USER my-app-user
 
