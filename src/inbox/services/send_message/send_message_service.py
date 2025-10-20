@@ -3,12 +3,12 @@ from django.db import transaction
 
 from app.utils import format_datetime, remote_file_path_for_conversation
 from src.inbox.models import Message, Conversation
-from src.inbox.tasks import auto_reply
+from src.inbox.tasks import task_auto_reply
 from src.payment.services.spendings.spend_service import SpendService
 from src.storage.crons.compress_media_task.compress_media_task import CompressMediaTask
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
-from src.storage.tasks import compress_media_task
+from src.storage.tasks import task_compress_media_task
 from src.user.models import User
 
 
@@ -58,8 +58,9 @@ class SendMessageService:
         conversation.save()
         self.spend_service.spend_message(user, message)
 
-        compress_media_task.delay(media_id=message.id, media_type=CompressMediaTask.MEDIA_TYPE_INBOX)
-        auto_reply.delay(message_id=message.id)
+        task_compress_media_task.delay(media_id=message.id, media_type=CompressMediaTask.MEDIA_TYPE_INBOX)
+        # pass send_message_service because of circular import problem (I call SendMessageService in AutoReplyTask)
+        task_auto_reply.delay(message_id=message.id, send_message_service=self)
 
         return {
             'id': message.id,

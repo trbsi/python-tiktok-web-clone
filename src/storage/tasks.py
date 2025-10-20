@@ -4,7 +4,7 @@ from src.storage.crons.compress_media_task.compress_media_task import CompressMe
 
 
 @shared_task
-def compress_media_task(
+def task_compress_media_task(
         media_type: str,
         media_id: int,
         create_thumbnail: bool = False,

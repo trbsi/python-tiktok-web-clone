@@ -7,7 +7,6 @@ class UnlockedMediaService():
         if user.is_anonymous:
             return set()
 
-        print(media_ids)
         result = (
             Unlock.objects
             .filter(user=user, media_id__in=list(media_ids))

@@ -5,12 +5,12 @@ from src.user.crons.delete_user_messages.delete_user_messages_task import Delete
 
 
 @shared_task
-def delete_user_media(user_id: int):
+def task_delete_user_media(user_id: int):
     task = DeleteUserMediaTask()
     task.delete_user_media(user_id)
 
 
 @shared_task
-def delete_user_messages(user_id: int):
+def task_delete_user_messages(user_id: int):
     task = DeleteUserMessagesTask()
     task.delete_user_messages(user_id)

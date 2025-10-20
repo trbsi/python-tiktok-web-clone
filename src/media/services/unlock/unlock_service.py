@@ -1,7 +1,4 @@
-from datetime import timedelta
-
 from django.db import transaction
-from django.utils import timezone
 
 from src.media.enums import MediaEnum
 from src.media.models import Media, Unlock
@@ -20,7 +17,6 @@ class UnlockService():
         Unlock.objects.create(
             user=user,
             media=media,
-            expires_at=timezone.now() + timedelta(days=1),
             amount=amount,
             unlock_type=MediaEnum.UNLOCK_24H.value,
         )

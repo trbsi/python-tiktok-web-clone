@@ -83,7 +83,6 @@ class Unlock(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     media = models.ForeignKey(Media, on_delete=models.CASCADE)
     unlocked_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     unlock_type = models.CharField(max_length=20, choices=MediaEnum.unlock_types())
 
@@ -122,12 +121,12 @@ class MediaScheduler(models.Model):
             # for publish scheduled media
             models.Index(
                 fields=['number_of_scheduled_media', 'timezone', 'last_slot'],
-                name='idx_number_of_scheduled_media_timezone_last_slot'
+                name='idx_media_timezone_last_slot'
             ),
             # for recycle media
             models.Index(
                 fields=['number_of_scheduled_media', 'last_published_at', 'current_slot'],
-                name='idx_number_of_scheduled_media_last_published_at_current_slot'
+                name='idx_media_published_at_slot'
             )
         ]
 

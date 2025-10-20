@@ -7,7 +7,7 @@ from src.media.services.hashtag.hashtag_service import HashtagService
 from src.storage.crons.compress_media_task.compress_media_task import CompressMediaTask
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
-from src.storage.tasks import compress_media_task
+from src.storage.tasks import task_compress_media_task
 from src.user.models import User, UserProfile
 
 
@@ -76,7 +76,7 @@ class UploadMediaService:
         profile.save()
 
         # compress media
-        compress_media_task.delay(
+        task_compress_media_task.delay(
             media_id=media.id,
             media_type=CompressMediaTask.MEDIA_TYPE_MEDIA,
             create_thumbnail=True,

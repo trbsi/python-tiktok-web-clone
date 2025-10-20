@@ -7,7 +7,7 @@ from src.follow.models import Follow
 from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.user.models import User, UserProfile
-from src.user.tasks import delete_user_media, delete_user_messages
+from src.user.tasks import task_delete_user_media, task_delete_user_messages
 
 
 class DeleteUserService:
@@ -40,5 +40,5 @@ class DeleteUserService:
         profile.bio = None
         profile.save()
 
-        delete_user_media.delay(user_id=user.id)
-        delete_user_messages.delay(user_id=user.id)
+        task_delete_user_media.delay(user_id=user.id)
+        task_delete_user_messages.delay(user_id=user.id)

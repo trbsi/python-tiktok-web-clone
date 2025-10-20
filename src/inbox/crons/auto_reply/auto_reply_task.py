@@ -1,27 +1,24 @@
 import torch
-from transformers.models.auto.modeling_auto import _BaseModelWithGenerate
 
 from src.inbox.models import Message, Conversation
 from src.inbox.services.inbox_settings.inbox_settings_service import InboxSettingsService
-from src.inbox.services.send_message.send_message_service import SendMessageService
 
 
 class AutoReplyTask:
     def __init__(
             self,
             tokenizer,
-            model: _BaseModelWithGenerate,
+            model,
             inbox_settings_service: InboxSettingsService | None = None,
-            send_message_service: SendMessageService | None = None,
     ):
         # @TODO
         print(type(tokenizer))
+        print(type(model))
         self.tokenizer = tokenizer
         self.model = model
         self.inbox_settings_service = inbox_settings_service or InboxSettingsService()
-        self.send_message_service = send_message_service or SendMessageService()
 
-    def auto_reply(self, message_id: int):
+    def auto_reply(self, message_id: int, send_message_service):
         message: Message = Message.objects.get(id=message_id)
 
         # if creator sent a message do not auto reply
@@ -58,7 +55,7 @@ class AutoReplyTask:
 
         # Get reply and save
         reply = self._get_reply(textual_history)
-        self.send_message_service.send_message(
+        send_message_service.send_message(
             user=creator,
             conversation_id=conversation.id,
             message_content=reply,
