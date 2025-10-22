@@ -34,3 +34,8 @@ def send_test_email(request: HttpRequest) -> HttpResponse:
     NotificationService.send_notification(email)
     messages.success(request, 'Thank you for sending an email')
     return redirect(reverse_lazy('home'))
+
+
+@require_GET
+def landing_page(request: HttpRequest) -> HttpResponse:
+    return render(request, 'core/landing_page.html')
