@@ -56,9 +56,11 @@ RUN mkdir -p /app/logs /app/staticfiles /app/uploads /app/geoip /app/celerybeat_
 USER my-app-user
 
 # Download GeoLite2 City database
-RUN mkdir -p /app/geoip
-RUN curl -L "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz" \
-    | tar --strip-components=1 -xz -C /app/geoip
+# Dynamically determine year-month and download + extract the DB
+RUN YEAR_MONTH=$(date +'%Y-%m') && \
+    curl -L "https://download.db-ip.com/free/dbip-city-lite-${YEAR_MONTH}.mmdb.gz" -o /tmp/dbip.mmdb.gz && \
+    gzip -d /tmp/dbip.mmdb.gz && \
+    mv /tmp/dbip-city-lite-${YEAR_MONTH}.mmdb /app/geoip/GeoLite-City.mmdb \
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
