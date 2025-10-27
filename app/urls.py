@@ -26,7 +26,7 @@ from . import settings
 urlpatterns = [
     path('', include('src.core.urls')),
     path('.internal/.fuckoff/', admin.site.urls),
-    path('.internal/logs/', include('log_viewer.urls')),
+    path('.internal/.logs/', include('log_viewer.urls')),
     path('authentication/', include('src.authentication.urls')),
     path('auth/login/', AppLoginView.as_view(), name='login'),
     path('auth/password_reset/', AppPasswordResetView.as_view(), name='password_reset'),
