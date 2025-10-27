@@ -230,6 +230,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # allauth settings
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"  # "mandatory" if you want verified emails
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 # Celery
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
