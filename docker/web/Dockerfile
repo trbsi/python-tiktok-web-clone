@@ -28,7 +28,6 @@ FROM python:latest
 
 ARG UID
 ARG GID
-ARG MAXMIND_LICENSE_KEY
 
 # Create group and user with the same UID/GID as host
 RUN addgroup --gid ${GID} my-app-user \
@@ -60,7 +59,7 @@ USER my-app-user
 RUN YEAR_MONTH=$(date +'%Y-%m') && \
     curl -L "https://download.db-ip.com/free/dbip-city-lite-${YEAR_MONTH}.mmdb.gz" -o /tmp/dbip.mmdb.gz && \
     gzip -d /tmp/dbip.mmdb.gz && \
-    mv /tmp/dbip-city-lite-${YEAR_MONTH}.mmdb /app/geoip/GeoLite-City.mmdb \
+    mv /tmp/dbip.mmdb /app/geoip/GeoLite-City.mmdb
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1

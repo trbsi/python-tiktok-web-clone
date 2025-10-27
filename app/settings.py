@@ -33,7 +33,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env.bool('DEBUG_MODE')
 APP_ENV = env('APP_ENV')
 APP_URL = env('APP_URL')
 APP_NAME = env('APP_NAME')

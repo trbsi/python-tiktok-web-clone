@@ -8,9 +8,10 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx/nginx_config.conf:/etc/nginx/conf.d/nginx_config.conf:ro
       # Certificates folder on the host → inside the container
       - ./nginx/certs:/etc/nginx/certs:ro
+      - ./nginx/vhost.d:/etc/nginx/vhost.d
+      - my_app_static_volume:/app/staticfiles:ro
 
 volumes:
   my_app_db_data:

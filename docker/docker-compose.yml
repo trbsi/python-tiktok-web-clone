@@ -53,7 +53,6 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        MAXMIND_LICENSE_KEY: ${MAXMIND_LICENSE_KEY}
       dockerfile: docker/web/Dockerfile
     image: my-app-web-image
     restart: unless-stopped
@@ -64,8 +63,6 @@ services:
       DJANGO_SETTINGS_MODULE: "app.settings"
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://my-app-redis:6379/0
-      # enable debug for dev/live reload
-      DEBUG: 1
     #app.wsgi is path to app/wsgi.py
     command: >
       gunicorn app.wsgi:application
