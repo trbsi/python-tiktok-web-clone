@@ -224,6 +224,7 @@ ADMIN_EMAILS = env('ADMIN_EMAILS').split(',')
 SUPPORT_EMAIL = env('SUPPORT_EMAIL')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
+CSRF_TRUSTED_ORIGINS = env('CSRF_TRUSTED_ORIGINS').split(',')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # allauth settings
