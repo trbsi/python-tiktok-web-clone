@@ -1,4 +1,4 @@
-.PHONY: makemigrations, migrate, seed-database, docker-build, createsuperuser, collectstatic, create-docker-network
+.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage
 
 makemigrations:
 	docker exec -it my-app-web python manage.py makemigrations
@@ -9,14 +9,20 @@ migrate:
 collectstatic:
 	docker exec -it my-app-web python manage.py collectstatic
 
-seed-database:
+seeddatabase:
 	docker exec -it my-app-web python manage.py seed_database local --truncate
 
-docker-build:
+builddocker:
 	cd docker && docker compose --env-file ../.env build my-app-web && docker compose --env-file ../.env  up -d --build
+
+restartweb:
+	cd docker && docker compose --env-file ../.env restart my-app-web
 
 createsuperuser:
 	docker exec -it my-app-web python manage.py createsuperuser
 
-create-docker-network:
+createdockernetwork:
 	docker network create my-network
+
+manage:
+	docker exec -it my-app-web python manage.py $(CMD)"
