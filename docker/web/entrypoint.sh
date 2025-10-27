@@ -11,8 +11,3 @@ $PYTHON_BIN manage.py migrate --noinput
 
 echo "Collecting static files..."
 $PYTHON_BIN manage.py collectstatic --noinput
-
-if [ "$DJANGO_CREATE_SUPERUSER" = "true" ]; then
-  echo "Creating Django superuser..."
-  $PYTHON_BIN manage.py createsuperuser --noinput || true
-fi
