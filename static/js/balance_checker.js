@@ -3,8 +3,8 @@ function balanceChecker(balanceEndpoint, isAuthenticated) {
         balance: null,
         open: false,
         pollingInterval: null,
-        pollingRate: 10 * 1000, // 10 seconds by default
-        defaultRate: 10 * 60 * 1000, //10 minutes
+        pollingRate: 1 * 60 * 1000, // 1 minute
+        storage_key: 'balance_checker',
 
         async balancePolling() {
             if (!isAuthenticated) {
@@ -15,6 +15,11 @@ function balanceChecker(balanceEndpoint, isAuthenticated) {
         },
 
         async fetchBalance() {
+            console.log('Balance checked');
+            if (this.getWithExpiry() !== null) {
+                return;
+            }
+
             try {
                 const res = await fetch(balanceEndpoint);
                 const data = await res.json();
@@ -48,8 +53,32 @@ function balanceChecker(balanceEndpoint, isAuthenticated) {
 
         closePopup() {
             this.open = false;
-            this.pollingRate = this.defaultRate;
+            this.setWithExpiry();
             this.startPolling();
+        },
+
+        setWithExpiry() {
+            const now = Date.now();
+            const item = {
+                value: true,
+                expiry: now + 5 * 60 * 1000, //5 minutes
+            };
+            localStorage.setItem(this.storage_key, JSON.stringify(item));
+        },
+
+        getWithExpiry() {
+            const itemStr = localStorage.getItem(this.storage_key);
+            if (!itemStr) return null;
+
+            const item = JSON.parse(itemStr);
+            const now = Date.now();
+
+            if (now > item.expiry) {
+                localStorage.removeItem(this.storage_key);
+                return null;
+            }
+
+            return item.value;
         }
     }
 }
