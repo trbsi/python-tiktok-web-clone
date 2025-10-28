@@ -61,7 +61,7 @@ function balanceChecker(balanceEndpoint, isAuthenticated) {
             const now = Date.now();
             const item = {
                 value: true,
-                expiry: now + 5 * 60 * 1000, //5 minutes
+                expiry: now + 10 * 60 * 1000, //10 minutes
             };
             localStorage.setItem(this.storage_key, JSON.stringify(item));
         },
