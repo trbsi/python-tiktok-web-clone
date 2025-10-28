@@ -3,8 +3,8 @@ function balanceChecker(balanceEndpoint, isAuthenticated) {
         balance: null,
         open: false,
         pollingInterval: null,
-        pollingRate: 10000, // 10 seconds by default
-        defaultRate: 10000,
+        pollingRate: 10 * 1000, // 10 seconds by default
+        defaultRate: 10 * 60 * 1000, //10 minutes
 
         async balancePolling() {
             if (!isAuthenticated) {
@@ -48,7 +48,7 @@ function balanceChecker(balanceEndpoint, isAuthenticated) {
 
         closePopup() {
             this.open = false;
-            this.pollingRate = this.pollingRate + this.defaultRate;
+            this.pollingRate = this.defaultRate;
             this.startPolling();
         }
     }
