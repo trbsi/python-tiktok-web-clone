@@ -1,4 +1,5 @@
-import torch
+import random
+import re
 
 from src.inbox.models import Message, Conversation
 from src.inbox.services.inbox_settings.inbox_settings_service import InboxSettingsService
@@ -32,41 +33,88 @@ class AutoReplyTask:
         if auto_reply_active == False:
             return
 
-        # Get last 100 messages as context
+        # Get last 50 messages as context
         last_messages = (
             Message.objects
             .select_related('sender')
             .filter(conversation=conversation)
             .filter(id__lte=message_id)
-            .order_by('-id')[:100]
+            .order_by('-id')[:50]
         )
         last_messages = last_messages.reverse()
 
         # Create GPT format
-        history = []
+        chat_history = []
         for message in last_messages:
             if message.sender.is_creator():
-                prefix = 'Bot: '
+                role = 'assistant'
             else:
-                prefix = 'User: '
-            history.append(prefix + message.message)
-        history.append('Bot: ')
-        textual_history = '\n'.join(history)
+                role = 'user'
+
+            chat_history.append({'role': role, 'content': message.message})
 
         # Get reply and save
-        reply = self._get_reply(textual_history)
-        send_message_service.send_message(
-            user=creator,
-            conversation_id=conversation.id,
-            message_content=reply,
+        reply = self._get_reply_from_ai(chat_history)
+        replies = self._split_sentences_randomly(reply)
+
+        for reply in replies:
+            send_message_service.send_message(
+                user=creator,
+                conversation_id=conversation.id,
+                message_content=reply,
+            )
+
+    def _get_reply_from_ai(self, chat_history) -> str:
+        # -------------------- Build input text --------------------
+        style_instruction = "Assistant should respond in short, casual sentences.\n\n"
+        input_text = style_instruction + self.tokenizer.apply_chat_template(
+            chat_history,
+            tokenize=False,
+            add_generation_prompt=True  # model continues as assistant
         )
 
-    def _get_reply(self, textual_history) -> str:
-        inputs = self.tokenizer.encode(textual_history, return_tensors='pt')
-        if torch.cuda.is_available():
-            self.model.to('cuda')
-            inputs = inputs.to('cuda')
+        inputs = self.tokenizer(input_text, return_tensors="pt").to(self.model.device)
 
-        reply_ids = self.model.generate(inputs=inputs, max_length=128, pad_token_id=self.tokenizer.eos_token_id)
+        # -------------------- Generate reply --------------------
+        outputs = self.model.generate(
+            **inputs,
+            max_new_tokens=50,
+            temperature=0.7,
+            top_p=0.9,
+            do_sample=True,
+            pad_token_id=self.tokenizer.eos_token_id,
+            eos_token_id=self.tokenizer.eos_token_id
+        )
 
-        return self.tokenizer.decode(reply_ids[0], skip_special_tokens=True)
+        # --- Only decode newly generated tokens ---
+        generated_tokens = outputs[0][inputs["input_ids"].shape[-1]:]
+        reply = self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
+
+        return reply
+
+    def _split_sentences_randomly(self, text: str, max_sentences=5):
+        text = text.casefold()  # lowercase
+
+        # Split by sentence-ending punctuation (., ?, !)
+        sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+        sentences = [s.strip() for s in sentences if s.strip()]
+
+        # Take at most the first 5 sentences
+        sentences = sentences[:max_sentences]
+
+        # Randomly merge some sentences (at most 2 each)
+        merged = []
+        i = 0
+        while i < len(sentences):
+            # Randomly decide to merge with the next one (50% chance)
+            if i < len(sentences) - 1 and random.choice([True, False]):
+                temp_msg = (f"{sentences[i]} {sentences[i + 1]}")
+                i += 2
+            else:
+                temp_msg = (sentences[i])
+                i += 1
+
+            temp_msg = temp_msg.rstrip('.').rstrip('!')
+            merged.append(temp_msg)
+
+        return merged
