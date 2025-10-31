@@ -19,15 +19,17 @@ class PaymentEnum(Enum):
     PROVIDER_CCBILL = 'ccbill'
 
     STATUS_PENDING = 'pending'
-    STATUS_APPROVED = 'approved'
+    STATUS_SUCCESS = 'success'
     STATUS_CANCELED = 'canceled'
+    STATUS_FAILED = 'failed'
 
     @staticmethod
     def statuses() -> Tuple:
         return (
             (PaymentEnum.STATUS_PENDING.value, 'Pending'),
-            (PaymentEnum.STATUS_APPROVED.value, 'Approved'),
+            (PaymentEnum.STATUS_SUCCESS.value, 'Success'),
             (PaymentEnum.STATUS_CANCELED.value, 'Canceled'),
+            (PaymentEnum.STATUS_FAILED.value, 'Failed'),
         )
 
     @staticmethod

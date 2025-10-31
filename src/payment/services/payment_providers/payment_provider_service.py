@@ -4,6 +4,7 @@ from src.payment.models import PaymentHistory
 from src.payment.services.payment_providers.ccbill.ccbill_create_checkout_service import CcbillCreateCheckoutService
 from src.payment.services.payment_providers.ccbill.ccbill_webhook_service import CCBillWebhookService
 from src.payment.value_objects.checkout_value_object import CheckoutValueObject
+from src.payment.value_objects.payment_webhook_value_object import PaymentWebhookValueObject
 
 
 class PaymentProviderService():
@@ -22,7 +23,7 @@ class PaymentProviderService():
 
         raise Exception('Payment provider is not supported.')
 
-    def handle_webook(self, body: dict):
+    def handle_webook(self, body: dict) -> PaymentWebhookValueObject:
         if self.default_payment_provider == PaymentEnum.PROVIDER_CCBILL.value:
             return self.ccbill_webhook_service.handle_webhook(body)
 

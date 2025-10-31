@@ -1,7 +1,9 @@
 from app import settings
 from src.payment.enums import PaymentEnum
-from src.payment.models import PaymentHistory, Package, Balance
+from src.payment.models import PaymentHistory, Package
 from src.payment.services.payment_providers.payment_provider_service import PaymentProviderService
+from src.payment.services.payment_webhook.payment_webhook_service import PaymentWebhookService
+from src.payment.value_objects.checkout_value_object import CheckoutValueObject
 from src.user.models import User
 
 
@@ -14,6 +16,7 @@ class BuyPackageService():
 
         payment_history = PaymentHistory.objects.create(
             user=user,
+            price=package.price,
             amount=package.amount,
             provider=settings.DEFAULT_PAYMENT_PROVIDER,
             provider_payment_id='default_no_id',
@@ -21,18 +24,10 @@ class BuyPackageService():
         )
 
         # @TODO remove payment_webhook call, this is just for debug
-        self.payment_webhook(user, {})
+        PaymentWebhookService().handle_webook({})
 
-        checkout_value_object = self.payment_provider_service.create_checkout(payment_history)
-        return checkout_value_object.redirect_url
-
-    # @TODO finish webhook
-    def payment_webhook(self, user: User, body: dict):
-        self.payment_provider_service.handle_webook(body)
-        payment_history = PaymentHistory.objects.get(user=user, provider_payment_id='default_no_id')
-        payment_history.status = PaymentEnum.STATUS_APPROVED.value
+        value_object: CheckoutValueObject = self.payment_provider_service.create_checkout(payment_history)
+        payment_history.provider_payment_id = value_object.provider_payment_id
         payment_history.save()
 
-        balance = Balance.objects.get(user=user)
-        balance.amount += payment_history.amount
-        balance.save()
+        return value_object.redirect_url

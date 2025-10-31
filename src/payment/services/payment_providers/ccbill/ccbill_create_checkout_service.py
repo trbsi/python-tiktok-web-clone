@@ -1,16 +1,44 @@
+import hashlib
+import uuid
+
+from app import settings
 from src.payment.models import PaymentHistory
+from src.payment.utils import coin_to_fiat
 from src.payment.value_objects.checkout_value_object import CheckoutValueObject
 
 
 class CcbillCreateCheckoutService:
+
+    # https://ccbill.com/doc/flexforms-quick-start-guide
+    # https://ccbill.com/doc/dynamic-pricing-user-guide
     def create_checkout(self, payment_history: PaymentHistory) -> CheckoutValueObject:
-        # some api call here
-        user = payment_history.user
-        apicall_result = object(user)
-        apicall_result.id = 111
-        apicall_result.url = 'https://payments.ccbill.com/callback/'
+        currency = settings.DEFAULT_CURRENCY
+        payment_id = str(uuid.uuid4())
 
-        payment_history.provider_payment_id = apicall_result.id
-        payment_history.save()
+        if currency == 'USD':
+            currency_code = '840'
+        else:
+            raise Exception(f'Currency code is not set: {currency}')
 
-        return CheckoutValueObject(apicall_result.url)
+        ccbill = settings.CCBILL_SETTINGS
+
+        amount = coin_to_fiat(payment_history.price)
+        client_account_number = ccbill.get('account_number')
+        client_subaccount_number = ccbill.get('subaccount_number')
+        flex_form_id = ccbill.get('flex_form_id')
+        # salt can be found at: Client Admin → Account Info → Sub-account Management → View Salts
+        salt = ccbill.get('salt')
+        initial_price = str(amount)
+        initial_period = "30"
+
+        to_hash = initial_price + initial_period + currency_code + salt
+        form_digest = hashlib.md5(to_hash.encode("utf-8")).hexdigest()
+
+        redirect_url = (
+            f"https://api.ccbill.com/wap-frontflex/flexforms/{flex_form_id}?"
+            f"clientAccnum={client_account_number}&clientSubacc={client_subaccount_number}&"
+            f"initialPrice={initial_price}&initialPeriod={initial_period}&"
+            f"currencyCode={currency_code}&formDigest={form_digest}&X-paymentid={payment_id}"
+        )
+
+        return CheckoutValueObject(redirect_url, payment_id)

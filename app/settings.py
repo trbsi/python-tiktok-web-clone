@@ -264,6 +264,12 @@ LOG_VIEWER_EXCLUDE_TEXT_PATTERN = None  # String regex expression to exclude the
 
 # Payment
 DEFAULT_PAYMENT_PROVIDER = env('DEFAULT_PAYMENT_PROVIDER')
+DEFAULT_CURRENCY = env('DEFAULT_CURRENCY')
+CCBILL_SETTINGS = {
+    'salt': env('CCBILL_SALT'),
+    'account_number': env('CCBILL_ACCOUNT_NUMBER'),
+    'subaccount_number': env('CCBILL_SUBACCOUNT_NUMBER'),
+}
 
 LOGGING = {
     'version': 1,

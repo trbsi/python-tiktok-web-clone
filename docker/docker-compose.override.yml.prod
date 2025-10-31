@@ -18,6 +18,5 @@ volumes:
   my_app_redis_data:
   my_app_static_volume:
   my_app_media_volume:
-  my_app_logs_volume:
   my_app_celerybeat_data:
   geoip_volume:

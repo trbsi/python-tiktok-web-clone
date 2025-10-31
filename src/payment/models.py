@@ -13,6 +13,7 @@ from src.user.models import User
 class PaymentHistory(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    price = models.DecimalField(decimal_places=2, max_digits=10)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     provider = models.CharField(max_length=10, choices=PaymentEnum.providers())
     provider_payment_id = models.CharField(max_length=50)
@@ -35,7 +36,7 @@ class Balance(models.Model):
     def get_balance_as_number(self) -> Decimal | int:
         user: User = self.user
         if user.is_creator():
-            return get_creator_balance(amount_in_coins=self.balance)
+            return get_creator_balance(coins=self.balance)
 
         return self.balance
 
@@ -55,7 +56,7 @@ class Spending(models.Model):
     id = models.BigAutoField(primary_key=True)
     by_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spent_by_user')
     on_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spent_on_user')
-    amount = models.DecimalField(decimal_places=2, max_digits=10)
+    amount = models.DecimalField(decimal_places=2, max_digits=10)  # coins
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # These two are required for GenericForeignKey
@@ -66,7 +67,7 @@ class Spending(models.Model):
     objects = models.Manager()
 
     def amount_for_creator(self):
-        amount = get_creator_balance(amount_in_coins=self.amount)
+        amount = get_creator_balance(coins=self.amount)
         return f'{amount} $'
 
     def amount_for_user(self):
