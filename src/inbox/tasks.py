@@ -9,7 +9,7 @@ from src.inbox.crons.auto_reply.auto_reply_task import AutoReplyTask
 
 # -------------------- PRELOAD MODEL AND TOKENIZER --------------------
 base_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # or your TinyLlama
-adapter_path = settings.BASE_DIR / "/gpt/trained_model"  # path to your LoRA adapter
+adapter_path = f"{settings.BASE_DIR}/gpt/trained_model"  # path to your LoRA adapter
 
 # -------------------- Load tokenizer --------------------
 tokenizer = AutoTokenizer.from_pretrained(base_model)
