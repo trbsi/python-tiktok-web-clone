@@ -11,7 +11,7 @@ class EmailService:
         context = notification.template_variables
         context = {
             **context,
-            'APP_NAME': settings.APP_NAME
+            'TEMPLATE_APP_NAME': settings.APP_NAME
         }
         html = render_to_string(notification.template_path, context=context)
         text = striptags(html)

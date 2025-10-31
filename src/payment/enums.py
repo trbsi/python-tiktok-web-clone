@@ -16,6 +16,7 @@ class PaymentEnum(Enum):
 
     PROVIDER_SEGPAY = 'segpay'
     PROVIDER_EPOCH = 'epoch'
+    PROVIDER_CCBILL = 'ccbill'
 
     STATUS_PENDING = 'pending'
     STATUS_APPROVED = 'approved'

@@ -20,6 +20,7 @@ from django.urls import path, include
 
 from src.authentication.forms.app_login_view import AppLoginView
 from src.authentication.forms.app_password_change_view import AppPasswordChangeView
+from src.authentication.forms.app_password_reset_confirm_view import AppPasswordResetConfirmView
 from src.authentication.forms.app_password_reset_view import AppPasswordResetView
 from . import settings
 
@@ -31,6 +32,7 @@ urlpatterns = [
     path('auth/login/', AppLoginView.as_view(), name='login'),
     path('auth/password_reset/', AppPasswordResetView.as_view(), name='password_reset'),
     path('auth/password_change/', AppPasswordChangeView.as_view(), name='password_change'),
+    path('auth/reset/<uidb64>/<token>/', AppPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('auth/', include('django.contrib.auth.urls')),
     path('social-oauth/', include('allauth.urls')),
     path('discover/', include('src.discover.urls')),

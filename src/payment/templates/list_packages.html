@@ -10,7 +10,7 @@
 
     <div class="w-full max-w-sm flex flex-col gap-4">
         {% for pkg in packages %}
-        <a href="#">
+        <a href="{% url 'payment.buy_single_package' pkg.id %}">
             <div class="relative bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex items-center justify-between hover:scale-[1.02] hover:border-yellow-500 transition-all">
                 <div>
                     <div class="text-lg font-semibold">

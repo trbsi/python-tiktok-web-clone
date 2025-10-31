@@ -1,5 +1,8 @@
 {% extends "core/layout.html" %}
 {% block content %}
+
+{% include "components/elements/back_button.html" with include_header=True %}
+
 <div class="p-7">
     <h1 class="text-3xl font-bold mb-6">{{TEMPLATE_APP_NAME}} – Privacy Policy</h1>
     <section class="mb-6">

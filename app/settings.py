@@ -262,6 +262,9 @@ LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE = 25  # Max logs files loaded in Datatab
 LOG_VIEWER_PATTERNS = ['INFO', 'DEBUG', 'WARNING', 'ERROR', 'CRITICAL']
 LOG_VIEWER_EXCLUDE_TEXT_PATTERN = None  # String regex expression to exclude the logs from line
 
+# Payment
+DEFAULT_PAYMENT_PROVIDER = env('DEFAULT_PAYMENT_PROVIDER')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # Keep Django’s default loggers

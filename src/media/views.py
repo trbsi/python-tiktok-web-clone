@@ -108,7 +108,7 @@ def api_unlock(request: HttpRequest) -> JsonResponse:
     except BalanceTooLowException as e:
         return JsonResponse(
             {
-                'error': f'Your balance is too low. <a href="{reverse_lazy('payment.buy_packages')}" class="underline">Click here to buy more coins.</a>'
+                'error': f'Your balance is too low. <a href="{reverse_lazy('payment.list_packages')}" class="underline">Click here to buy more coins.</a>'
             },
             status=402
         )
