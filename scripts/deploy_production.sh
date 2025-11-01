@@ -23,8 +23,9 @@ git reset --hard "origin/$GIT_BRANCH"
 # ------------------------------
 # Install dependencies
 # ------------------------------
-echo "📦 Installing Python dependencies via Poetry..."
-docker exec -it "$CONTAINER_NAME" poetry install --no-interaction --no-ansi
+echo "📦 Installing Python dependencies via Poetry (no virtualenv)..."
+docker exec -it "$CONTAINER_NAME" bash -c \
+    "POETRY_VIRTUALENVS_CREATE=false poetry install --no-interaction --no-ansi"
 
 # ------------------------------
 # Apply migrations
