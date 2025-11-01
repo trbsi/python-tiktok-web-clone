@@ -11,7 +11,7 @@ set -euo pipefail
 CONTAINER_NAME="my-app-web"
 CELERY_CONTAINER_NAME="my-app-celery_worker"
 APP_DIR="$(pwd)"   # Assumes script is run from project root
-GIT_BRANCH="main"  # Change if using a different branch
+GIT_BRANCH="master"  # Change if using a different branch
 
 # ------------------------------
 # Update code from Git
