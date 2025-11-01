@@ -25,7 +25,7 @@ createdockernetwork:
 	docker network create my-network
 
 manage:
-	docker exec -it my-app-web python manage.py $(CMD)"
+	docker exec -it my-app-web python manage.py $(CMD)
 
 ssh:
 	docker exec -it $(CONTAINER) /bin/bash
