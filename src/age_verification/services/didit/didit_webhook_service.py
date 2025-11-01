@@ -20,6 +20,7 @@ class DiditWebhookService:
             # Get the raw request body as string
             body = request.body()
             body_str = body.decode()
+            log.info(f'Received webhook request: {body_str}')
 
             signature = request.headers.get("x-signature")
             timestamp = request.headers.get("x-timestamp")
