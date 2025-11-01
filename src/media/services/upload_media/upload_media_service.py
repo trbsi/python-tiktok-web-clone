@@ -41,11 +41,11 @@ class UploadMediaService:
 
         match post_type:
             case 'post_now':
-                status = MediaEnum.STATUS_PAID.value
+                status = MediaEnum.STATUS_PAID
             case 'schedule':
-                status = MediaEnum.STATUS_SCHEDULE.value
+                status = MediaEnum.STATUS_SCHEDULE
             case _:
-                status = MediaEnum.STATUS_PAID.value
+                status = MediaEnum.STATUS_PAID
 
         media = Media.objects.create(
             file_info=remote_file_info,
@@ -58,7 +58,8 @@ class UploadMediaService:
         profile: UserProfile = user.profile
 
         # Update media scheduler
-        media_scheduler: MediaScheduler = MediaScheduler.objects.get_or_create(
+        media_scheduler: MediaScheduler
+        media_scheduler, created = MediaScheduler.objects.get_or_create(
             user=user,
             defaults={'timezone': 'UTC'}
         )

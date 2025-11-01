@@ -16,8 +16,8 @@ class CreatorService:
         creator_agreement = self.is_creator_agreement_completed(user)
 
         if age_verification and creator_agreement:
-            creator_role = Group.objects.get_or_create(name=UserEnum.ROLE_CREATOR.value)
-            user_role = Group.objects.get_or_create(name=UserEnum.ROLE_USER.value)
+            creator_role = Group.objects.get(name=UserEnum.ROLE_CREATOR.value)
+            user_role = Group.objects.get(name=UserEnum.ROLE_USER.value)
 
             creator_role.user_set.add(user)
             user_role.user_set.remove(user)
