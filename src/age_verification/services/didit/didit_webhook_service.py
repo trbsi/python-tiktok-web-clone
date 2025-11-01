@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+import traceback
 from time import time
 
 from django.http.request import HttpRequest
@@ -53,7 +54,8 @@ class DiditWebhookService:
 
             return True
         except Exception as e:
-            log.error(f'Didit webhook service error: {e}')
+            tb_str = traceback.format_exc()
+            log.error(f'Didit webhook service error: {e}. {tb_str}')
             return False
 
     def verify_webhook_signature(
