@@ -1,4 +1,4 @@
-.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage, ssh
+.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog
 
 makemigrations:
 	docker exec -it my-app-web python manage.py makemigrations
@@ -27,5 +27,8 @@ createdockernetwork:
 manage:
 	docker exec -it my-app-web python manage.py $(CMD)
 
-ssh:
+dockerssh:
 	docker exec -it $(CONTAINER) /bin/bash
+
+dockerlog:
+	docker logs $(CONTAINER)

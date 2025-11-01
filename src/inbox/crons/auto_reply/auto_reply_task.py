@@ -25,6 +25,7 @@ class AutoReplyTask:
         if self._model is None:
             with self._lock:
                 if self._model is None:
+                    print('Initializing AutoReplyTask')
                     self._load_model()
         self.inbox_settings_service = inbox_settings_service or InboxSettingsService()
 
