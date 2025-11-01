@@ -17,7 +17,7 @@
         {% if logged_in_user.is_creator %}
         <div class="flex flex-col items-center">
             <span class="font-bold">{{current_user.profile.follower_count}}</span>
-            <span class="text-sm text-gray-400">Subscribers</span>
+            <span class="text-sm text-gray-400">Followers</span>
         </div>
         <div class="flex flex-col items-center">
             <span class="font-bold">{{current_user.profile.media_count}}</span>
@@ -32,7 +32,7 @@
         {% else %}
         <div class="flex flex-col items-center">
             <span class="font-bold">{{current_user.profile.following_count}}</span>
-            <span class="text-sm text-gray-400">Subscriptions</span>
+            <span class="text-sm text-gray-400">Following</span>
         </div>
         {% if is_the_same_user %}
         <div class="flex flex-col items-center">
