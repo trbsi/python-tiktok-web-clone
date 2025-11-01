@@ -77,7 +77,7 @@ def webhook_age_verification(request: HttpRequest) -> JsonResponse:
     if result:
         return JsonResponse({})
 
-    return JsonResponse({'result': 'Something happened, check logs'}, 400)
+    return JsonResponse({'result': 'Something happened, check logs'}, status=400)
 
 
 @require_GET
