@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+import json
 import traceback
 from time import time
 
@@ -36,6 +37,7 @@ class DiditWebhookService:
                     f'Could not verify webhook signature. Body: {body_str}. Signature: {signature}. Timestamp: {timestamp}')
                 return False
 
+            body = json.loads(body_str)
             session_id = body.get("session_id")
             status = body.get("status")
             vendor_data = body.get("vendor_data")
