@@ -15,7 +15,6 @@ class UpdateMyContentService:
             delete_list: list,
             ids: list,
             descriptions: list,
-            statuses: list
     ):
         if delete_list:
             Media.objects.filter(user=user).filter(id__in=delete_list).update(status=MediaEnum.STATUS_DELETED.value)
@@ -26,11 +25,9 @@ class UpdateMyContentService:
 
         for (index, id) in enumerate(ids):
             description = descriptions[index]
-            status = statuses[index]
             media = Media.objects.filter(user=user, id=id).first()
             if media:
                 media.description = description
-                media.status = status
                 media.save()
                 self.hashtag_service.save_hashtags(media=media, description=description)
 

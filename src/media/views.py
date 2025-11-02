@@ -83,7 +83,6 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
     delete = post.getlist('delete')
     ids = post.getlist('media_ids')
     descriptions = post.getlist('descriptions')
-    statuses = post.getlist('statuses')
 
     service = UpdateMyContentService()
     service.update_my_content(
@@ -91,7 +90,6 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
         delete_list=delete,
         ids=ids,
         descriptions=descriptions,
-        statuses=statuses
     )
 
     messages.success(request, 'Your content has been updated.')
