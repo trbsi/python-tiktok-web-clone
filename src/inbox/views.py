@@ -141,7 +141,6 @@ def api_toggle_auto_reply(request: HttpRequest) -> JsonResponse:
         return JsonResponse({})
 
     body = json.loads(request.body)
-    print(body)
     auto_reply_active = bool(body.get('auto_reply_active'))
     service = InboxSettingsService()
     settings = service.update_settings(user=user, auto_reply_active=auto_reply_active)

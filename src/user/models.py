@@ -12,7 +12,6 @@ from src.user.query_managers import UserQueryManager
 
 # instance: UserProfile
 def profile_image_upload_path(user_profile, filename: str) -> str:
-    print(f'user_profile/{user_profile.user_id}/{filename}')
     return f'user_profile/{user_profile.user_id}/{filename}'
 
 

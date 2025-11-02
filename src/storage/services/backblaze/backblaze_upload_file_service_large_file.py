@@ -74,7 +74,5 @@ class BackBlazeUploadFileService:
                 future.result()
 
         # Finalize large file
-        print(shas)
         bucket.api.session.finish_large_file(file_id, shas)
-        print("Upload complete")
         return file_info
