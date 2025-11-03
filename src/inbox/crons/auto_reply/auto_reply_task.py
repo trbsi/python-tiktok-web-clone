@@ -3,6 +3,7 @@ import re
 from threading import Lock
 
 import torch
+from huggingface_hub import login
 from peft import PeftModel
 from transformers import AutoModelForCausalLM
 from transformers import AutoTokenizer
@@ -79,6 +80,8 @@ class AutoReplyTask:
             )
 
     def _load_model(self) -> None:
+        login(token=settings.HUGGING_FACE_LOGIN_TOKEN)
+        
         # -------------------- PRELOAD MODEL AND TOKENIZER --------------------
         base_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # or your TinyLlama
         adapter_path = f"{settings.BASE_DIR}/gpt/trained_model"  # path to your LoRA adapter
@@ -93,7 +96,7 @@ class AutoReplyTask:
         model = AutoModelForCausalLM.from_pretrained(
             base_model,
             device_map="auto",
-            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+            dtype=torch.float16 if torch.cuda.is_available() else torch.float32
         )
 
         model = PeftModel.from_pretrained(model, adapter_path)

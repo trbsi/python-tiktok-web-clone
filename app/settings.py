@@ -252,6 +252,9 @@ AGE_VERIFICATION_CONFIG = {
     }
 }
 
+# Hugging face
+HUGGING_FACE_LOGIN_TOKEN = env('HUGGING_FACE_LOGIN_TOKEN')
+
 # Logging
 LOG_VIEWER_FILES = ["*.logs*"]
 LOG_VIEWER_FILES_PATTERN = '*.logs*'
