@@ -21,5 +21,5 @@ class PaymentWebhookService:
 
         if payment_status.is_success():
             balance = Balance.objects.get(user=payment_history.user)
-            balance.price += payment_history.price
+            balance.balance += payment_history.amount
             balance.save()
