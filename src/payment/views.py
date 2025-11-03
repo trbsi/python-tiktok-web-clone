@@ -60,7 +60,7 @@ def list_packages(request: HttpRequest) -> HttpResponse:
     return render(request, 'list_packages.html', context)
 
 
-@require_POST
+@require_GET
 @login_required
 def buy_single_package(request: HttpRequest, package_id: int) -> HttpResponse:
     service = BuyPackageService()
