@@ -1,5 +1,6 @@
 import random
 import re
+import time
 from threading import Lock
 
 import torch
@@ -108,7 +109,10 @@ class AutoReplyTask:
         AutoReplyTask._tokenizer = tokenizer
 
     def _get_reply_from_ai(self, chat_history) -> str:
+        print(f'Number of threads{torch.get_num_threads()}')
+
         # -------------------- Build input text --------------------
+        print('Build input text')
         style_instruction = "Assistant should respond in short, casual sentences.\n\n"
         input_text = style_instruction + self._tokenizer.apply_chat_template(
             chat_history,
@@ -120,6 +124,7 @@ class AutoReplyTask:
 
         # -------------------- Generate reply --------------------
         print('Prepare chat output')
+        start_time = time.time()
         outputs = self._model.generate(
             **inputs,
             max_new_tokens=50,
@@ -129,6 +134,9 @@ class AutoReplyTask:
             pad_token_id=self._tokenizer.eos_token_id,
             eos_token_id=self._tokenizer.eos_token_id
         )
+        end_time = time.time()
+        elapsed = end_time - start_time
+        print(f"Elapsed time: {elapsed:.4f} seconds")
 
         # --- Only decode newly generated tokens ---
         print('Decode tokens')
