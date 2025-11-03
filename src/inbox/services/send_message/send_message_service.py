@@ -59,8 +59,7 @@ class SendMessageService:
         self.spend_service.spend_message(user, message)
 
         task_compress_media_task.delay(media_id=message.id, media_type=CompressMediaTask.MEDIA_TYPE_INBOX)
-        # pass send_message_service because of circular import problem (I call SendMessageService in AutoReplyTask)
-        task_auto_reply.delay(message_id=message.id, send_message_service=self)
+        task_auto_reply.delay(message_id=message.id)
 
         return {
             'id': message.id,
