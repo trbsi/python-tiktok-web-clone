@@ -10,7 +10,6 @@ from transformers import AutoTokenizer
 from app import settings
 from src.inbox.models import Message, Conversation
 from src.inbox.services.inbox_settings.inbox_settings_service import InboxSettingsService
-from src.inbox.services.send_message.send_message_service import SendMessageService
 
 
 class AutoReplyTask:
@@ -22,13 +21,15 @@ class AutoReplyTask:
     def __init__(
             self,
             inbox_settings_service: InboxSettingsService | None = None,
-            send_message_service: SendMessageService | None = None
+            send_message_service=None
     ):
         if self._model is None:
             with self._lock:
                 if self._model is None:
                     print('Initializing AutoReplyTask')
                     self._load_model()
+
+        from src.inbox.services.send_message.send_message_service import SendMessageService
         self.inbox_settings_service = inbox_settings_service or InboxSettingsService()
         self.send_message_service = send_message_service or SendMessageService()
 

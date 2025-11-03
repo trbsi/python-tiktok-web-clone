@@ -134,7 +134,7 @@ services:
       - "80:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx/nginx_config.conf:/etc/nginx/conf.d/nginx_config.conf:ro
+      - ./nginx/vhost.d:/etc/nginx/vhost.d
 
 networks:
   my-network:
