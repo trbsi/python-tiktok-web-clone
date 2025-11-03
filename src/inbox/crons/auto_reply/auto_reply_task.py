@@ -54,9 +54,10 @@ class AutoReplyTask:
             .select_related('sender')
             .filter(conversation=conversation)
             .filter(id__lte=message_id)
-            .order_by('-id')[:50]
+            .order_by('-id')
         )
-        last_messages = last_messages.reverse()
+        # take 50 newest first, then reverse to chronological order
+        last_messages = list(last_messages[:50])[::-1]
 
         # Create GPT format
         chat_history = []
@@ -81,7 +82,7 @@ class AutoReplyTask:
 
     def _load_model(self) -> None:
         login(token=settings.HUGGING_FACE_LOGIN_TOKEN)
-        
+
         # -------------------- PRELOAD MODEL AND TOKENIZER --------------------
         base_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # or your TinyLlama
         adapter_path = f"{settings.BASE_DIR}/gpt/trained_model"  # path to your LoRA adapter
