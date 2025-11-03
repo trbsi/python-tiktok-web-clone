@@ -116,7 +116,7 @@ class AutoReplyTask:
             add_generation_prompt=True  # model continues as assistant
         )
 
-        inputs = self._tokenizer(input_text, return_tensors="pt").to(self.model.device)
+        inputs = self._tokenizer(input_text, return_tensors="pt").to(self._model.device)
 
         # -------------------- Generate reply --------------------
         outputs = self._model.generate(
