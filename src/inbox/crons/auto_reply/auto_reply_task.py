@@ -119,6 +119,7 @@ class AutoReplyTask:
         inputs = self._tokenizer(input_text, return_tensors="pt").to(self._model.device)
 
         # -------------------- Generate reply --------------------
+        print('Prepare chat output')
         outputs = self._model.generate(
             **inputs,
             max_new_tokens=50,
@@ -130,9 +131,11 @@ class AutoReplyTask:
         )
 
         # --- Only decode newly generated tokens ---
+        print('Decode tokens')
         generated_tokens = outputs[0][inputs["input_ids"].shape[-1]:]
         reply = self._tokenizer.decode(generated_tokens, skip_special_tokens=True)
 
+        print('Return reply')
         return reply
 
     def _split_sentences_randomly(self, text: str, max_sentences=5):
