@@ -92,7 +92,8 @@ services:
     image: my-app-web-image
     command: celery -A ${CELERY_APP} worker --loglevel=info --concurrency=1
     environment:
-      - CELERY_BROKER_URL=redis://my-app-redis:6379/0
+      CELERY_BROKER_URL: redis://my-app-redis:6379/0
+      CELERY_APP: ${CELERY_APP}
     volumes:
       - ../:/app:cached
       - my_app_media_volume:/app/uploads
