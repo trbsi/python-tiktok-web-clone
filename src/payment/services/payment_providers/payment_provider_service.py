@@ -14,8 +14,8 @@ class PaymentProviderService():
             ccbill_webhook_service: CCBillWebhookService | None = None,
     ):
         self.default_payment_provider = settings.DEFAULT_PAYMENT_PROVIDER
-        self.ccbill_create_checkout_service = ccbill_create_checkout_service
-        self.ccbill_webhook_service = ccbill_webhook_service
+        self.ccbill_create_checkout_service = ccbill_create_checkout_service or CcbillCreateCheckoutService()
+        self.ccbill_webhook_service = ccbill_webhook_service or CCBillWebhookService()
 
     def create_checkout(self, payment_history: PaymentHistory) -> CheckoutValueObject:
         if self.default_payment_provider == PaymentEnum.PROVIDER_CCBILL.value:
