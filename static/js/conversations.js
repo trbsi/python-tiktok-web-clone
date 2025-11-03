@@ -76,7 +76,7 @@ async function toggleAutoReply(isChecked) {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": this.$utils.getCsrfToken()
+            "X-CSRFToken": getCsrfToken()
         },
         body: JSON.stringify({auto_reply_active: isChecked})
     });
