@@ -1,4 +1,4 @@
-.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog
+.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog, restartcontainer
 
 makemigrations:
 	docker exec -it my-app-web python manage.py makemigrations
@@ -32,3 +32,6 @@ dockerssh:
 
 dockerlog:
 	docker logs $(CONTAINER)
+
+restartcontainer:
+	cd docker && docker compose --env-file ../.env restart $(CONTAINER)
