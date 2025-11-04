@@ -55,7 +55,7 @@ class RemoteStorageService:
         if is_backblaze():
             local_file_path = self.backblaze_download_file_service.download_file(
                 file_id=file_id,
-                file_name=file_path,
+                file_path=file_path,
                 local_file_path_directory=local_file_path_directory
             )
         elif is_bunny():
