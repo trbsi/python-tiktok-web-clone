@@ -35,6 +35,9 @@ class User(AbstractUser):
     def is_creator(self) -> bool:
         return self.groups.filter(name=UserEnum.ROLE_CREATOR.value).exists()
 
+    def get_role(self) -> str:
+        return self.groups.first().name
+
 
 class UserProfile(models.Model):
     id = models.BigAutoField(primary_key=True)

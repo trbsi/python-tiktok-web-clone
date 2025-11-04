@@ -68,8 +68,13 @@ class AutoReplyTask:
             else:
                 role = 'user'
 
-            chat_history.append({'role': role, 'content': message.message})
+            if chat_history and chat_history[-1]['role'] == role:
+                chat_history[-1]['content'] += ' ' + message.message
+            else:
+                chat_history.append({'role': role, 'content': message.message})
 
+        print(last_messages)
+        print(chat_history)
         # Get reply and save
         reply = self._get_reply_from_ai(chat_history)
         replies = self._split_sentences_randomly(reply)
@@ -109,7 +114,7 @@ class AutoReplyTask:
         AutoReplyTask._tokenizer = tokenizer
 
     def _get_reply_from_ai(self, chat_history) -> str:
-        print(f'Number of threads{torch.get_num_threads()}')
+        print(f'Number of threads: {torch.get_num_threads()}')
 
         # -------------------- Build input text --------------------
         print('Build input text')
