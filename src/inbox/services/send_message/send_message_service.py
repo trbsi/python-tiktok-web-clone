@@ -58,8 +58,10 @@ class SendMessageService:
         conversation.save()
         self.spend_service.spend_message(user, message)
 
-        task_compress_media_task.delay(media_id=message.id, media_type=CompressMediaTask.MEDIA_TYPE_INBOX)
-        task_auto_reply.delay(message_id=message.id)
+        transaction.on_commit(
+            lambda: task_compress_media_task.delay(media_id=message.id, media_type=CompressMediaTask.MEDIA_TYPE_INBOX)
+        )
+        transaction.on_commit(lambda: task_auto_reply.delay(message_id=message.id))
 
         return {
             'id': message.id,
