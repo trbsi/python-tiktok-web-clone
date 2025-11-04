@@ -121,7 +121,7 @@ def api_list_messages(request: HttpRequest, conversation_id: int) -> JsonRespons
 def api_send_message(request: HttpRequest) -> JsonResponse:
     post = request.POST
     files = request.FILES
-
+    
     service = SendMessageService()
     message = service.send_message(
         user=request.user,

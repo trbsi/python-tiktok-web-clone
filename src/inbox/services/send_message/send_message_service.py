@@ -48,7 +48,7 @@ class SendMessageService:
                 remote_file_path=remote_file_path
             )
             time2 = time.time()
-            print(f'time in seconds for local upload: {time2 - time1}')
+            print(f'time in seconds for remote upload: {time2 - time1}')
 
         message = Message.objects.create(
             sender=user,
