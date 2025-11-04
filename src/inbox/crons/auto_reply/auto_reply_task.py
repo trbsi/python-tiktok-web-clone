@@ -73,10 +73,10 @@ class AutoReplyTask:
             else:
                 chat_history.append({'role': role, 'content': message.message})
 
-        print(last_messages)
         print(chat_history)
         # Get reply and save
         reply = self._get_reply_from_ai(chat_history)
+        print(replies)
         replies = self._split_sentences_randomly(reply)
 
         for reply in replies:
