@@ -63,8 +63,6 @@ services:
       DJANGO_SETTINGS_MODULE: "app.settings"
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://my-app-redis:6379/0
-      CLIENT_MAX_BODY_SIZE: 300m
-      PROXY_REQUEST_BUFFERING: off
     #app.wsgi is path to app/wsgi.py
     command: >
       gunicorn app.wsgi:application
