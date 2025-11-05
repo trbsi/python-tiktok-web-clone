@@ -2,7 +2,7 @@ from typing import List
 
 from django.db.models import QuerySet
 
-from app.utils import format_datetime
+from src.core.utils import format_datetime
 from src.engagement.models import Comment
 
 

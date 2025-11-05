@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 
-from app.utils import format_datetime
+from src.core.utils import format_datetime
 from src.engagement.models import Comment
 from src.media.models import Media
 from src.user.models import User

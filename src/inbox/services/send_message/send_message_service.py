@@ -3,7 +3,7 @@ import time
 from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
 
-from app.utils import format_datetime, remote_file_path_for_conversation
+from src.core.utils import format_datetime, remote_file_path_for_conversation
 from src.inbox.models import Message, Conversation
 from src.inbox.tasks import task_auto_reply
 from src.payment.services.spendings.spend_service import SpendService

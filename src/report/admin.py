@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
-from app.utils import reverse_lazy_admin
+from src.core.utils import reverse_lazy_admin
 from src.media.models import Media
 from src.report.models import Report
 from src.user.models import User

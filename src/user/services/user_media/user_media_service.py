@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator, Page
 from django.db.models import QuerySet
 
-from app.utils import reverse_lazy_with_query
+from src.core.utils import reverse_lazy_with_query
 from src.engagement.models import Like
 from src.media.enums import MediaEnum
 from src.media.models import Media

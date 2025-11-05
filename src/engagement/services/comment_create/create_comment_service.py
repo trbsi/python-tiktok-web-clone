@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AnonymousUser
 from django.db import transaction
 
-from app.utils import format_datetime
+from src.core.utils import format_datetime
 from src.engagement.models import Comment
 from src.media.models import Media
 from src.payment.services.spendings.spend_service import SpendService

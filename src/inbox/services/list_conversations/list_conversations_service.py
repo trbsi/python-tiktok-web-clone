@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.urls import reverse_lazy
 
-from app.utils import format_datetime
+from src.core.utils import format_datetime
 from src.inbox.models import Conversation
 from src.user.models import User
 

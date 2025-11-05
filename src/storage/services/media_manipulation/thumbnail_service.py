@@ -1,7 +1,7 @@
 import subprocess
 import uuid
 
-from app.utils import remote_file_path_for_media
+from src.core.utils import remote_file_path_for_media
 from src.media.models import Media
 from src.storage.services.remote_storage_service import RemoteStorageService
 
