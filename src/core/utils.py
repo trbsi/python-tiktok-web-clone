@@ -50,7 +50,7 @@ def full_url(route_name, kwargs=None, query_params=None):
     if query_params:
         url = url + f'?{urlencode(query_params)}'
 
-    return f'{settings.APP_UPLOAD_URL}{url}'
+    return f'{settings.APP_URL}{url}'
 
 
 def reverse_lazy_with_query(route_name, kwargs=None, query_params=None):
