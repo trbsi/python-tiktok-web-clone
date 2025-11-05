@@ -59,17 +59,19 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
                     const data = await res.json();
 
                     if (data.results && data.results.length > 0) {
-                        // Filter out any messages we already have
-                        const newMessages = data.results.filter(
-                            newMessage => !this.messagesList.some(messageInList => messageInList.id === newMessage.id)
-                        );
+                        data.results.forEach(newMessage => {
+                            const index = this.messagesList.findIndex(msg => msg.id === newMessage.id);
 
-                        if (newMessages.length > 0) {
-                            // Add new messages at the bottom
-                            this.messagesList.push(...newMessages);
-                            this.scrollToBottom();
-                        }
+                            if (index !== -1) {
+                                // Replace the existing message
+                                this.messagesList.splice(index, 1, newMessage);
+                            } else {
+                                // Add as a new message at the bottom
+                                this.messagesList.push(newMessage);
+                            }
+                        });
 
+                        this.scrollToBottom();
                         this.highestMessageId = null;
                     }
                 } catch (e) {
