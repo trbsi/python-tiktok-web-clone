@@ -2,7 +2,10 @@ services:
   # Nginx reverse proxy
   my-app-nginx:
     image: jwilder/nginx-proxy
+    container_name: my-app-nginx
     restart: unless-stopped
+    networks:
+      - my-network
     ports:
       - "80:80"
       - "443:443"
@@ -15,7 +18,9 @@ services:
 
   my-app-nginx-proxy-acme:
     image: nginxproxy/acme-companion
-    container_name: nginx-proxy-acme
+    container_name: my-app-nginx-acme
+    networks:
+      - my-network
     restart: always
     volumes_from:
       - my-app-nginx
@@ -25,8 +30,6 @@ services:
       - ./nginx/vhost.d:/etc/nginx/vhost.d
     environment:
       - DEFAULT_EMAIL=${LETSENCRYPT_EMAIL}
-    networks:
-      - proxy
 
 volumes:
   my_app_db_data:

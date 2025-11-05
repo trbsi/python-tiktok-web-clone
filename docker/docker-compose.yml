@@ -39,7 +39,7 @@ services:
       PMA_HOST: my-app-db
       VIRTUAL_HOST: ${PHPMYADMIN_VIRTUAL_HOST}
       LETSENCRYPT_HOST: ${PHPMYADMIN_VIRTUAL_HOST}
-      LETSENCRYPT_EMAIL: you@example.com
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     depends_on:
       - my-app-db
     expose:
