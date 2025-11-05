@@ -9,6 +9,7 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         allLoaded: false,
         currentUserId: currentUserId,
         isSending: false,
+        highestMessageId: null,
 
         async initChat() {
             await this.loadMessages();
@@ -68,6 +69,8 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
                             this.messagesList.push(...newMessages);
                             this.scrollToBottom();
                         }
+
+                        this.highestMessageId = null;
                     }
                 } catch (e) {
                     console.error("Polling failed", e);
@@ -76,7 +79,13 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         },
 
         getHighestId() {
-            if (this.messagesList.length === 0) return 0;
+            if (this.highestMessageId !== null) {
+                return this.highestMessageId;
+            }
+
+            if (this.messagesList.length === 0) {
+                return 0;
+            }
             return Math.max(...this.messagesList.map(message => message.id));
         },
 
@@ -116,6 +125,10 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
 
                 const msg = await res.json();
                 this.messagesList.push(msg); // add message to list
+
+                if (this.attachment !== null) {
+                    this.highestMessageId = msg.id - 1
+                }
 
                 // Reset input
                 this.newMessage = "";
