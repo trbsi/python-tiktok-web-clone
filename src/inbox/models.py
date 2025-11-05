@@ -9,7 +9,8 @@ from src.user.models import User as User
 class InboxSettings(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    auto_reply_active=models.BooleanField(default=False)
+    auto_reply_active = models.BooleanField(default=False)
+
 
 class Conversation(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -55,6 +56,7 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
     message = models.TextField(null=True, blank=True)
+    is_ready = models.BooleanField(default=True)
     file_info = models.JSONField(null=True, blank=True)
     file_type = models.CharField(max_length=10, null=True, blank=True, choices=MediaEnum.file_types())
     created_at = models.DateTimeField(auto_now_add=True)

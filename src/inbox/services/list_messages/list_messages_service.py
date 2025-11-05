@@ -12,6 +12,7 @@ class ListMessagesService:
         messages = (
             Message.objects
             .filter(conversation_id=conversation_id)
+            .filter(is_ready=True)
             .select_related('sender')
             .order_by('-id')
         )

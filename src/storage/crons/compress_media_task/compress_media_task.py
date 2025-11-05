@@ -84,3 +84,6 @@ class CompressMediaTask:
         if isinstance(media, Media):
             media.is_processed = True
             media.save()
+        elif isinstance(media, Message):
+            media.is_ready = True
+            media.save()

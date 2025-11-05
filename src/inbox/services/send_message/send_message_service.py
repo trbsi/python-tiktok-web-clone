@@ -56,6 +56,7 @@ class SendMessageService:
             message=message_content,
             file_info=file_info,
             file_type=file_type,
+            is_ready=True if file_info is None else False
         )
 
         if user == conversation.sender:
@@ -71,11 +72,16 @@ class SendMessageService:
         )
         transaction.on_commit(lambda: task_auto_reply.delay(message_id=message.id))
 
+        if not message.is_ready:
+            tmp_message = 'Preparing the media...'
+        else:
+            tmp_message = message.message
+
         return {
             'id': message.id,
             'created_at': format_datetime(message.created_at),
-            'message': message.message,
-            'attachment_url': message.get_attachment_url(),
+            'message': tmp_message,
+            'attachment_url': None,
             'sender': {
                 'id': message.sender.id,
                 'profile_picture': message.sender.get_profile_picture(),
