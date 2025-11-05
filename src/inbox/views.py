@@ -7,7 +7,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
-from src.core.utils import full_url
 from src.inbox.services.create_conversation.create_conversation_service import CreateConversationService
 from src.inbox.services.delete_conversation.delete_conversation_service import DeleteConversationService
 from src.inbox.services.inbox_settings.inbox_settings_service import InboxSettingsService
@@ -93,7 +92,7 @@ def list_messages(request: HttpRequest, conversation_id: int) -> HttpResponse:
                 'inbox.api.list_messages',
                 kwargs={'conversation_id': '__CONVERSATION_ID__'}
             ),
-            'send_message_api': full_url('inbox.api.send_message'),
+            'send_message_api': reverse_lazy('inbox.api.send_message'),
         }
     )
 
