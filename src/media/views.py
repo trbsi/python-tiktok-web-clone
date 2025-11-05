@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 
 from src.age_verification.services.creator_service import CreatorService
+from src.core.utils import full_url
 from src.media.enums import MediaEnum
 from src.media.services.my_content.my_content_service import MyContentService
 from src.media.services.unlock.unlock_service import UnlockService
@@ -31,7 +32,7 @@ def upload(request: HttpRequest) -> HttpResponse:
         if not _can_access_upload(request):
             return redirect(reverse_lazy('age_verification.become_creator'))
 
-    return render(request, 'upload.html', {'upload_api': reverse_lazy('media.api.upload')})
+    return render(request, 'upload.html', {'upload_api': full_url('media.api.upload')})
 
 
 @require_POST
