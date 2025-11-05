@@ -63,6 +63,9 @@ class AutoReplyTask:
         # Create GPT format
         chat_history = []
         for message in last_messages:
+            if message.message is None:
+                continue
+                
             if message.sender.is_creator():
                 role = 'assistant'
             else:
