@@ -38,6 +38,8 @@ services:
     environment:
       PMA_HOST: my-app-db
       VIRTUAL_HOST: ${PHPMYADMIN_VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${PHPMYADMIN_VIRTUAL_HOST}
+      LETSENCRYPT_EMAIL: you@example.com
     depends_on:
       - my-app-db
     expose:
@@ -62,6 +64,8 @@ services:
       VIRTUAL_PORT: 8000  # Gunicorn port inside the container
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://my-app-redis:6379/0
+      LETSENCRYPT_HOST: ${NGINX_VIRTUAL_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     #app.wsgi is path to app/wsgi.py
     command: >
       gunicorn app.wsgi:application

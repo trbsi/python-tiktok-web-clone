@@ -11,8 +11,22 @@ services:
       # Certificates folder on the host → inside the container
       - ./nginx/certs:/etc/nginx/certs:ro
       - ./nginx/vhost.d:/etc/nginx/vhost.d
-      - ./nginx/conf.d:/etc/nginx/conf.d
       - my_app_static_volume:/app/staticfiles:ro
+
+  my-app-nginx-proxy-acme:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    restart: always
+    volumes_from:
+      - my-app-nginx
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/vhost.d:/etc/nginx/vhost.d
+    environment:
+      - DEFAULT_EMAIL=${NGINX_PROXY_ACME_MAIL}
+    networks:
+      - proxy
 
 volumes:
   my_app_db_data:
