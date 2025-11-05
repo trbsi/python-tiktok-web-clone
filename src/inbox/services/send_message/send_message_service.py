@@ -73,12 +73,14 @@ class SendMessageService:
         transaction.on_commit(lambda: task_auto_reply.delay(message_id=message.id))
 
         if not message.is_ready:
+            id = message.id - 1  # -1 because of polling on frontend so it picks up new message one media is done with processing
             tmp_message = 'Preparing the media...'
         else:
+            id = message.id
             tmp_message = message.message
 
         return {
-            'id': message.id,
+            'id': id,
             'created_at': format_datetime(message.created_at),
             'message': tmp_message,
             'attachment_url': None,
