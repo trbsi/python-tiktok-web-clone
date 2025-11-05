@@ -14,6 +14,7 @@ services:
       # Certificates folder on the host → inside the container
       - ./nginx/certs:/etc/nginx/certs:ro
       - ./nginx/vhost.d:/etc/nginx/vhost.d
+      - ./nginx/html:/usr/share/nginx/html
       - my_app_static_volume:/app/staticfiles:ro
 
   my-app-nginx-proxy-acme:
@@ -28,6 +29,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/vhost.d:/etc/nginx/vhost.d
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/acme:/etc/acme.sh
     environment:
       - DEFAULT_EMAIL=${LETSENCRYPT_EMAIL}
 
