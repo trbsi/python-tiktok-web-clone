@@ -24,7 +24,7 @@ services:
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/vhost.d:/etc/nginx/vhost.d
     environment:
-      - DEFAULT_EMAIL=${NGINX_PROXY_ACME_MAIL}
+      - DEFAULT_EMAIL=${LETSENCRYPT_EMAIL}
     networks:
       - proxy
 
