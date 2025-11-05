@@ -44,6 +44,7 @@ services:
       - 8000
 
   my-app-web:
+    image: my-app-web-image
     container_name: my-app-web
     user: "${UID}:${GID}"
     networks:
@@ -54,13 +55,11 @@ services:
         UID: ${UID}
         GID: ${GID}
       dockerfile: docker/web/Dockerfile
-    image: my-app-web-image
     restart: unless-stopped
     environment:
       # Required by nginx-proxy to proxy to gunicorn
       VIRTUAL_HOST: ${NGINX_VIRTUAL_HOST}
       VIRTUAL_PORT: 8000  # Gunicorn port inside the container
-      DJANGO_SETTINGS_MODULE: "app.settings"
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://my-app-redis:6379/0
     #app.wsgi is path to app/wsgi.py

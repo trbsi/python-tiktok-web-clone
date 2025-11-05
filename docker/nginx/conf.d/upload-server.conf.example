@@ -1,0 +1,49 @@
+# use this only if you use CloudFlare. Because CF limits uploads to 100MB for Free account
+# and you get "Payload too large 413" error
+server {
+    listen 80;
+    server_name upload.yoursite.com; # ‼️‼️‼️ CHANGE TO YOUR DOMAIN ‼️‼️‼️
+
+    # Access / error logs
+    access_log /var/log/nginx/upload.access.log;
+    error_log /var/log/nginx/upload.error.log;
+
+    # Timeouts & buffering for large file uploads
+    client_max_body_size 500M;
+    proxy_connect_timeout 600s;
+    proxy_send_timeout 600s;
+    proxy_read_timeout 600s;
+    send_timeout 600s;
+
+    # Disable request buffering for streaming uploads
+    proxy_request_buffering off;
+    proxy_buffering off;
+
+    # Allow only these two routes
+    location ~ ^/inbox/api/send-message(/.*)?$ {
+        proxy_pass http://my-app-web:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Upgrade $http_upgrade;
+    }
+
+    location ~ ^/media/api/upload(/.*)?$ {
+        proxy_pass http://my-app-web:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Upgrade $http_upgrade;
+    }
+
+    # Block everything else
+    location / {
+        return 403;
+    }
+}
