@@ -23,14 +23,13 @@ class UpdateMyContentService:
             profile: UserProfile = user.profile
             profile.media_count = profile.media_count - len(delete_list)
             profile.save()
-            return
-
-        for (index, id) in enumerate(ids):
-            description = descriptions[index]
-            media = Media.objects.filter(user=user, id=id).first()
-            if media:
-                media.description = description
-                media.save()
-                self.hashtag_service.save_hashtags(media=media, description=description)
+        else:
+            for (index, id) in enumerate(ids):
+                description = descriptions[index]
+                media = Media.objects.filter(user=user, id=id).first()
+                if media:
+                    media.description = description
+                    media.save()
+                    self.hashtag_service.save_hashtags(media=media, description=description)
 
         transaction.on_commit(lambda: task_delete_user_media.delay(user_id=user.id))
