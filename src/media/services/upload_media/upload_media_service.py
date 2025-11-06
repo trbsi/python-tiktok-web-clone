@@ -1,4 +1,5 @@
 from django.core.files.uploadedfile import UploadedFile
+from django.db import transaction
 from django.utils import timezone
 
 from src.media.enums import MediaEnum
@@ -83,9 +84,12 @@ class UploadMediaService:
         profile.save()
 
         # compress media
-        task_compress_media_task.delay(
-            media_id=media.id,
-            media_type=CompressMediaTask.MEDIA_TYPE_MEDIA,
-            create_thumbnail=True,
-            create_trailer=True
+        transaction.on_commit(
+            lambda:
+            task_compress_media_task.delay(
+                media_id=media.id,
+                media_type=CompressMediaTask.MEDIA_TYPE_MEDIA,
+                create_thumbnail=True,
+                create_trailer=True
+            )
         )

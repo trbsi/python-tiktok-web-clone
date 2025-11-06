@@ -1,6 +1,8 @@
 import random
 import string
 
+from django.db import transaction
+
 from src.age_verification.models import AgeVerification, CreatorAgreement
 from src.engagement.models import Comment
 from src.follow.models import Follow
@@ -40,5 +42,5 @@ class DeleteUserService:
         profile.bio = None
         profile.save()
 
-        task_delete_user_media.delay(user_id=user.id)
-        task_delete_user_messages.delay(user_id=user.id)
+        transaction.on_commit(lambda: task_delete_user_media.delay(user_id=user.id))
+        transaction.on_commit(lambda: task_delete_user_messages.delay(user_id=user.id))
