@@ -48,7 +48,8 @@ class Command(BaseCommand):
             if mmdb_path:
                 break
 
-        os.remove(output_path)
+        if os.path.exists(output_path):
+            os.remove(output_path)
         shutil.move(mmdb_path, output_path)
         shutil.rmtree(DOWNLOAD_DIR_TMP)
 

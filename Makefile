@@ -1,4 +1,4 @@
-.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog, restartcontainer
+.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog, restartcontainer, truncatelogs
 
 makemigrations:
 	docker exec -it my-app-web python manage.py makemigrations
@@ -35,3 +35,6 @@ dockerlog:
 
 restartcontainer:
 	cd docker && docker compose --env-file ../.env restart $(CONTAINER)
+
+truncatelogs:
+	sudo truncate -s 0 $(docker inspect --format='{{.LogPath}}' $(CONTAINER))
