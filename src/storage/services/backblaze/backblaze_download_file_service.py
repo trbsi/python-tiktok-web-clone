@@ -1,5 +1,3 @@
-import os.path
-
 from b2sdk.v2 import DoNothingProgressListener
 
 from src.storage.init_storage import init_remote_storage
@@ -8,8 +6,6 @@ from src.storage.init_storage import init_remote_storage
 class BackBlazeDownloadFileService:
     def download_file(self, file_id: str, file_path: str, local_file_path_directory: str) -> str:
         b2_api = init_remote_storage()
-
-        os.makedirs(local_file_path_directory, exist_ok=True)
 
         local_name = f'{file_id}_{file_path}'
         local_name = local_name.replace('/', '_')

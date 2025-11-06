@@ -34,6 +34,8 @@ class CompressMediaTask:
         trailer_service = TrailerService()
 
         local_file_path_directory = os.path.join(settings.MEDIA_ROOT, 'temp')
+        os.makedirs(local_file_path_directory, exist_ok=True)
+
         files_to_remove = []
 
         # download file from remote

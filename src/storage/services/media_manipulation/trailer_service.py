@@ -7,16 +7,6 @@ from src.storage.services.remote_storage_service import RemoteStorageService
 
 
 class TrailerService:
-    """
-    Generate a trailer by cutting evenly spaced clips from a video.
-
-    :param input_file: Path to the input video file
-    :param output_file: Path to the output trailer file
-    :param clip_count: How many clips to extract
-    :param min_length: Minimum trailer length in seconds
-    :param max_length: Maximum trailer length in seconds
-    :param percentage: Fraction of video duration to use for trailer
-    """
 
     def make_trailer(
             self,
@@ -29,7 +19,16 @@ class TrailerService:
             max_length=60,
             percentage=0.15
     ):
+        """
+        Generate a trailer by cutting evenly spaced clips from a video.
 
+        :param input_file: Path to the input video file
+        :param output_file: Path to the output trailer file
+        :param clip_count: How many clips to extract
+        :param min_length: Minimum trailer length in seconds
+        :param max_length: Maximum trailer length in seconds
+        :param percentage: Fraction of video duration to use for trailer
+        """
         remote_storage_service = RemoteStorageService()
 
         # Get video duration with ffprobe
