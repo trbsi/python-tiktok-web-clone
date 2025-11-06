@@ -48,11 +48,11 @@ class UploadMediaService:
 
         match post_type:
             case 'post_now':
-                status = MediaEnum.STATUS_PAID
+                status = MediaEnum.STATUS_PENDING.value
             case 'schedule':
-                status = MediaEnum.STATUS_SCHEDULE
+                status = MediaEnum.STATUS_SCHEDULE.value
             case _:
-                status = MediaEnum.STATUS_PAID
+                status = MediaEnum.STATUS_PENDING.value
 
         media = Media.objects.create(
             file_info=remote_file_info,

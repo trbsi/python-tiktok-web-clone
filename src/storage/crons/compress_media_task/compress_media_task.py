@@ -4,6 +4,7 @@ import bugsnag
 
 from app import settings
 from src.inbox.models import Message
+from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.storage.services.media_manipulation.compress_media_service import CompressMediaService
 from src.storage.services.media_manipulation.thumbnail_service import ThumbnailService
@@ -99,6 +100,7 @@ class CompressMediaTask:
         # set model as ready
         if isinstance(media, Media):
             media.is_processed = True
+            media.status = MediaEnum.STATUS_PAID.value
             media.save()
         elif isinstance(media, Message):
             media.is_ready = True
