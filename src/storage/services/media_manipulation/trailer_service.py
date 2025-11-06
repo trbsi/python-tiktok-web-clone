@@ -70,11 +70,11 @@ class TrailerService:
             parts.append(part)
 
         # Merge into final trailer
-        cmd = ["ffmpeg", "-y"]
+        command = ["ffmpeg", "-y"]
 
         # Add each part as an input
         for part in parts:
-            cmd += ["-i", part]
+            command += ["-i", part]
 
         # Build the filter_complex string
         filter_parts = []
@@ -84,7 +84,8 @@ class TrailerService:
 
         # Complete FFmpeg command
         output_trailer_file_path = f'{local_file_path_directory}/{uuid.uuid4()}.mp4'
-        cmd += ["-filter_complex", filter_complex, "-map", "[outv]", "-map", "[outa]", str(output_trailer_file_path)]
+        command += ["-filter_complex", filter_complex, "-map", "[outv]", "-map", "[outa]",
+                    str(output_trailer_file_path)]
 
         subprocess.run(command, check=True)
 
