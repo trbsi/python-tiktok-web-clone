@@ -41,9 +41,6 @@ class Command(BaseCommand):
         # --- Find .mmdb file in extracted directory ---
         mmdb_path = None
         for root, dirs, files in os.walk(DOWNLOAD_DIR_TMP):
-            print(root)
-            print(dirs)
-            print(files)
             for file in files:
                 if file.endswith(".mmdb"):
                     mmdb_path = os.path.join(root, file)
@@ -51,7 +48,7 @@ class Command(BaseCommand):
             if mmdb_path:
                 break
 
-        print(mmdb_path)
+        os.remove(output_path)
         shutil.move(mmdb_path, output_path)
         shutil.rmtree(DOWNLOAD_DIR_TMP)
 
