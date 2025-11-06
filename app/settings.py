@@ -48,6 +48,7 @@ MAX_MIND_LICENCE = env('MAX_MIND_LICENCE')
 BUGSNAG = {
     'api_key': env('BUGSNAG_API_KEY'),
     'project_root': BASE_DIR,
+    'release_stage': 'production'
 }
 
 # Application definition

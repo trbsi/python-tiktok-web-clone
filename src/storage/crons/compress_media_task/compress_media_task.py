@@ -40,6 +40,7 @@ class CompressMediaTask:
         os.makedirs(local_file_path_directory, exist_ok=True)
 
         files_to_remove = []
+        files_to_remove.append(media.file_info.get('file_path'))
 
         try:
             # download file from remote
