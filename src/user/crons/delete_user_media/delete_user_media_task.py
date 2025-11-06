@@ -24,7 +24,7 @@ class DeleteUserMediaTask:
                 try:
                     remote_storage_service.delete_file(
                         file_id=media_item.file_thumbnail.get('file_id'),
-                        file_path=media_item.file_thumbnail.get('file_name')
+                        file_path=media_item.file_thumbnail.get('file_path')
                     )
                 except Exception as e:
                     bugsnag.notify(e)
@@ -33,7 +33,7 @@ class DeleteUserMediaTask:
                 try:
                     remote_storage_service.delete_file(
                         file_id=media_item.file_trailer.get('file_id'),
-                        file_path=media_item.file_trailer.get('file_name')
+                        file_path=media_item.file_trailer.get('file_path')
                     )
                 except Exception as e:
                     bugsnag.notify(e)
