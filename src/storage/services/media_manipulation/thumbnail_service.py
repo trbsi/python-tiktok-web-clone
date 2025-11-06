@@ -23,7 +23,7 @@ class ThumbnailService:
         remote_storage_service = RemoteStorageService()
         command = [
             'ffmpeg',
-            '-ss', time_in_seconds,
+            '-ss', str(time_in_seconds),
             '-i', local_file_path,
             '-frames:v', '1',
             '-q:v', '2',
