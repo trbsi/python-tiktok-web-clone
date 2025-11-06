@@ -68,7 +68,6 @@ function fileUploader(uploadApi) {
                     this.files.forEach(file => {
                         if (file.status !== 'completed') {
                             allUploaded = false;
-                            break;
                         }
                     });
                     if (allUploaded) {
