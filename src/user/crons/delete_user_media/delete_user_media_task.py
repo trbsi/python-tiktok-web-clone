@@ -10,21 +10,30 @@ class DeleteUserMediaTask:
 
         for item in media:
             media_item: Media = item
-            remote_storage_service.delete_file(
-                file_id=media_item.file_info.get('file_id'),
-                file_path=media_item.file_info.get('file_path')
-            )
+            try:
+                remote_storage_service.delete_file(
+                    file_id=media_item.file_info.get('file_id'),
+                    file_path=media_item.file_info.get('file_path')
+                )
+            except Exception as e:
+                print(e)
 
             if media_item.file_thumbnail is not None:
-                remote_storage_service.delete_file(
-                    file_id=media_item.file_thumbnail.get('file_id'),
-                    file_path=media_item.file_thumbnail.get('file_name')
-                )
+                try:
+                    remote_storage_service.delete_file(
+                        file_id=media_item.file_thumbnail.get('file_id'),
+                        file_path=media_item.file_thumbnail.get('file_name')
+                    )
+                except Exception as e:
+                    print(e)
 
             if media_item.file_trailer is not None:
-                remote_storage_service.delete_file(
-                    file_id=media_item.file_trailer.get('file_id'),
-                    file_path=media_item.file_trailer.get('file_name')
-                )
+                try:
+                    remote_storage_service.delete_file(
+                        file_id=media_item.file_trailer.get('file_id'),
+                        file_path=media_item.file_trailer.get('file_name')
+                    )
+                except Exception as e:
+                    print(e)
 
             media_item.delete()

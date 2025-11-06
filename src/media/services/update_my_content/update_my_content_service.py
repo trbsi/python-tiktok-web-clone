@@ -1,3 +1,5 @@
+from django.db import transaction
+
 from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.media.services.hashtag.hashtag_service import HashtagService
@@ -31,4 +33,4 @@ class UpdateMyContentService:
                 media.save()
                 self.hashtag_service.save_hashtags(media=media, description=description)
 
-        task_delete_user_media.delay(user_id=user.id)
+        transaction.on_commit(lambda: task_delete_user_media.delay(user_id=user.id))
