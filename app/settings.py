@@ -39,7 +39,10 @@ APP_URL = env('APP_URL')
 APP_NAME = env('APP_NAME')
 DB_TYPE = env('DB_TYPE')
 DATE_TIME_FORMAT = '%m/%d/%Y %I:%M%p'
+
+# GEO IP
 IP_DATABASE_PATH = BASE_DIR / 'geoip/GeoLite-City.mmdb'
+MAX_MIND_LICENCE = env('MAX_MIND_LICENCE')
 
 # Application definition
 

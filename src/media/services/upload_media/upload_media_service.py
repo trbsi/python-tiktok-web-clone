@@ -22,7 +22,13 @@ class UploadMediaService:
         self.local_storage_service = local_storage_service or LocalStorageService()
         self.hashtag_service = hashtag_service or HashtagService()
 
-    def upload_media(self, user: User, uploaded_file: UploadedFile, description: str, post_type: str) -> None:
+    def upload_media(
+            self,
+            user: User,
+            uploaded_file: UploadedFile,
+            description: str,
+            post_type: str
+    ) -> None:
         """
         post_type: post_now|schedule
         """
@@ -65,7 +71,7 @@ class UploadMediaService:
         )
         if status.is_schedule_status():
             media_scheduler.number_of_scheduled_media += 1
-        media_scheduler.timezone = profile.timezone
+        media_scheduler.timezone = 'UTC' if profile.timezone is None else profile.timezone
         media_scheduler.last_published_at = timezone.now()
         media_scheduler.save()
 

@@ -1,5 +1,8 @@
 import gzip
+import io
+import os
 import shutil
+import tarfile
 from pathlib import Path
 
 import requests
@@ -12,6 +15,47 @@ from app import settings
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        self._download_maxmind()
+        print('Done.')
+
+    def _download_maxmind(self):
+        LICENSE_KEY = settings.MAX_MIND_LICENCE
+        EDITION_ID = "GeoLite2-City"  # or "GeoLite2-Country", "GeoLite2-ASN"
+        DOWNLOAD_DIR_TMP = "./geoip_tmp"
+        output_path = settings.IP_DATABASE_PATH
+
+        url = f"https://download.maxmind.com/app/geoip_download?edition_id={EDITION_ID}&license_key={LICENSE_KEY}&suffix=tar.gz"
+
+        # --- Make download folder ---
+        os.makedirs(DOWNLOAD_DIR_TMP, exist_ok=True)
+
+        # --- Download the tar.gz ---
+        print(f"Downloading {EDITION_ID} database...")
+        r = requests.get(url, stream=True)
+        r.raise_for_status()
+
+        # --- Extract the tar.gz ---
+        with tarfile.open(fileobj=io.BytesIO(r.content), mode="r:gz") as tar:
+            tar.extractall(path=DOWNLOAD_DIR_TMP)
+
+        # --- Find .mmdb file in extracted directory ---
+        mmdb_path = None
+        for root, dirs, files in os.walk(DOWNLOAD_DIR_TMP):
+            print(root)
+            print(dirs)
+            print(files)
+            for file in files:
+                if file.endswith(".mmdb"):
+                    mmdb_path = os.path.join(root, file)
+                    break
+            if mmdb_path:
+                break
+
+        print(mmdb_path)
+        shutil.move(mmdb_path, output_path)
+        shutil.rmtree(DOWNLOAD_DIR_TMP)
+
+    def _download_db_ip(self):
         now = timezone.now()
         year_month = f'{now.year}-{now.month}'
         url = f"https://download.db-ip.com/free/dbip-city-lite-{year_month}.mmdb.gz"
@@ -32,4 +76,3 @@ class Command(BaseCommand):
                 shutil.copyfileobj(f_in, f_out)
 
         gzip_path.unlink()
-        print('Done.')
