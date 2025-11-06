@@ -44,6 +44,12 @@ DATE_TIME_FORMAT = '%m/%d/%Y %I:%M%p'
 IP_DATABASE_PATH = BASE_DIR / 'geoip/GeoLite-City.mmdb'
 MAX_MIND_LICENCE = env('MAX_MIND_LICENCE')
 
+# BugSnag
+BUGSNAG = {
+    'api_key': env('BUGSNAG_API_KEY'),
+    'project_root': BASE_DIR,
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -99,7 +105,9 @@ MIDDLEWARE = [
 
     'allauth.account.middleware.AccountMiddleware',
 
-    'auditlog.middleware.AuditlogMiddleware'
+    'auditlog.middleware.AuditlogMiddleware',
+
+    'bugsnag.django.middleware.BugsnagMiddleware',
 ]
 
 # settings.py

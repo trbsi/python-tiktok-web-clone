@@ -1,3 +1,5 @@
+import bugsnag
+
 from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.storage.services.remote_storage_service import RemoteStorageService
@@ -16,7 +18,7 @@ class DeleteUserMediaTask:
                     file_path=media_item.file_info.get('file_path')
                 )
             except Exception as e:
-                print(e)
+                bugsnag.notify(e)
 
             if media_item.file_thumbnail is not None:
                 try:
@@ -25,7 +27,7 @@ class DeleteUserMediaTask:
                         file_path=media_item.file_thumbnail.get('file_name')
                     )
                 except Exception as e:
-                    print(e)
+                    bugsnag.notify(e)
 
             if media_item.file_trailer is not None:
                 try:
@@ -34,6 +36,6 @@ class DeleteUserMediaTask:
                         file_path=media_item.file_trailer.get('file_name')
                     )
                 except Exception as e:
-                    print(e)
+                    bugsnag.notify(e)
 
             media_item.delete()
