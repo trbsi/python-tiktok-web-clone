@@ -90,7 +90,7 @@ def remote_file_path_for_conversation(conversation: Conversation, file_name: str
 
 
 def remote_file_path_for_media(media: Media, file_name: str) -> str:
-    return f'{media.file_type}/media/{media.id}/{file_name}'
+    return f'{media.file_type}/media/{media.user_id}/{file_name}'
 
 
 def format_datetime(date: datetime):

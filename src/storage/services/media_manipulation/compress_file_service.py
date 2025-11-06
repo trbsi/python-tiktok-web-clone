@@ -21,16 +21,15 @@ class CompressFileService:
         image.thumbnail(size=self.IMAGE_MAX_SIZE)
         image.save(path, format="WEBP", quality=self.IMAGE_QUALITY)
 
-    """
-    Compress a video using ffmpeg.
-
-    Args:
-        crf: Constant Rate Factor (lower = better quality, bigger file)
-        preset: Speed/efficiency tradeoff ("ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "veryslow")
-        max_height: Resize height (maintains aspect ratio)
-    """
-
     def compress_video(self, input_path: str, output_path: str) -> None:
+        """
+        Compress a video using ffmpeg.
+
+        Args:
+            crf: Constant Rate Factor (lower = better quality, bigger file)
+            preset: Speed/efficiency tradeoff ("ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "veryslow")
+            max_height: Resize height (maintains aspect ratio)
+        """
         input_path_size = os.path.getsize(input_path)
 
         command = [
