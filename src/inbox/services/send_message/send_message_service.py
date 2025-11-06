@@ -64,6 +64,8 @@ class SendMessageService:
         else:
             conversation.read_by_sender = False
 
+        conversation.deleted_by_sender = False
+        conversation.deleted_by_recipient = False
         conversation.save()
         self.spend_service.spend_message(user, message)
 
