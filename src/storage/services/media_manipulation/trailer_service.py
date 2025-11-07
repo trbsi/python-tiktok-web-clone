@@ -20,7 +20,33 @@ class TrailerService:
             percentage=0.15
     ):
         """
-        Generate a trailer by cutting evenly spaced clips from a video.
+        Video Processing Overview:
+
+        1. **Get video duration**:
+           - Uses `ffprobe` to extract the total duration of the input video file.
+
+        2. **Determine trailer length**:
+           - Computes a target trailer length as a percentage of the original video duration.
+           - Ensures the trailer length is within the given `min_length` and `max_length`.
+
+        3. **Determine clip positions and length**:
+           - Divides the trailer into `clip_count` equally spaced segments.
+           - Each clip has a duration of `trailer_length / clip_count`.
+           - Clip start positions are chosen so that clips are evenly distributed throughout the video.
+
+        4. **Extract clips**:
+           - Loops over each position and uses `ffmpeg` to extract a clip of the computed length.
+           - Clips are stored temporarily in the same directory, with unique filenames.
+
+        5. **Merge clips into a trailer**:
+           - Builds a `filter_complex` string for FFmpeg `concat` filter to combine video and audio streams.
+           - Uses FFmpeg to concatenate all the clips into a single output trailer file.
+
+        6. **Output**:
+           - The final trailer is saved as a new MP4 file with a unique UUID filename in the same directory.
+
+        Summary:
+        The code takes an input video, extracts evenly spaced short clips, and concatenates them into a shorter trailer video while preserving audio.
 
         :param input_file: Path to the input video file
         :param output_file: Path to the output trailer file

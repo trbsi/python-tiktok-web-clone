@@ -101,7 +101,8 @@ class CompressMediaTask:
         # set model as ready
         if isinstance(media, Media):
             media.is_processed = True
-            media.status = MediaEnum.STATUS_PAID.value
+            if media.status != MediaEnum.STATUS_SCHEDULE.value:
+                media.status = MediaEnum.STATUS_PAID.value
             media.save()
         elif isinstance(media, Message):
             media.is_ready = True
