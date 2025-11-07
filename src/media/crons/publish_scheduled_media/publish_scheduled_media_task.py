@@ -88,7 +88,7 @@ class PublishScheduledMediaTask:
         """
         result = []
         for media_scheduler in timezones_for_posting:
-            tz = zoneinfo.ZoneInfo(media_scheduler.timezone)
+            tz = zoneinfo.ZoneInfo(media_scheduler['timezone'])
             now = datetime.now(tz)
             local_time = now.time()
 
@@ -99,7 +99,7 @@ class PublishScheduledMediaTask:
                 result.append(ScheduledMediaValueObject(
                     minutes_left=minutes_left,
                     current_slot_name=slot_name,
-                    number_of_creators=media_scheduler.user_count
+                    number_of_creators=media_scheduler['user_count']
                 ))
 
         return ScheduledMediaCollection(*result)
