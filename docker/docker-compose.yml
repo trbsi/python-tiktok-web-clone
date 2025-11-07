@@ -115,8 +115,7 @@ services:
       UID: ${UID}
       GID: ${GID}
     command: >
-      bash -c "ls -alh /app &&
-        chown -R ${UID}:${GID} /app/celerybeat_data
+      bash -c "chown -R ${UID}:${GID} /app/celerybeat_data &&
         touch /app/celerybeat_data/celerybeat-schedule &&
         celery -A ${CELERY_APP} beat \
               --loglevel=info \
