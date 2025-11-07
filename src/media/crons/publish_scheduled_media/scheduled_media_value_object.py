@@ -1,3 +1,6 @@
+import math
+
+
 class ScheduledMediaValueObject:
     def __init__(
             self,
@@ -16,5 +19,5 @@ class ScheduledMediaValueObject:
         self.number_of_creators = number_of_creators
         self.timezone = timezone
 
-    def process_creators_per_minute_count(self):
-        return self.number_of_creators / self.minutes_left
+    def process_creators_per_minute_count(self) -> int:
+        return math.ceil(self.number_of_creators / self.minutes_left)
