@@ -69,16 +69,18 @@ class PublishScheduledMediaTask:
                 .first()
             )
 
-            if not media:
-                continue
+            # Maybe user removed scheduled media but counter left intacted
+            if next_creator.number_of_scheduled_media > 0:
+                next_creator.number_of_scheduled_media -= 1
+                next_creator.save()
 
-            media.status = MediaEnum.STATUS_PAID.value
-            media.save()
+            if media:
+                media.status = MediaEnum.STATUS_PAID.value
+                media.save()
 
-            next_creator.last_published_at = timezone.now()
-            next_creator.number_of_scheduled_media -= 1
-            next_creator.last_slot = schedule_creator.current_slot_name
-            next_creator.save()
+                next_creator.last_published_at = timezone.now()
+                next_creator.last_slot = schedule_creator.current_slot_name
+                next_creator.save()
 
     def _get_posting_slot_data(self, timezones_for_posting: QuerySet[MediaScheduler]) -> ScheduledMediaCollection:
         """
