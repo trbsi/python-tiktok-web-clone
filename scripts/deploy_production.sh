@@ -9,7 +9,8 @@ set -euo pipefail
 
 # Configurable variables
 CONTAINER_NAME="my-app-web"
-CELERY_CONTAINER_NAME="my-app-celery_worker"
+CELERY_WORKER_CONTAINER_NAME="my-app-celery_worker"
+CELERY_BEAT_CONTAINER_NAME="my-app-celery_beat"
 APP_DIR="$(pwd)"   # Assumes script is run from project root
 GIT_BRANCH="master"  # Change if using a different branch
 
@@ -49,7 +50,8 @@ docker exec -it "$CONTAINER_NAME" python manage.py download_geoip_command
 # ------------------------------
 # Restart celery
 # ------------------------------
-cd docker && docker compose --env-file ../.env restart $CELERY_CONTAINER_NAME
+cd docker && docker compose --env-file ../.env restart $CELERY_WORKER_CONTAINER_NAME
+cd docker && docker compose --env-file ../.env restart $CELERY_BEAT_CONTAINER_NAME
 
 # ------------------------------
 # Deployment finished
