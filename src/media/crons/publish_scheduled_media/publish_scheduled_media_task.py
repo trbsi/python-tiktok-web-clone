@@ -69,7 +69,7 @@ class PublishScheduledMediaTask:
                 .first()
             )
 
-            # Maybe user removed scheduled media but counter left intacted
+            # Maybe user removed scheduled media but counter left intact
             if next_creator.number_of_scheduled_media > 0:
                 next_creator.number_of_scheduled_media -= 1
                 next_creator.save()
