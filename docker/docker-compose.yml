@@ -119,7 +119,6 @@ services:
         touch /app/celerybeat_data/celerybeat-schedule &&
         celery -A ${CELERY_APP} beat \
               --loglevel=info \
-              --scheduler django_celery_beat.schedulers:DatabaseScheduler \
               --schedule=/app/celerybeat_data/celerybeat-schedule"
     volumes:
       - ../:/app:cached
