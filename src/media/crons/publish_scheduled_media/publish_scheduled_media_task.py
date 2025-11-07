@@ -47,7 +47,7 @@ class PublishScheduledMediaTask:
             next_creators: QuerySet[MediaScheduler] = (
                 MediaScheduler.objects
                 .filter(number_of_scheduled_media__gt=0)
-                .filter(timezone=timezone)
+                .filter(timezone=scheduled_media.timezone)
                 .order_by('last_published_at')[:per_page]
             )
             if not next_creators.exists():
@@ -99,7 +99,8 @@ class PublishScheduledMediaTask:
                 result.append(ScheduledMediaValueObject(
                     minutes_left=minutes_left,
                     current_slot_name=slot_name,
-                    number_of_creators=media_scheduler['user_count']
+                    number_of_creators=media_scheduler['user_count'],
+                    timezone=media_scheduler['timezone']
                 ))
 
         return ScheduledMediaCollection(*result)
