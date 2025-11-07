@@ -1,3 +1,4 @@
+import bugsnag
 from celery import shared_task
 
 from src.media.crons.locked_media.lock_media_task import LockMediaTask
@@ -7,17 +8,26 @@ from src.media.crons.scheduled_slots.update_creator_timezone_slots_task import U
 
 @shared_task
 def cron_publish_scheduled_media():
-    task = PublishScheduledMediaTask()
-    task.publish_scheduled_media()
+    try:
+        task = PublishScheduledMediaTask()
+        task.publish_scheduled_media()
+    except Exception as e:
+        bugsnag.notify(e)
 
 
 @shared_task
 def cron_set_current_publishing_slot():
-    task = UpdateCreatorTimezoneSlotsTask()
-    task.update_timezone_slots()
+    try:
+        task = UpdateCreatorTimezoneSlotsTask()
+        task.update_timezone_slots()
+    except Exception as e:
+        bugsnag.notify(e)
 
 
 @shared_task
 def cron_lock_media():
-    task = LockMediaTask()
-    task.lock_media()
+    try:
+        task = LockMediaTask()
+        task.lock_media()
+    except Exception as e:
+        bugsnag.notify(e)
