@@ -36,7 +36,7 @@ class Command(BaseCommand):
         train_conversations = []
         for index, conversation in enumerate(conversations):
             tmp = []
-            print(f'Conversations count: {len(conversations)}')
+            print(f'Conversations count: {len(conversation)}')
             for message in conversation:
                 tmp.append(message['content'])
             train_conversations.append(tmp)
