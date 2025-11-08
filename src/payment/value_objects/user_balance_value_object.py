@@ -18,7 +18,9 @@ class UserBalanceValueObject:
         platform_commission_percentage = Decimal(PaymentEnum.COMMISSION_PERCENTAGE.value)
 
         balance_in_fiat: Decimal = self.coins / Decimal(coin_to_fiat)
-        self.platform_commission: Decimal = balance_in_fiat * Decimal(platform_commission_percentage)
-        final: Decimal = balance_in_fiat - self.platform_commission
 
-        self.user_balance = final.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        self.platform_commission: Decimal = balance_in_fiat * Decimal(platform_commission_percentage)
+        self.user_balance: Decimal = balance_in_fiat - self.platform_commission
+
+        self.platform_commission = self.platform_commission.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        self.user_balance = self.user_balance.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
