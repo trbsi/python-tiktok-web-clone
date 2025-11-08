@@ -1,4 +1,4 @@
-.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog, restartcontainer, truncatelogs, poetryinstall
+.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog, restartcontainer, truncatelogs, poetryinstall, trainchatbot
 
 makemigrations:
 	docker exec -it my-app-web python manage.py makemigrations
@@ -14,6 +14,9 @@ seeddatabase:
 
 createsuperuser:
 	docker exec -it my-app-web python manage.py createsuperuser
+
+trainchatbot:
+	docker exec -it my-app-web python manage.py train_chatbot_command
 
 manage:
 	docker exec -it my-app-web python manage.py $(CMD)
