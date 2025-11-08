@@ -2,6 +2,9 @@ import random
 import re
 from threading import Lock
 
+from chatterbot import ChatBot
+
+from app import settings
 from src.inbox.models import Message, Conversation
 from src.inbox.services.inbox_settings.inbox_settings_service import InboxSettingsService
 
@@ -86,34 +89,10 @@ class AutoReplyTask:
                 message_content=reply,
             )
 
-    # def _load_model(self) -> None:
-    #     login(token=settings.HUGGING_FACE_LOGIN_TOKEN)
-    #
-    #     # -------------------- PRELOAD MODEL AND TOKENIZER --------------------
-    #     base_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # or your TinyLlama
-    #     adapter_path = f"{settings.BASE_DIR}/gpt/trained_model"  # path to your LoRA adapter
-    #
-    #     # -------------------- Load tokenizer --------------------
-    #     tokenizer = AutoTokenizer.from_pretrained(base_model)
-    #     # Fix pad token if missing
-    #     if tokenizer.pad_token is None:
-    #         tokenizer.pad_token = tokenizer.eos_token
-    #
-    #     # -------------------- Load model + LoRA --------------------
-    #     model = AutoModelForCausalLM.from_pretrained(
-    #         base_model,
-    #         device_map="auto",
-    #         dtype=torch.float16 if torch.cuda.is_available() else torch.float32
-    #     )
-    #
-    #     model = PeftModel.from_pretrained(model, adapter_path)
-    #     model.eval()  # evaluation mode
-    #
-    #     # Assign to class attribute so it is reused by all instances
-    #     AutoReplyTask._model = model
-    #     AutoReplyTask._tokenizer = tokenizer
+    def _get_reply_from_ai(self, chat_history) -> str:
+        chatbot = ChatBot(settings.CHAT_BOT_NAME)
+        return chatbot.get_response(chat_history[-1]['content']).text
 
-    # def _get_reply_from_ai(self, chat_history) -> str:
     #     print(f'Number of threads: {torch.get_num_threads()}')
     #
     #     # -------------------- Build input text --------------------
@@ -177,3 +156,30 @@ class AutoReplyTask:
             merged.append(temp_msg)
 
         return merged
+
+    # def _load_model(self) -> None:
+    #     login(token=settings.HUGGING_FACE_LOGIN_TOKEN)
+    #
+    #     # -------------------- PRELOAD MODEL AND TOKENIZER --------------------
+    #     base_model = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # or your TinyLlama
+    #     adapter_path = f"{settings.BASE_DIR}/gpt/trained_model"  # path to your LoRA adapter
+    #
+    #     # -------------------- Load tokenizer --------------------
+    #     tokenizer = AutoTokenizer.from_pretrained(base_model)
+    #     # Fix pad token if missing
+    #     if tokenizer.pad_token is None:
+    #         tokenizer.pad_token = tokenizer.eos_token
+    #
+    #     # -------------------- Load model + LoRA --------------------
+    #     model = AutoModelForCausalLM.from_pretrained(
+    #         base_model,
+    #         device_map="auto",
+    #         dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+    #     )
+    #
+    #     model = PeftModel.from_pretrained(model, adapter_path)
+    #     model.eval()  # evaluation mode
+    #
+    #     # Assign to class attribute so it is reused by all instances
+    #     AutoReplyTask._model = model
+    #     AutoReplyTask._tokenizer = tokenizer

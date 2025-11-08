@@ -15,7 +15,7 @@ class Command(BaseCommand):
         parser.add_argument('--test', type=str, help="Some random sentence you want to get reply to", default=None)
 
     def handle(self, *args, **options):
-        chatbot = ChatBot("Sexting Bot")
+        chatbot = ChatBot(settings.CHAT_BOT_NAME)
         test = options["test"]
 
         if test:
@@ -47,4 +47,4 @@ class Command(BaseCommand):
 
     def _test_output(self, chatbot: ChatBot, test_output: str) -> None:
         response = chatbot.get_response(test_output)
-        self.info(response)
+        self.info(response.text)
