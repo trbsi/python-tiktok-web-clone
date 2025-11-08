@@ -36,6 +36,7 @@ class AutoReplyTask:
         self.send_message_service = send_message_service or SendMessageService()
 
     def auto_reply(self, message_id: int):
+        return
         message: Message = Message.objects.get(id=message_id)
 
         # if creator sent a message do not auto reply
@@ -65,7 +66,7 @@ class AutoReplyTask:
         for message in last_messages:
             if message.message is None:
                 continue
-                
+
             if message.sender.is_creator():
                 role = 'assistant'
             else:

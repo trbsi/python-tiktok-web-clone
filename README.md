@@ -1,46 +1,8 @@
 # Predeployment
 
-1. Generate certificate in Cloudflare
-    1. Put certificates in `docker/nginx/certs`
-        1. yourdomain.com.crt
-        1. yourdomain.com.key
-        1. databasesubdomain.yourdomain.com.crt
-        1. databasesubdomain.yourdomain.com.key
-1. Set Cloudflare mode to be Full(Strict)
 1. Copy `.env.example` to `.env` and set up all parameters
-1. Rename `docker/nginx/vhost.d/yourdomain.com.example` to `docker/nginx/vhost.d/your_real_domain.com`
-
-## Cloudflare Full (Strict) SSL Setup with jwilder/nginx-proxy
-
-This guide explains how to configure **Cloudflare Full (Strict) SSL** for Docker services using `jwilder/nginx-proxy`.  
-It covers generating Cloudflare origin certificates, placing them correctly, and configuring Cloudflare SSL mode.
-
----
-
-### Generate Cloudflare Origin Certificates
-
-1. Log in to your **Cloudflare Dashboard**.
-2. Navigate to **SSL/TLS → Origin Server**.
-3. Click **Create Certificate**:
-    - Choose **“Let Cloudflare generate a private key and CSR”**
-    - Choose **RSA 2048** (or ECC) key type
-    - Set the **hostnames** you want the certificate for:
-        - `yourdomain.com`
-        - `databasesubdomain.yourdomain.com`
-    - Set the certificate validity (default: 15 years)
-4. Download the generated certificate files:
-    - `.pem` (the public certificate)
-    - `.key` (the private key)
-
----
-
-### Set to strict mode
-
-1. Go to SSL/TLS Settings
-1. Click your domain.
-1. In the menu, click SSL/TLS.
-1. In the left sidebar, click Overview.
-1. Click "Configure and Change SSL/TLS mode Find the section SSL/TLS encryption mode. Click Full (Strict).
+1. Rename `docker/nginx/vhost.d/yourdomain.com` to `docker/nginx/vhost.d/your_real_domain.com`
+1. Rename `docker/nginx/vhost.d/yourdomain.com_location` to `docker/nginx/vhost.d/your_real_domain.com_location`
 
 # Deployment
 
@@ -48,20 +10,9 @@ It covers generating Cloudflare origin certificates, placing them correctly, and
 1. Install Make
 1. Create docker network
 1. Run docker
-1. Migrate data
-1. Collect static
-1. Restart Celery
+1. Run migration script `scripts/deploy_production.sh`
 
 **Commands:**
-
-``` 
-sudo apt install make
-make create-docker-network
-make docker-build
-docker compose restart my-app-celery_worker
-make migrate
-make collectstatic
-```
 
 For local dev add to hosts:
 
@@ -75,11 +26,15 @@ For local dev add to hosts:
 *Note*: First build web image because celery worker and celery beat depend on it because of "image: my-app-web-image".
 As you can see in "make docker-build"
 
-# Celery logs
+# Celery
 
-`celery -A app worker -l info`
+## Logs
 
-# Update poetry dependencies
+`celery -A app.celery worker -l info`
+
+# Poetry
+
+## Update poetry dependencies
 
 ```
 
@@ -93,3 +48,18 @@ docker compose restart my-app-web
 Deliver Public Backblaze B2 Content Through Cloudflare CDN
 
 https://www.backblaze.com/docs/cloud-storage-deliver-public-backblaze-b2-content-through-cloudflare-cdn
+
+## SSL certificates
+
+We don't use SSL certificates from Cloudflare because free CloudFlare limits upload to 100MB per file. Instead we use
+Let's Encrypt SSL.
+
+# LLM Chatbot
+
+For LLM Chatbot you need to install
+
+```
+ "torch (>=2.9.0,<3.0.0)",
+ "transformers (>=4.57.1,<5.0.0)",
+ "peft (>=0.17.1,<0.18.0)",
+ ```
