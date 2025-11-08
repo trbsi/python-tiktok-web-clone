@@ -131,6 +131,25 @@ class AutoReplyTask:
     #     return reply
 
     def _split_sentences_randomly(self, text: str, max_sentences=5):
+        """
+        Split the given text into a limited number of lowercase sentences,
+        then randomly merge some of them for variation.
+
+        Steps:
+          1. Converts the entire text to lowercase for normalization.
+          2. Splits the text into individual sentences using punctuation
+             marks (., ?, !) as delimiters.
+          3. Keeps at most `max_sentences` sentences (default = 5).
+          4. Iterates through the sentences and, with a 50% chance, merges
+             each sentence with the next one (so some combined sentences
+             may contain two original sentences).
+          5. Strips trailing periods and exclamation marks from each merged
+             segment.
+          6. Returns a list of the resulting sentence strings.
+
+        Returns:
+            list[str]: A list of processed and randomly merged sentences.
+        """
         text = text.casefold()  # lowercase
 
         # Split by sentence-ending punctuation (., ?, !)
