@@ -21,7 +21,7 @@ RUN poetry config virtualenvs.create false
 COPY pyproject.toml poetry.lock* /app/
 
 # Install dependencies
-RUN poetry install --no-root --ignore-python
+RUN poetry install --no-root
 
 # Stage 2: runtime
 FROM python:3.13
