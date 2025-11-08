@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from src.payment.enums import PaymentEnum
-from src.payment.utils import get_creator_balance
+from src.payment.utils import get_creator_balance_in_fiat
 from src.user.models import User
 
 
@@ -36,7 +36,7 @@ class Balance(models.Model):
     def get_balance_as_number(self) -> Decimal | int:
         user: User = self.user
         if user.is_creator():
-            return get_creator_balance(coins=self.balance)
+            return get_creator_balance_in_fiat(coins=self.balance).user_balance
 
         return self.balance
 
@@ -66,8 +66,8 @@ class Spending(models.Model):
 
     objects = models.Manager()
 
-    def amount_for_creator(self):
-        amount = get_creator_balance(coins=self.amount)
+    def amount_for_creator(self) -> str:
+        amount = get_creator_balance_in_fiat(coins=self.amount).user_balance
         return f'{amount} $'
 
     def amount_for_user(self):

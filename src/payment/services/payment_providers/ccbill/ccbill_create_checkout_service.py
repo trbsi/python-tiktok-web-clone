@@ -7,7 +7,7 @@ from src.payment.utils import coin_to_fiat
 from src.payment.value_objects.checkout_value_object import CheckoutValueObject
 
 
-class CcbillCreateCheckoutService:
+class CCBillCreateCheckoutService:
 
     # https://ccbill.com/doc/flexforms-quick-start-guide
     # https://ccbill.com/doc/dynamic-pricing-user-guide

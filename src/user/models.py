@@ -38,6 +38,10 @@ class User(AbstractUser):
     def get_role(self) -> str:
         return self.groups.first().name
 
+    @staticmethod
+    def get_admin():
+        return User.objects.filter(is_staff=True).first()
+
 
 class UserProfile(models.Model):
     id = models.BigAutoField(primary_key=True)
