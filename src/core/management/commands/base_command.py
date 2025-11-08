@@ -9,4 +9,4 @@ class BaseCommand(DjangoBaseCommand):
         self.stdout.write(self.style.ERROR(string))
 
     def info(self, string: str) -> None:
-        self.stdout.write(self.style.INFO(string))
+        self.stdout.write(self.style.NOTICE(string))

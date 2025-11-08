@@ -23,6 +23,9 @@ COPY pyproject.toml poetry.lock* /app/
 # Install dependencies
 RUN poetry install --no-root
 
+# This is needed for  https://github.com/gunthercox/ChatterBot
+RUN python -m spacy download en_core_web_sm
+
 # Stage 2: runtime
 FROM python:3.13
 

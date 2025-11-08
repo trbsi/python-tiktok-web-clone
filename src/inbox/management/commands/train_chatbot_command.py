@@ -12,7 +12,7 @@ class Command(BaseCommand):
     help = 'Trains the chatbot model'
 
     def add_arguments(self, parser):
-        parser.add_argument('test', type=str, help="Some random sentence you want to get reply to")
+        parser.add_argument('--test', type=str, help="Some random sentence you want to get reply to", default=None)
 
     def handle(self, *args, **options):
         chatbot = ChatBot("Sexting Bot")
