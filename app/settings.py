@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+import bugsnag
 import environ
 
 env = environ.Env(
@@ -48,11 +49,11 @@ IP_DATABASE_PATH = BASE_DIR / 'geoip/GeoLite-City.mmdb'
 MAX_MIND_LICENCE = env('MAX_MIND_LICENCE')
 
 # BugSnag
-BUGSNAG = {
-    'api_key': env('BUGSNAG_API_KEY'),
-    'project_root': BASE_DIR,
-    'release_stage': 'production'
-}
+bugsnag.configure(
+    api_key=env("BUGSNAG_API_KEY"),
+    project_root=BASE_DIR,
+    release_stage=env("APP_ENV"),
+)
 
 # Application definition
 
