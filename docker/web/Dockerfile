@@ -1,5 +1,5 @@
 # Stage 1: build
-FROM python:latest as builder
+FROM python:3.13 as builder
 
 # System deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -21,10 +21,10 @@ RUN poetry config virtualenvs.create false
 COPY pyproject.toml poetry.lock* /app/
 
 # Install dependencies
-RUN poetry install --no-root
+RUN poetry install --no-root --ignore-python
 
 # Stage 2: runtime
-FROM python:latest
+FROM python:3.13
 
 ARG UID
 ARG GID

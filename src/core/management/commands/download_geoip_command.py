@@ -6,11 +6,11 @@ import tarfile
 from pathlib import Path
 
 import requests
-from django.core.management.base import BaseCommand
 from django.utils import timezone
 from requests import Response
 
 from app import settings
+from src.core.management.commands.base_command import BaseCommand
 
 
 class Command(BaseCommand):

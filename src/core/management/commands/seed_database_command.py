@@ -1,4 +1,4 @@
-from django.core.management import BaseCommand, call_command, CommandError
+from django.core.management import call_command, CommandError
 
 from app import settings
 from database.seeders.age_verification_seeder import AgeVerificationSeeder
@@ -10,6 +10,7 @@ from database.seeders.media_seeder import MediaSeeder
 from database.seeders.packages_seeder import PackagesSeeder
 from database.seeders.payment_seeder import PaymentSeeder
 from database.seeders.user_seeder import UserSeeder
+from src.core.management.commands.base_command import BaseCommand
 
 
 class Command(BaseCommand):

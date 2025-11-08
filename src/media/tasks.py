@@ -1,8 +1,10 @@
 import bugsnag
 from celery import shared_task
+from src.media.crons.clear_temp_folder.clear_temp_folder_task import ClearTempFolderTask
 
 from src.media.crons.locked_media.lock_media_task import LockMediaTask
 from src.media.crons.publish_scheduled_media.publish_scheduled_media_task import PublishScheduledMediaTask
+from src.media.crons.recreate_media_asset.recreate_thumbnail_and_trailer_task import RecreateThumbnailAndTrailerTask
 from src.media.crons.scheduled_slots.update_creator_timezone_slots_task import UpdateCreatorTimezoneSlotsTask
 
 
@@ -29,5 +31,14 @@ def cron_lock_media():
     try:
         task = LockMediaTask()
         task.lock_media()
+    except Exception as e:
+        bugsnag.notify(e)
+
+
+@shared_task
+def cron_recreate_thumbnail_and_trailer():
+    try:
+        task = RecreateThumbnailAndTrailerTask()
+        task.recreate_media_asset()
     except Exception as e:
         bugsnag.notify(e)

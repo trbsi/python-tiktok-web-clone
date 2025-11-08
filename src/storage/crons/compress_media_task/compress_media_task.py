@@ -16,25 +16,34 @@ class CompressMediaTask:
     MEDIA_TYPE_MEDIA = 'media'
     MEDIA_TYPE_INBOX = 'inbox'
 
+    def __init__(
+            self,
+            remote_storage_service: RemoteStorageService or None = None,
+            compress_service: CompressMediaService or None = None,
+            thumbnail_service: ThumbnailService or None = None,
+            trailer_service: TrailerService or None = None,
+    ):
+        self.remote_storage_service = remote_storage_service
+        self.compress_service = compress_service
+        self.thumbnail_service = thumbnail_service
+        self.trailer_service = trailer_service
+
     def compress_media(
             self,
             media_type: str,
             media_id: int,
             create_thumbnail: bool = False,
-            create_trailer: bool = False
+            create_trailer: bool = False,
+            should_compress_media: bool = True,
     ) -> None:
+        media = None
         if media_type == self.MEDIA_TYPE_INBOX:
             media = Message.objects.get(id=media_id)
         elif media_type == self.MEDIA_TYPE_MEDIA:
             media = Media.objects.get(id=media_id)
 
-        if media.file_info is None:
+        if media is None or media.file_info is None:
             return
-
-        remote_storage_service = RemoteStorageService()
-        compress_service = CompressMediaService()
-        thumbnail_service = ThumbnailService()
-        trailer_service = TrailerService()
 
         local_file_path_directory = os.path.join(settings.MEDIA_ROOT, 'temp')
         os.makedirs(local_file_path_directory, exist_ok=True)
@@ -44,30 +53,32 @@ class CompressMediaTask:
 
         try:
             # download file from remote
-            downloaded_local_file_path = remote_storage_service.download_file(
+            downloaded_local_file_path = self.remote_storage_service.download_file(
                 file_id=media.file_info.get('file_id'),
                 file_path=media.file_info.get('file_path'),
                 local_file_path_directory=local_file_path_directory
             )
+            output_compressed_file_path = downloaded_local_file_path
         except Exception as e:
             bugsnag.notify(e)
 
-        try:
-            # compress file
-            compression_result = compress_service.handle_compression(
-                media=media,
-                local_file_type=media.file_type,
-                local_file_path=downloaded_local_file_path,
-                local_file_path_directory=local_file_path_directory
-            )
-            output_compressed_file_path = compression_result.get('output_compressed_file_path')
-        except Exception as e:
-            bugsnag.notify(e)
+        if should_compress_media:
+            try:
+                # compress file
+                compression_result = self.compress_service.handle_compression(
+                    media=media,
+                    local_file_type=media.file_type,
+                    local_file_path=downloaded_local_file_path,
+                    local_file_path_directory=local_file_path_directory
+                )
+                output_compressed_file_path = compression_result.get('output_compressed_file_path')
+            except Exception as e:
+                bugsnag.notify(e)
 
         # create thumbnail
         if create_thumbnail and media.is_video():
             try:
-                thumbnail_result = thumbnail_service.snap_thumbnail(
+                thumbnail_result = self.thumbnail_service.snap_thumbnail(
                     media=media,
                     local_file_type=media.file_type,
                     local_file_path=output_compressed_file_path,
@@ -80,7 +91,7 @@ class CompressMediaTask:
         # create trailer
         if create_trailer and media.is_video():
             try:
-                trailer_result = trailer_service.make_trailer(
+                trailer_result = self.trailer_service.make_trailer(
                     media=media,
                     local_file_type=media.file_type,
                     local_file_path=output_compressed_file_path,

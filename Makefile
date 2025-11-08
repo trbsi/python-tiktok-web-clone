@@ -1,4 +1,4 @@
-.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog, restartcontainer, truncatelogs
+.PHONY: makemigrations, migrate, collectstatic, seeddatabase, builddocker, restartweb, createsuperuser, createdockernetwork. manage, dockerssh, dockerlog, restartcontainer, truncatelogs, poetryinstall
 
 makemigrations:
 	docker exec -it my-app-web python manage.py makemigrations
@@ -10,7 +10,7 @@ collectstatic:
 	docker exec -it my-app-web python manage.py collectstatic
 
 seeddatabase:
-	docker exec -it my-app-web python manage.py seed_database local --truncate
+	docker exec -it my-app-web python manage.py seed_database_command local --truncate
 
 builddocker:
 	cd docker && docker compose --env-file ../.env build my-app-web && docker compose --env-file ../.env  up -d --build
@@ -38,3 +38,6 @@ restartcontainer:
 
 truncatelogs:
 	sudo truncate -s 0 $(docker inspect --format='{{.LogPath}}' $(CONTAINER))
+
+poetryinstall:
+	docker exec -it -u root my-app-web bash -c "export POETRY_VIRTUALENVS_CREATE=false && poetry install --no-interaction --no-ansi"
