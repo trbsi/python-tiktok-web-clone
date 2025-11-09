@@ -1,6 +1,5 @@
 import bugsnag
 from celery import shared_task
-from src.media.crons.clear_temp_folder.clear_temp_folder_task import ClearTempFolderTask
 
 from src.media.crons.locked_media.lock_media_task import LockMediaTask
 from src.media.crons.publish_scheduled_media.publish_scheduled_media_task import PublishScheduledMediaTask
