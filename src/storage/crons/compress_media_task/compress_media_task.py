@@ -23,10 +23,10 @@ class CompressMediaTask:
             thumbnail_service: ThumbnailService or None = None,
             trailer_service: TrailerService or None = None,
     ):
-        self.remote_storage_service = remote_storage_service
-        self.compress_service = compress_service
-        self.thumbnail_service = thumbnail_service
-        self.trailer_service = trailer_service
+        self.remote_storage_service = remote_storage_service or RemoteStorageService()
+        self.compress_service = compress_service or CompressMediaService()
+        self.thumbnail_service = thumbnail_service or ThumbnailService()
+        self.trailer_service = trailer_service or TrailerService()
 
     def compress_media(
             self,
