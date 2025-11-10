@@ -630,7 +630,7 @@ function mediaFeed(
             } else if (media.type === 'video') {
                 // Clear previous event handlers
                 mediaElement.onplay = null;
-                mediaElement.onplay = () => {
+                mediaElement.onplaying  = () => {
                     // Start blur timer 10s after play
                     media._blurTimer = setTimeout(() => {
                         if (this.currentIndex === index && media.lock.is_locked && !media.unlocked) {
@@ -668,7 +668,7 @@ function mediaFeed(
                 const duration = mediaElement.duration;
 
                 if (!duration || duration === Infinity) {
-                    console.warn('Video duration not available yet, delaying tracking...');
+                    console.warn('Video duration not available yet, delaying tracking...', duration);
                     return;
                 }
 

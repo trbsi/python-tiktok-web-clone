@@ -49,8 +49,7 @@ docker exec -it "$CONTAINER_NAME" python manage.py download_geoip_command
 # ------------------------------
 # Restart celery
 # ------------------------------
-cd docker && docker compose --env-file ../.env restart $CELERY_WORKER_CONTAINER_NAME
-cd docker && docker compose --env-file ../.env restart $CELERY_BEAT_CONTAINER_NAME
+cd docker && docker compose --env-file ../.env restart $CELERY_WORKER_CONTAINER_NAME  && docker compose --env-file ../.env restart $CELERY_BEAT_CONTAINER_NAME
 
 # ------------------------------
 # Deployment finished

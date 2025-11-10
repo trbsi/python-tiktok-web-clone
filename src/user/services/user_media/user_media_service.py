@@ -48,7 +48,7 @@ class UserMediaService:
         paginator = Paginator(object_list=likes, per_page=self.PER_PAGE)
         page: Page = paginator.page(current_page)
 
-        media_ids = page.object_list.values_list('media_id', flat=True)
+        media_ids = list(page.object_list.values_list('media_id', flat=True))
         media = Media.objects.select_related('user').filter(id__in=media_ids).order_by('-created_at')
 
         result = []
