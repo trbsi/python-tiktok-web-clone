@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET
 
 from app import settings
+from src.core.utils import reverse_lazy_with_query
 from src.notification.services.notification_service import NotificationService
 from src.notification.value_objects.email_value_object import EmailValueObject
 
@@ -36,12 +37,16 @@ def legal_documents(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def terms_of_use(request: HttpRequest) -> HttpResponse:
-    return redirect('/static/Terms_of_Service.pdf')
+    return redirect(
+        reverse_lazy_with_query(route_name='legal_documents', query_params={'document': 'terms_of_service'})
+    )
 
 
 @require_GET
 def privacy_policy(request: HttpRequest) -> HttpResponse:
-    return redirect('/static/Privacy_Policy.pdf')
+    return redirect(
+        reverse_lazy_with_query(route_name='legal_documents', query_params={'document': 'privacy_policy'})
+    )
 
 
 @require_GET
