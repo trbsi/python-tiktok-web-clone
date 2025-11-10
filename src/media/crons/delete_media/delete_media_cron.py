@@ -12,5 +12,4 @@ class DeleteMediaCron:
             .distinct()
         )
         for single_media in media:
-            print(single_media['user_id'])
             task_delete_user_media.delay(user_id=single_media['user_id'])
