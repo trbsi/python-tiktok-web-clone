@@ -1,6 +1,15 @@
-import geoip2.database
+import datetime
+from gettext import ngettext
 
+import geoip2.database
+from django.db.models import Model
+from django.urls import reverse_lazy
+from django.utils.http import urlencode
+
+from app import settings
 from src.core.value_object.ip_data import IpData
+from src.inbox.models import Conversation
+from src.media.models import Media
 
 
 def get_client_ip(request) -> str:
@@ -31,18 +40,6 @@ def get_ip_data(ip: str) -> IpData:
         return data
     except Exception as e:
         return IpData()
-
-
-import datetime
-from gettext import ngettext
-
-from django.db.models import Model
-from django.urls import reverse_lazy
-from django.utils.http import urlencode
-
-from app import settings
-from src.inbox.models import Conversation
-from src.media.models import Media
 
 
 def full_url(route_name, kwargs=None, query_params=None):
