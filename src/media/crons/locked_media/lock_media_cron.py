@@ -6,7 +6,7 @@ from src.media.enums import MediaEnum
 from src.media.models import Unlock
 
 
-class LockMediaTask:
+class LockMediaCron:
     def lock_media(self):
         yesterday = timezone.now() - timedelta(days=1)
         (Unlock.objects

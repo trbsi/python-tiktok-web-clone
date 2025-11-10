@@ -5,7 +5,7 @@ from src.media.crons.schedule_slots_service import ScheduleSlotsService
 from src.media.models import MediaScheduler
 
 
-class UpdateCreatorTimezoneSlotsTask:
+class UpdateCreatorTimezoneSlotsCron:
     def update_timezone_slots(self):
         """
         Runs through all timezones and updates the scheduled slots based on timezone local time and available slots

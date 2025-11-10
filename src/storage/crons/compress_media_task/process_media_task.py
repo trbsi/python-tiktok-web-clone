@@ -12,7 +12,7 @@ from src.storage.services.media_manipulation.trailer_service import TrailerServi
 from src.storage.services.remote_storage_service import RemoteStorageService
 
 
-class CompressMediaTask:
+class ProcessMediaTask:
     MEDIA_TYPE_MEDIA = 'media'
     MEDIA_TYPE_INBOX = 'inbox'
 
@@ -28,7 +28,7 @@ class CompressMediaTask:
         self.thumbnail_service = thumbnail_service or ThumbnailService()
         self.trailer_service = trailer_service or TrailerService()
 
-    def compress_media(
+    def process_media(
             self,
             media_type: str,
             media_id: int,

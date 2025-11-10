@@ -3,7 +3,6 @@ import uuid
 
 from app import settings
 from src.payment.models import PaymentHistory
-from src.payment.utils import coin_to_fiat
 from src.payment.value_objects.checkout_value_object import CheckoutValueObject
 
 
@@ -22,7 +21,7 @@ class CCBillCreateCheckoutService:
 
         ccbill = settings.CCBILL_SETTINGS
 
-        amount = coin_to_fiat(payment_history.price)
+        amount = payment_history.price
         client_account_number = ccbill.get('account_number')
         client_subaccount_number = ccbill.get('subaccount_number')
         flex_form_id = ccbill.get('flex_form_id')

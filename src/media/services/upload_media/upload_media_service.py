@@ -5,10 +5,10 @@ from django.utils import timezone
 from src.media.enums import MediaEnum
 from src.media.models import Media, MediaScheduler
 from src.media.services.hashtag.hashtag_service import HashtagService
-from src.storage.crons.compress_media_task.compress_media_task import CompressMediaTask
+from src.storage.crons.compress_media_task.process_media_task import ProcessMediaTask
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
-from src.storage.tasks import task_compress_media_task
+from src.storage.tasks import task_process_media
 from src.user.models import User, UserProfile
 
 
@@ -86,10 +86,11 @@ class UploadMediaService:
         # compress media
         transaction.on_commit(
             lambda:
-            task_compress_media_task.delay(
+            task_process_media.delay(
                 media_id=media.id,
-                media_type=CompressMediaTask.MEDIA_TYPE_MEDIA,
+                media_type=ProcessMediaTask.MEDIA_TYPE_MEDIA,
                 create_thumbnail=True,
-                create_trailer=True
+                create_trailer=True,
+                should_compress_media=False
             )
         )

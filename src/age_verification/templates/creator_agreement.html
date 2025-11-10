@@ -11,52 +11,11 @@
     </header>
 
     <div class="space-y-6">
-        <!-- Section 1 -->
-        <section class="pt-4 border-t border-gray-700">
-            <h2 class="text-lg font-medium text-gray-200">1. Age &amp; Identity Declaration</h2>
-            <p class="mt-2 text-sm text-gray-400">
-                You confirm you are at least 18 years old (or the age of majority in
-                your jurisdiction) and have completed identity verification with our approved KYC provider.
-            </p>
-        </section>
-
-        <!-- Section 2 -->
-        <section class="pt-4 border-t border-gray-700">
-            <h2 class="text-lg font-medium text-gray-200">2. Content Release &amp; Rights</h2>
-            <p class="mt-2 text-sm text-gray-400">
-                You grant us a non-exclusive, worldwide, royalty-free license to use
-                the content you produce. Content may be published under your stage name, while your legal name is stored
-                only for compliance purposes.
-            </p>
-        </section>
-
-        <!-- Section 3 -->
-        <section class="pt-4 border-t border-gray-700">
-            <h2 class="text-lg font-medium text-gray-200">3. Data Processing &amp; Privacy</h2>
-            <p class="mt-2 text-sm text-gray-400">
-                We collect and store your personal data (ID verification, agreements,
-                compliance info) for age verification, legal compliance, and payment processing. Data may be shared with
-                regulators or law enforcement if required by law.
-            </p>
-        </section>
-
-        <!-- Section 4 -->
-        <section class="pt-4 border-t border-gray-700">
-            <h2 class="text-lg font-medium text-gray-200">4. Withdrawal &amp; Termination</h2>
-            <p class="mt-2 text-sm text-gray-400">
-                You may withdraw consent for future content creation at any time.
-                Withdrawal does not require the removal of previously published content, unless required by law.
-            </p>
-        </section>
-
-        <!-- Section 5 -->
-        <section class="pt-4 border-t border-gray-700">
-            <h2 class="text-lg font-medium text-gray-200">5. Jurisdiction &amp; Governing Law</h2>
-            <p class="mt-2 text-sm text-gray-400">
-                This agreement is governed by the laws of [Insert Jurisdiction].
-                Disputes will be handled in the courts of that jurisdiction.
-            </p>
-        </section>
+        <div>
+            <a href="{% url 'legal_documents' %}?document=creator_agreement" target="_blank" class="underline pb-5">
+                Click here to read Creator Agreement
+            </a>
+        </div>
 
         <!-- Consent Form -->
         <section class="pt-6 border-t border-gray-700">

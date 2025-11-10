@@ -11,7 +11,7 @@ from src.media.enums import MediaEnum
 from src.media.models import MediaScheduler, Media
 
 
-class PublishScheduledMediaTask:
+class PublishScheduledMediaCron:
     def publish_scheduled_media(self):
         """
         Implements a round-robin content scheduler that automatically selects the next creator

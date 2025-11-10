@@ -5,7 +5,7 @@ from django.utils import timezone
 from app import settings
 
 
-class ClearTempFolderTask:
+class ClearTempFolderCron:
     def clear_temp_folder(self) -> None:
         directory = Path(f'{settings.BASE_DIR}/uploads/temp')
         now = timezone.now().timestamp()
