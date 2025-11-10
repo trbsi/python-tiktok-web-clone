@@ -33,7 +33,7 @@ def create_comment(request: HttpRequest) -> JsonResponse:
     service = CreateCommentService()
     comment: dict = service.create_comment(
         user=request.user,
-        comment=post.get('comment'),
+        comment_content=post.get('comment'),
         media_id=int(post.get('media_id'))
     )
 
