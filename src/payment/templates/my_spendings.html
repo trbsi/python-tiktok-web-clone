@@ -25,7 +25,7 @@
                     {{spending.amount_for_user}}
                     {% endif %}
                 </p>
-                <p class="text-sm text-gray-400">{{spending.action_type}}</p>
+                <p class="text-xs text-gray-400">{{spending.content_type}} (ID: {{spending.object_id}})</p>
             </div>
             <div>
                 <p class="text-gray-300 text-sm">by: {{spending.by_user.username}}</p>
