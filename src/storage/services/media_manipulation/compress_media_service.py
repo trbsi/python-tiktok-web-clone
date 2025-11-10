@@ -1,11 +1,11 @@
 import uuid
 from pathlib import Path
 
-from src.core.utils import remote_file_path_for_conversation, remote_file_path_for_media
 from src.inbox.models import Message
 from src.media.models import Media
 from src.storage.services.media_manipulation.compress_file_service import CompressFileService
 from src.storage.services.remote_storage_service import RemoteStorageService
+from src.storage.utils import remote_file_path_for_conversation, remote_file_path_for_media
 
 
 class CompressMediaService:

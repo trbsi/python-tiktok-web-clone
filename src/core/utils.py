@@ -8,8 +8,6 @@ from django.utils.http import urlencode
 
 from app import settings
 from src.core.value_object.ip_data import IpData
-from src.inbox.models import Conversation
-from src.media.models import Media
 
 
 def get_client_ip(request) -> str:
@@ -80,14 +78,6 @@ def reverse_lazy_admin(object: Model, action: str, args: list = None):
     """
     route = f'admin:{object._meta.app_label}_{object._meta.model_name}_{action}'
     return reverse_lazy(route, args=args)
-
-
-def remote_file_path_for_conversation(conversation: Conversation, file_name: str) -> str:
-    return f'conversation/{conversation.id}/{file_name}'
-
-
-def remote_file_path_for_media(media: Media, file_name: str) -> str:
-    return f'{media.file_type}/media/{media.user_id}/{file_name}'
 
 
 def format_datetime(date: datetime):

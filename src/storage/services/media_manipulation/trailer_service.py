@@ -1,9 +1,9 @@
 import subprocess
 import uuid
 
-from src.core.utils import remote_file_path_for_media
 from src.media.models import Media
 from src.storage.services.remote_storage_service import RemoteStorageService
+from src.storage.utils import remote_file_path_for_media
 
 
 class TrailerService:
