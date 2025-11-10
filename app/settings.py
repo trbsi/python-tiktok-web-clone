@@ -288,6 +288,7 @@ CCBILL_SETTINGS = {
     'salt': env('CCBILL_SALT'),
     'account_number': env('CCBILL_ACCOUNT_NUMBER'),
     'subaccount_number': env('CCBILL_SUBACCOUNT_NUMBER'),
+    'flex_form_id': env('CCBILL_FLEX_FORM_ID'),
 }
 
 LOGGING = {

@@ -8,7 +8,7 @@ from src.payment.services.spendings.spend_service import SpendService
 from src.user.models import User
 
 
-class CreateComment():
+class CreateCommentService():
     def __init__(self, spend_service: SpendService | None = None):
         self.spend_service = spend_service or SpendService()
 

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 
-from src.engagement.services.comment_create.create_comment import CreateComment
+from src.engagement.services.comment_create.create_comment_service import CreateCommentService
 from src.engagement.services.comment_list.comment_list_service import CommentListService
 from src.engagement.services.like.like_service import LikeService
 
@@ -30,7 +30,7 @@ def list_comments(request: HttpRequest, media_id: int) -> JsonResponse:
 @login_required
 def create_comment(request: HttpRequest) -> JsonResponse:
     post = json.loads(request.body)
-    service = CreateComment()
+    service = CreateCommentService()
     comment: dict = service.create_comment(
         user=request.user,
         comment=post.get('comment'),

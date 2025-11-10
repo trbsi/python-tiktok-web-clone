@@ -21,7 +21,10 @@ class SpendService:
             return SpendEnum.COMMENT_COINS.value
 
         if isinstance(object, Message):
-            return SpendEnum.TEXT_MESSAGE_COINS.value
+            if object.is_media_message():
+                return SpendEnum.MEDIA_MESSAGE_COINS.value
+            else:
+                return SpendEnum.TEXT_MESSAGE_COINS.value
 
         return 0
 
