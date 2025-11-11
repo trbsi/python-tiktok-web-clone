@@ -5,6 +5,10 @@ from src.user.models import User
 
 class CanSpendService():
     def can_spend(self, user: User, type: str) -> bool:
+        # @TODO what if people start registering as creators and do things for free?
+        if user.is_creator():
+            return True
+        
         balance = Balance.get_user_balance(user).balance
 
         if type == 'text_message' and balance < SpendEnum.TEXT_MESSAGE_COINS.value:
