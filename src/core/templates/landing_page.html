@@ -5,37 +5,36 @@
 
 <head>
     <meta charset="utf-8">
-    
+
     <!--====== Title ======-->
     <title>{{TEMPLATE_APP_NAME}}</title>
-    
+
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!--====== Favicon Icon ======-->
     <link rel="shortcut icon" href="{% static 'landing/images/favicon.ico' %}" type="image/png">
-        
 
-        
+
     <!--====== Animate CSS ======-->
     <link rel="stylesheet" href="{% static 'landing/css/animate.css' %}">
-        
 
-        
+
     <!--====== Line Icons CSS ======-->
-    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css"/>
 
 
     <!--====== Bootstrap CSS ======-->
     <link rel="stylesheet" href="{% static 'landing/css/bootstrap.4.5.2.min.css' %}">
-    
+
     <!--====== Default CSS ======-->
     <link rel="stylesheet" href="{% static 'landing/css/default.css' %}">
-    
+
     <!--====== Style CSS ======-->
     <link rel="stylesheet" href="{% static 'landing/css/style.css' %}">
 
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.js"
+            integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
 
     <style>
         .logo {
@@ -60,716 +59,240 @@
             }
         }
     </style>
-    
+
 </head>
 
 <body>
-    <!--[if IE]>
-    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-  <![endif]-->
+<!--[if IE]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade
+    your browser</a> to improve your experience and security.</p>
+<![endif]-->
 
-    <!--====== PRELOADER PART START ======-->
+<!--====== PRELOADER PART START ======-->
 
-    <div class="preloader">
-        <div class="loader">
-            <div class="ytp-spinner">
-                <div class="ytp-spinner-container">
-                    <div class="ytp-spinner-rotator">
-                        <div class="ytp-spinner-left">
-                            <div class="ytp-spinner-circle"></div>
-                        </div>
-                        <div class="ytp-spinner-right">
-                            <div class="ytp-spinner-circle"></div>
-                        </div>
+<div class="preloader">
+    <div class="loader">
+        <div class="ytp-spinner">
+            <div class="ytp-spinner-container">
+                <div class="ytp-spinner-rotator">
+                    <div class="ytp-spinner-left">
+                        <div class="ytp-spinner-circle"></div>
+                    </div>
+                    <div class="ytp-spinner-right">
+                        <div class="ytp-spinner-circle"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!--====== PRELOADER PART ENDS ======-->
-    
-    <!--====== HEADER PART START ======-->
+<!--====== PRELOADER PART ENDS ======-->
 
-    <section class="header_area">
-        <div class="header_navbar">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand logo" href="/">
-                                {{TEMPLATE_APP_NAME}}
-                            </a>
-                        </nav> <!-- navbar -->
-                    </div>
-                </div> <!-- row -->
-            </div> <!-- container -->
-        </div> <!-- header navbar -->
+<!--====== HEADER PART START ======-->
 
-        <div id="home" class="header_hero d-lg-flex align-items-center gradient-bg">
-            <img class="shape shape-1" src="{% static 'landing/images/shape-1.svg' %}" alt="shape">
-            <img class="shape shape-2" src="{% static 'landing/images/shape-2.svg' %}" alt="shape">
-            <img class="shape shape-3" src="{% static 'landing/images/shape-3.svg' %}" alt="shape">
-
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <div class="header_hero_content mt-45">
-                            <h2 class="header_title wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.2s">
-                                Automate your fan chats and posts — focus on content creation.
-                            </h2>
-                            <p class="wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.6s">
-                                The all-in-one automation tool for adult creators.
-                                Engage fans 24/7 and stay active without lifting a finger.
-                            </p>
-                        </div> <!-- header hero content -->
-                    </div>
-                </div> <!-- row -->
-            </div> <!-- container -->
-            <div class="header_image d-flex align-items-center">
-                <div class="image wow fadeInRightBig " data-wow-duration="1.3s" data-wow-delay="1.8s" style="width: 100%">
-                    <div id="mailchimp">
-                        <div id="mc_embed_shell">
-                            <link href="https://cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css">
-                            <style type="text/css">
-                                #mc_embed_signup{background:#fff; false;clear:left; font:14px Helvetica,Arial,sans-serif; width: 100%;}
-                                /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
-                                   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-                            </style>
-                            <div id="mc_embed_signup" style="background: rgba(255,255,255,0.7); border-radius: 7px;">
-                                <form action="https://swyve.us17.list-manage.com/subscribe/post?u=5d1ff345f548dfa95170a672e&amp;id=a896e6a70b&amp;f_id=002efae2f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
-                                    <div id="mc_embed_signup_scroll " style="padding-top: 10px;"><h2>Get notified when we launch</h2>
-                                        <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
-                                        <div class="mc-field-group"><label for="mce-EMAIL">Email Address <span class="asterisk">*</span></label><input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required="" value=""></div>
-                                        <div id="mce-responses" class="clear foot">
-                                            <div class="response" id="mce-error-response" style="display: none;"></div>
-                                            <div class="response" id="mce-success-response" style="display: none;"></div>
-                                        </div>
-                                        <div aria-hidden="true" style="position: absolute; left: -5000px;">
-                                            /* real people should not fill this in and expect good things - do not remove this or risk form bot signups */
-                                            <input type="text" name="b_5d1ff345f548dfa95170a672e_a896e6a70b" tabindex="-1" value="">
-                                        </div>
-                                        <div class="optionalParent">
-                                            <div class="clear foot">
-                                                <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
-                                                <p style="margin: 0px auto;"><a href="http://eepurl.com/jp2CIs" title="Mailchimp - email marketing made easy and fun"><span style="display: inline-block; background-color: transparent; border-radius: 4px;"><img class="refferal_badge" src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg" alt="Intuit Mailchimp" style="width: 220px; height: 40px; display: flex; padding: 2px 0px; justify-content: center; align-items: center;"></span></a></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <script type="text/javascript" src="https://s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script><script type="text/javascript">(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';fnames[5]='BIRTHDAY';ftypes[5]='birthday';fnames[6]='COMPANY';ftypes[6]='text';}(jQuery));var $mcj = jQuery.noConflict(true);
-                        // SMS Phone Multi-Country Functionality
-                        if(!window.MC) {
-                            window.MC = {};
-                        }
-                        window.MC.smsPhoneData = {
-                            defaultCountryCode: 'NO',
-                            programs: [],
-                            smsProgramDataCountryNames: []
-                        };
-
-                        function getCountryUnicodeFlag(countryCode) {
-                            return countryCode.toUpperCase().replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-                        };
-
-                        // HTML sanitization function to prevent XSS
-                        function sanitizeHtml(str) {
-                            if (typeof str !== 'string') return '';
-                            return str
-                                .replace(/&/g, '&amp;')
-                                .replace(/</g, '&lt;')
-                                .replace(/>/g, '&gt;')
-                                .replace(/"/g, '&quot;')
-                                .replace(/'/g, '&#x27;')
-                                .replace(/\//g, '&#x2F;');
-                        }
-
-                        // URL sanitization function to prevent javascript: and data: URLs
-                        function sanitizeUrl(url) {
-                            if (typeof url !== 'string') return '';
-                            const trimmedUrl = url.trim().toLowerCase();
-                            if (trimmedUrl.startsWith('javascript:') || trimmedUrl.startsWith('data:') || trimmedUrl.startsWith('vbscript:')) {
-                                return '#';
-                            }
-                            return url;
-                        }
-
-                        const getBrowserLanguage = () => {
-                            if (!window?.navigator?.language?.split('-')[1]) {
-                                return window?.navigator?.language?.toUpperCase();
-                            }
-                            return window?.navigator?.language?.split('-')[1];
-                        };
-
-                        function getDefaultCountryProgram(defaultCountryCode, smsProgramData) {
-                            if (!smsProgramData || smsProgramData.length === 0) {
-                                return null;
-                            }
-
-                            const browserLanguage = getBrowserLanguage();
-
-                            if (browserLanguage) {
-                                const foundProgram = smsProgramData.find(
-                                    (program) => program?.countryCode === browserLanguage,
-                                );
-                                if (foundProgram) {
-                                    return foundProgram;
-                                }
-                            }
-
-                            if (defaultCountryCode) {
-                                const foundProgram = smsProgramData.find(
-                                    (program) => program?.countryCode === defaultCountryCode,
-                                );
-                                if (foundProgram) {
-                                    return foundProgram;
-                                }
-                            }
-
-                            return smsProgramData[0];
-                        }
-
-                        function updateSmsLegalText(countryCode, fieldName) {
-                            if (!countryCode || !fieldName) {
-                                return;
-                            }
-
-                            const programs = window?.MC?.smsPhoneData?.programs;
-                            if (!programs || !Array.isArray(programs)) {
-                                return;
-                            }
-
-                            const program = programs.find(program => program?.countryCode === countryCode);
-                            if (!program || !program.requiredTemplate) {
-                                return;
-                            }
-
-                            const legalTextElement = document.querySelector('#legal-text-' + fieldName);
-                            if (!legalTextElement) {
-                                return;
-                            }
-
-                            // Remove HTML tags and clean up the text
-                            const divRegex = new RegExp('</?[div][^>]*>', 'gi');
-                            const fullAnchorRegex = new RegExp('<a.*?</a>', 'g');
-                            const anchorRegex = new RegExp('<a href="(.*?)" target="(.*?)">(.*?)</a>');
-
-                            const requiredLegalText = program.requiredTemplate
-                                .replace(divRegex, '')
-                                .replace(fullAnchorRegex, '')
-                                .slice(0, -1);
-
-                            const anchorMatches = program.requiredTemplate.match(anchorRegex);
-
-                            if (anchorMatches && anchorMatches.length >= 4) {
-                                // Create link element safely using DOM methods instead of innerHTML
-                                const linkElement = document.createElement('a');
-                                linkElement.href = sanitizeUrl(anchorMatches[1]);
-                                linkElement.target = sanitizeHtml(anchorMatches[2]);
-                                linkElement.textContent = sanitizeHtml(anchorMatches[3]);
-
-                                legalTextElement.textContent = requiredLegalText + ' ';
-                                legalTextElement.appendChild(linkElement);
-                                legalTextElement.appendChild(document.createTextNode('.'));
-                            } else {
-                                legalTextElement.textContent = requiredLegalText + '.';
-                            }
-                        }
-
-                        function generateDropdownOptions(smsProgramData) {
-                            if (!smsProgramData || smsProgramData.length === 0) {
-                                return '';
-                            }
-
-                            return smsProgramData.map(program => {
-                                const flag = getCountryUnicodeFlag(program.countryCode);
-                                const countryName = getCountryName(program.countryCode);
-                                const callingCode = program.countryCallingCode || '';
-                                // Sanitize all values to prevent XSS
-                                const sanitizedCountryCode = sanitizeHtml(program.countryCode || '');
-                                const sanitizedCountryName = sanitizeHtml(countryName || '');
-                                const sanitizedCallingCode = sanitizeHtml(callingCode || '');
-                                return '<option value="' + sanitizedCountryCode + '">' + sanitizedCountryName + ' ' + sanitizedCallingCode + '</option>';
-                            }).join('');
-                        }
-
-                        function getCountryName(countryCode) {
-                            if (window.MC?.smsPhoneData?.smsProgramDataCountryNames && Array.isArray(window.MC.smsPhoneData.smsProgramDataCountryNames)) {
-                                for (let i = 0; i < window.MC.smsPhoneData.smsProgramDataCountryNames.length; i++) {
-                                    if (window.MC.smsPhoneData.smsProgramDataCountryNames[i].code === countryCode) {
-                                        return window.MC.smsPhoneData.smsProgramDataCountryNames[i].name;
-                                    }
-                                }
-                            }
-                            return countryCode;
-                        }
-
-                        function getDefaultPlaceholder(countryCode) {
-                            if (!countryCode || typeof countryCode !== 'string') {
-                                return '+1 000 000 0000'; // Default US placeholder
-                            }
-
-                            const mockPlaceholders = [
-                                {
-                                    countryCode: 'US',
-                                    placeholder: '+1 000 000 0000',
-                                    helpText: 'Include the US country code +1 before the phone number',
-                                },
-                                {
-                                    countryCode: 'GB',
-                                    placeholder: '+44 0000 000000',
-                                    helpText: 'Include the GB country code +44 before the phone number',
-                                },
-                                {
-                                    countryCode: 'CA',
-                                    placeholder: '+1 000 000 0000',
-                                    helpText: 'Include the CA country code +1 before the phone number',
-                                },
-                                {
-                                    countryCode: 'AU',
-                                    placeholder: '+61 000 000 000',
-                                    helpText: 'Include the AU country code +61 before the phone number',
-                                },
-                                {
-                                    countryCode: 'DE',
-                                    placeholder: '+49 000 0000000',
-                                    helpText: 'Fügen Sie vor der Telefonnummer die DE-Ländervorwahl +49 ein',
-                                },
-                                {
-                                    countryCode: 'FR',
-                                    placeholder: '+33 0 00 00 00 00',
-                                    helpText: 'Incluez le code pays FR +33 avant le numéro de téléphone',
-                                },
-                                {
-                                    countryCode: 'ES',
-                                    placeholder: '+34 000 000 000',
-                                    helpText: 'Incluya el código de país ES +34 antes del número de teléfono',
-                                },
-                                {
-                                    countryCode: 'NL',
-                                    placeholder: '+31 0 00000000',
-                                    helpText: 'Voeg de NL-landcode +31 toe vóór het telefoonnummer',
-                                },
-                                {
-                                    countryCode: 'BE',
-                                    placeholder: '+32 000 00 00 00',
-                                    helpText: 'Incluez le code pays BE +32 avant le numéro de téléphone',
-                                },
-                                {
-                                    countryCode: 'CH',
-                                    placeholder: '+41 00 000 00 00',
-                                    helpText: 'Fügen Sie vor der Telefonnummer die CH-Ländervorwahl +41 ein',
-                                },
-                                {
-                                    countryCode: 'AT',
-                                    placeholder: '+43 000 000 0000',
-                                    helpText: 'Fügen Sie vor der Telefonnummer die AT-Ländervorwahl +43 ein',
-                                },
-                                {
-                                    countryCode: 'IE',
-                                    placeholder: '+353 00 000 0000',
-                                    helpText: 'Include the IE country code +353 before the phone number',
-                                },
-                                {
-                                    countryCode: 'IT',
-                                    placeholder: '+39 000 000 0000',
-                                    helpText:
-                                        'Includere il prefisso internazionale IT +39 prima del numero di telefono',
-                                },
-                            ];
-
-                            const selectedPlaceholder = mockPlaceholders.find(function(item) {
-                                return item && item.countryCode === countryCode;
-                            });
-
-                            return selectedPlaceholder ? selectedPlaceholder.placeholder : mockPlaceholders[0].placeholder;
-                        }
-
-                        function updatePlaceholder(countryCode, fieldName) {
-                            if (!countryCode || !fieldName) {
-                                return;
-                            }
-
-                            const phoneInput = document.querySelector('#mce-' + fieldName);
-                            if (!phoneInput) {
-                                return;
-                            }
-
-                            const placeholder = getDefaultPlaceholder(countryCode);
-                            if (placeholder) {
-                                phoneInput.placeholder = placeholder;
-                            }
-                        }
-
-                        function updateCountryCodeInstruction(countryCode, fieldName) {
-                            updatePlaceholder(countryCode, fieldName);
-
-                        }
-
-                        function getDefaultHelpText(countryCode) {
-                            const mockPlaceholders = [
-                                {
-                                    countryCode: 'US',
-                                    placeholder: '+1 000 000 0000',
-                                    helpText: 'Include the US country code +1 before the phone number',
-                                },
-                                {
-                                    countryCode: 'GB',
-                                    placeholder: '+44 0000 000000',
-                                    helpText: 'Include the GB country code +44 before the phone number',
-                                },
-                                {
-                                    countryCode: 'CA',
-                                    placeholder: '+1 000 000 0000',
-                                    helpText: 'Include the CA country code +1 before the phone number',
-                                },
-                                {
-                                    countryCode: 'AU',
-                                    placeholder: '+61 000 000 000',
-                                    helpText: 'Include the AU country code +61 before the phone number',
-                                },
-                                {
-                                    countryCode: 'DE',
-                                    placeholder: '+49 000 0000000',
-                                    helpText: 'Fügen Sie vor der Telefonnummer die DE-Ländervorwahl +49 ein',
-                                },
-                                {
-                                    countryCode: 'FR',
-                                    placeholder: '+33 0 00 00 00 00',
-                                    helpText: 'Incluez le code pays FR +33 avant le numéro de téléphone',
-                                },
-                                {
-                                    countryCode: 'ES',
-                                    placeholder: '+34 000 000 000',
-                                    helpText: 'Incluya el código de país ES +34 antes del número de teléfono',
-                                },
-                                {
-                                    countryCode: 'NL',
-                                    placeholder: '+31 0 00000000',
-                                    helpText: 'Voeg de NL-landcode +31 toe vóór het telefoonnummer',
-                                },
-                                {
-                                    countryCode: 'BE',
-                                    placeholder: '+32 000 00 00 00',
-                                    helpText: 'Incluez le code pays BE +32 avant le numéro de téléphone',
-                                },
-                                {
-                                    countryCode: 'CH',
-                                    placeholder: '+41 00 000 00 00',
-                                    helpText: 'Fügen Sie vor der Telefonnummer die CH-Ländervorwahl +41 ein',
-                                },
-                                {
-                                    countryCode: 'AT',
-                                    placeholder: '+43 000 000 0000',
-                                    helpText: 'Fügen Sie vor der Telefonnummer die AT-Ländervorwahl +43 ein',
-                                },
-                                {
-                                    countryCode: 'IE',
-                                    placeholder: '+353 00 000 0000',
-                                    helpText: 'Include the IE country code +353 before the phone number',
-                                },
-                                {
-                                    countryCode: 'IT',
-                                    placeholder: '+39 000 000 0000',
-                                    helpText: 'Includere il prefisso internazionale IT +39 prima del numero di telefono',
-                                },
-                            ];
-
-                            if (!countryCode || typeof countryCode !== 'string') {
-                                return mockPlaceholders[0].helpText;
-                            }
-
-                            const selectedHelpText = mockPlaceholders.find(function(item) {
-                                return item && item.countryCode === countryCode;
-                            });
-
-                            return selectedHelpText ? selectedHelpText.helpText : mockPlaceholders[0].helpText;
-                        }
-
-                        function setDefaultHelpText(countryCode) {
-                            const helpTextSpan = document.querySelector('#help-text');
-                            if (!helpTextSpan) {
-                                return;
-                            }
-
-
-                        }
-
-                        function updateHelpTextCountryCode(countryCode, fieldName) {
-                            if (!countryCode || !fieldName) {
-                                return;
-                            }
-
-                            setDefaultHelpText(countryCode);
-                        }
-
-                        function initializeSmsPhoneDropdown(fieldName) {
-                            if (!fieldName || typeof fieldName !== 'string') {
-                                return;
-                            }
-
-                            const dropdown = document.querySelector('#country-select-' + fieldName);
-                            const displayFlag = document.querySelector('#flag-display-' + fieldName);
-
-                            if (!dropdown || !displayFlag) {
-                                return;
-                            }
-
-                            const smsPhoneData = window.MC?.smsPhoneData;
-                            if (smsPhoneData && smsPhoneData.programs && Array.isArray(smsPhoneData.programs)) {
-                                dropdown.innerHTML = generateDropdownOptions(smsPhoneData.programs);
-                            }
-
-                            const defaultProgram = getDefaultCountryProgram(smsPhoneData?.defaultCountryCode, smsPhoneData?.programs);
-                            if (defaultProgram && defaultProgram.countryCode) {
-                                dropdown.value = defaultProgram.countryCode;
-
-                                const flagSpan = displayFlag?.querySelector('#flag-emoji-' + fieldName);
-                                if (flagSpan) {
-                                    flagSpan.textContent = getCountryUnicodeFlag(defaultProgram.countryCode);
-                                    flagSpan.setAttribute('aria-label', sanitizeHtml(defaultProgram.countryCode) + ' flag');
-                                }
-
-                                updateSmsLegalText(defaultProgram.countryCode, fieldName);
-                                updatePlaceholder(defaultProgram.countryCode, fieldName);
-                                updateCountryCodeInstruction(defaultProgram.countryCode, fieldName);
-                            }
-
-
-                            var phoneInput = document.querySelector('#mce-' + fieldName);
-                            if (phoneInput && defaultProgram.countryCallingCode) {
-                                phoneInput.value = defaultProgram.countryCallingCode;
-                            }
-
-
-
-                            displayFlag?.addEventListener('click', function(e) {
-                                dropdown.focus();
-                            });
-
-
-                            dropdown?.addEventListener('change', function() {
-                                const selectedCountry = this.value;
-
-                                if (!selectedCountry || typeof selectedCountry !== 'string') {
-                                    return;
-                                }
-
-                                const flagSpan = displayFlag?.querySelector('#flag-emoji-' + fieldName);
-                                if (flagSpan) {
-                                    flagSpan.textContent = getCountryUnicodeFlag(selectedCountry);
-                                    flagSpan.setAttribute('aria-label', sanitizeHtml(selectedCountry) + ' flag');
-                                }
-
-
-                                const selectedProgram = window.MC?.smsPhoneData?.programs.find(function(program) {
-                                    return program && program.countryCode === selectedCountry;
-                                });
-                                var phoneInput = document.querySelector('#mce-' + fieldName);
-                                if (phoneInput && selectedProgram.countryCallingCode) {
-                                    phoneInput.value = selectedProgram.countryCallingCode;
-                                }
-
-
-                                updateSmsLegalText(selectedCountry, fieldName);
-                                updatePlaceholder(selectedCountry, fieldName);
-                                updateCountryCodeInstruction(selectedCountry, fieldName);
-                            });
-                        }
-
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const smsPhoneFields = document.querySelectorAll('[id^="country-select-"]');
-
-                            smsPhoneFields.forEach(function(dropdown) {
-                                const fieldName = dropdown?.id.replace('country-select-', '');
-                                initializeSmsPhoneDropdown(fieldName);
-                            });
-                        });
-                        </script></div>
-
-                    </div>
-                    <img src="{% static 'landing/images/dots.svg' %}" alt="dots" class="dots">
-                </div> <!-- image -->
-            </div> <!-- header image -->
-        </div> <!-- header hero -->
-    </section>
-
-    <!--====== HEADER PART ENDS ======-->
-
-    <!--====== FEATURES PART START ======-->
-
-    <section id="features" class="features_area pt-35 pb-80">
+<section class="header_area">
+    <div class="header_navbar">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="single_features mt-30 features_1 text-center wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">
-                        <div class="features_icon">
-                            <i class="lni lni-message-2"></i>
-                        </div>
-                        <div class="features_content">
-                            <h4 class="features_title">Auto Replies</h4>
-                            <p>Constantly replying to fans manually</p>
-                        </div>
-                    </div> <!-- single featuresow -->
-                </div>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="single_features mt-30 features_2 text-center wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.5s">
-                        <div class="features_icon">
-                            <i class="lni lni-camera-movie-1"></i>
-                        </div>
-                        <div class="features_content">
-                            <h4 class="features_title">Auto Posting</h4>
-                            <p>Forgetting to post or losing momentum</p>
-                        </div>
-                    </div> <!-- single featuresow -->
-                </div>
-                <div class="col-lg-4 col-md-7 col-sm-8">
-                    <div class="single_features mt-30 features_3 text-center wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.9s">
-                        <div class="features_icon">
-                            <i class="lni lni-hourglass"></i>
-                        </div>
-                        <div class="features_content">
-                            <h4 class="features_title">Save time</h4>
-                            <p>Spending more time managing than creating</p>
-                        </div>
-                    </div> <!-- single featuresow -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg">
+                        <a class="navbar-brand logo" href="/">
+                            {{TEMPLATE_APP_NAME}}
+                        </a>
+                    </nav> <!-- navbar -->
                 </div>
             </div> <!-- row -->
         </div> <!-- container -->
-    </section>
+    </div> <!-- header navbar -->
 
-    <!--====== FEATURES PART ENDS ======-->
+    <div id="home" class="header_hero d-lg-flex align-items-center gradient-bg">
+        <img class="shape shape-1" src="{% static 'landing/images/shape-1.svg' %}" alt="shape">
+        <img class="shape shape-2" src="{% static 'landing/images/shape-2.svg' %}" alt="shape">
+        <img class="shape shape-3" src="{% static 'landing/images/shape-3.svg' %}" alt="shape">
 
-    <!--====== ABOUT PART START ======-->
-
-    <section id="about" class="about_area pt-30 pb-30">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6 col-md-9">
-                    <div class="about_image mt-50 wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
-                        <img class="image" src="{% static 'landing/images/about.png' %}" alt="about">
-                        <img class="dots" src="{% static 'landing/images/dots.svg' %}" alt="dots">
-                    </div> <!-- about image -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </section>
-
-    <!--====== ABOUT PART ENDS ======-->
-
-    <!--====== APP FEATURES PART START ======-->
-
-    <section id="app_features">
-
-    </section>
-
-    <!--====== APP FEATURES PART ENDS ======-->
-
-    <!--====== VIDEO PART START ======-->
-
-
-
-    <!--====== PRICNG PART START ======-->
-
-    <section id="pricing" class="pricing_area mt-80 pt-30 pb-80">
-        <div class="container">
-            <div class="row justify-content-center">
                 <div class="col-lg-6">
-                    <div class="section_title text-center pb-25">
-                        <h4 class="title">Main features</h4>
-                    </div> <!-- section title -->
-                </div>
-            </div> <!-- row -->
-            <div class="row justify-content-center">
-                <div class="col-lg-4 col-md-8 col-sm-10">
-                    <div class="single_pricing text-center pricing_color_1 mt-30 wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.2s">
-                        <div class="pricing_top_bar mb-5">
-                            <h5 class="pricing_title">Message Automation</h5>
-                            <i class="lni lni-message-2"></i>
-                        </div>
-                        <div class="pricing_list">
-                            <ul>
-                                <li>AI trained to sext for you</li>
-                                <li>Boosts engagement and fan loyalty</li>
-                                <li>Instant replies = more tips and conversations</li>
-                            </ul>
-                        </div>
-                    </div>  <!-- single pricing -->
-                </div>
-                <div class="col-lg-4 col-md-8 col-sm-10">
-                    <div class="single_pricing text-center pricing_active pricing_color_2 mt-30 wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.5s">
-                        <div class="pricing_top_bar mb-5">
-                            <h5 class="pricing_title">Smart Auto-Posting</h5>
-                            <i class="lni lni-camera-movie-1"></i>
-                        </div>
-                        <div class="pricing_list">
-                            <ul>
-                                <li> Upload once, we handle scheduling</li>
-                                <li> Recycle top-performing content automatically</li>
-                                <li>Never miss the best posting times</li>
-                            </ul>
-                        </div>
-                    </div>  <!-- single pricing -->
+                    <div class="header_hero_content mt-45">
+                        <h2 class="header_title wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.2s">
+                            Automate your fan chats and posts — focus on content creation.
+                        </h2>
+                        <p class="wow fadeInLeftBig" data-wow-duration="1.3s" data-wow-delay="0.6s">
+                            The all-in-one automation tool for adult creators.
+                            Engage fans 24/7 and stay active without lifting a finger.
+                        </p>
+                    </div> <!-- header hero content -->
                 </div>
             </div> <!-- row -->
         </div> <!-- container -->
-    </section>
-
-    <!--====== PRICNG PART ENDS ======-->
-
-    <!--====== DOWNLOAD APP PART START ======-->
-
-    <section id="download" class="download_app_area pt-80 mb-80">
-        <div class="container">
-            <div class="download_app">
-                <div class="download_shape">
-                    <img src="{% static 'landing/images/shape-5.svg' %}" alt="shape">
-                </div>
-                <div class="download_shape_2">
-                    <img src="{% static 'landing/images/shape-6.png' %}" alt="shape">
-                </div>
-                <div class="download_app_content">
-                    <h3 class="download_title">More time. More money. More freedom</h3>
-                    <p>Creators using our automation tools save hours daily and see higher engagement.</p>
-                    <p>Unlike other fan platforms or schedulers, we’re the only automation tool built specifically for adult creators — combining AI chat and posting into one simple system</p>
-                </div>  <!-- download app content -->
-            </div> <!-- download app -->
-        </div> <!-- container -->
-        <div class="download_app_image d-none d-lg-flex align-items-end">
-            <div class="image wow fadeInRightBig" data-wow-duration="1.3s" data-wow-delay="0.5s">
-                <img src="{% static 'landing/images/download.png' %}" alt="download">
+        <div class="header_image d-flex align-items-center">
+            <div class="image wow fadeInRightBig " data-wow-duration="1.3s" data-wow-delay="1.8s" style="width: 100%">
+                <img src="{% static 'landing/images/dots.svg' %}" alt="dots" class="dots">
             </div> <!-- image -->
-        </div> <!-- download app image -->
-    </section>
+        </div> <!-- header image -->
+    </div> <!-- header hero -->
+</section>
 
-    <!--====== DOWNLOAD APP PART ENDS ======-->
+<!--====== HEADER PART ENDS ======-->
+
+<!--====== FEATURES PART START ======-->
+
+<section id="features" class="features_area pt-35 pb-80">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="single_features mt-30 features_1 text-center wow fadeInUp" data-wow-duration="1.3s"
+                     data-wow-delay="0.2s">
+                    <div class="features_icon">
+                        <i class="lni lni-message-2"></i>
+                    </div>
+                    <div class="features_content">
+                        <h4 class="features_title">Auto Replies</h4>
+                        <p>Constantly replying to fans manually</p>
+                    </div>
+                </div> <!-- single featuresow -->
+            </div>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="single_features mt-30 features_2 text-center wow fadeInUp" data-wow-duration="1.3s"
+                     data-wow-delay="0.5s">
+                    <div class="features_icon">
+                        <i class="lni lni-camera-movie-1"></i>
+                    </div>
+                    <div class="features_content">
+                        <h4 class="features_title">Auto Posting</h4>
+                        <p>Forgetting to post or losing momentum</p>
+                    </div>
+                </div> <!-- single featuresow -->
+            </div>
+            <div class="col-lg-4 col-md-7 col-sm-8">
+                <div class="single_features mt-30 features_3 text-center wow fadeInUp" data-wow-duration="1.3s"
+                     data-wow-delay="0.9s">
+                    <div class="features_icon">
+                        <i class="lni lni-hourglass"></i>
+                    </div>
+                    <div class="features_content">
+                        <h4 class="features_title">Save time</h4>
+                        <p>Spending more time managing than creating</p>
+                    </div>
+                </div> <!-- single featuresow -->
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
+</section>
+
+<!--====== FEATURES PART ENDS ======-->
 
 
-    <!--====== FOOTER PART START ======-->
+<!--====== APP FEATURES PART START ======-->
 
-    <section id="footer" class="footer_area pt-10 pb-25">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-7">
+<section id="app_features">
 
-                    <div class="footer_copyright text-center mt-55">
-                        <p>Copyright &copy; 2025 {{TEMPLATE_APP_NAME}}</p>
-                    </div> <!-- footer copyright -->
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </section>
+</section>
 
-    <!--====== FOOTER PART ENDS ======-->
-    
-    <!--====== BACK TOP TOP PART START ======-->
+<!--====== APP FEATURES PART ENDS ======-->
 
-    <a href="#" class="back-to-top"><i class="lni lni-chevron-up"></i></a>
+<!--====== VIDEO PART START ======-->
 
-    <!--====== BACK TOP TOP PART ENDS ======-->
-    
-    <!--====== PART START ======-->
+
+<!--====== PRICNG PART START ======-->
+
+<section id="pricing" class="pricing_area mt-80 pt-30 pb-80">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="section_title text-center pb-25">
+                    <h4 class="title">Main features</h4>
+                </div> <!-- section title -->
+            </div>
+        </div> <!-- row -->
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-8 col-sm-10">
+                <div class="single_pricing text-center pricing_color_1 mt-30 wow fadeInUp" data-wow-duration="1.3s"
+                     data-wow-delay="0.2s">
+                    <div class="pricing_top_bar mb-5">
+                        <h5 class="pricing_title">Message Automation</h5>
+                        <i class="lni lni-message-2"></i>
+                    </div>
+                    <div class="pricing_list">
+                        <ul>
+                            <li>AI trained to sext for you</li>
+                            <li>Boosts engagement and fan loyalty</li>
+                            <li>Instant replies = more tips and conversations</li>
+                        </ul>
+                    </div>
+                </div>  <!-- single pricing -->
+            </div>
+            <div class="col-lg-4 col-md-8 col-sm-10">
+                <div class="single_pricing text-center pricing_active pricing_color_2 mt-30 wow fadeInUp"
+                     data-wow-duration="1.3s" data-wow-delay="0.5s">
+                    <div class="pricing_top_bar mb-5">
+                        <h5 class="pricing_title">Smart Auto-Posting</h5>
+                        <i class="lni lni-camera-movie-1"></i>
+                    </div>
+                    <div class="pricing_list">
+                        <ul>
+                            <li> Upload once, we handle scheduling</li>
+                            <li> Recycle top-performing content automatically</li>
+                            <li>Never miss the best posting times</li>
+                        </ul>
+                    </div>
+                </div>  <!-- single pricing -->
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
+</section>
+
+<!--====== PRICNG PART ENDS ======-->
+
+<!--====== DOWNLOAD APP PART START ======-->
+
+<section id="download" class="download_app_area pt-80 mb-80">
+    <div class="container">
+        <div class="download_app">
+            <div class="download_shape">
+                <img src="{% static 'landing/images/shape-5.svg' %}" alt="shape">
+            </div>
+            <div class="download_shape_2">
+                <img src="{% static 'landing/images/shape-6.png' %}" alt="shape">
+            </div>
+            <div class="download_app_content">
+                <h3 class="download_title">More time. More money. More freedom</h3>
+                <p>Creators using our automation tools save hours daily and see higher engagement.</p>
+                <p>Unlike other fan platforms or schedulers, we’re the only automation tool built specifically for adult
+                    creators — combining AI chat and posting into one simple system</p>
+            </div>  <!-- download app content -->
+        </div> <!-- download app -->
+    </div> <!-- container -->
+</section>
+
+<!--====== DOWNLOAD APP PART ENDS ======-->
+
+
+<!--====== FOOTER PART START ======-->
+
+<section id="footer" class="footer_area pt-10 pb-25">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+
+                <div class="footer_copyright text-center mt-55">
+                    <p>Copyright &copy; 2025 {{TEMPLATE_APP_NAME}}</p>
+                </div> <!-- footer copyright -->
+            </div>
+        </div> <!-- row -->
+    </div> <!-- container -->
+</section>
+
+<!--====== FOOTER PART ENDS ======-->
+
+<!--====== BACK TOP TOP PART START ======-->
+
+<a href="#" class="back-to-top"><i class="lni lni-chevron-up"></i></a>
+
+<!--====== BACK TOP TOP PART ENDS ======-->
+
+<!--====== PART START ======-->
 
 <!--
     <section class="">
@@ -783,31 +306,28 @@
     </section>
 -->
 
-    <!--====== PART ENDS ======-->
-    
+<!--====== PART ENDS ======-->
 
 
+<!--====== Jquery js ======-->
+<script src="{% static 'landing/js/vendor/jquery-1.12.4.min.js' %}"></script>
+<script src="{% static 'landing/js/vendor/modernizr-3.7.1.min.js' %}"></script>
+
+<!--====== Bootstrap js ======-->
+<script src="{% static 'landing/js/popper.min.js' %}"></script>
+<script src="{% static 'landing/js/bootstrap.4.5.2.min.js' %}"></script>
 
 
-    <!--====== Jquery js ======-->
-    <script src="{% static 'landing/js/vendor/jquery-1.12.4.min.js' %}"></script>
-    <script src="{% static 'landing/js/vendor/modernizr-3.7.1.min.js' %}"></script>
-    
-    <!--====== Bootstrap js ======-->
-    <script src="{% static 'landing/js/popper.min.js' %}"></script>
-    <script src="{% static 'landing/js/bootstrap.4.5.2.min.js' %}"></script>
+<!--====== Scrolling Nav js ======-->
+<script src="{% static 'landing/js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'landing/js/scrolling-nav.js' %}"></script>
 
-    
-    <!--====== Scrolling Nav js ======-->
-    <script src="{% static 'landing/js/jquery.easing.min.js' %}"></script>
-    <script src="{% static 'landing/js/scrolling-nav.js' %}"></script>
-    
-    <!--====== wow js ======-->
-    <script src="{% static 'landing/js/wow.min.js' %}"></script>
-    
-    <!--====== Main js ======-->
-    <script src="{% static 'landing/js/main.js' %}"></script>
-    
+<!--====== wow js ======-->
+<script src="{% static 'landing/js/wow.min.js' %}"></script>
+
+<!--====== Main js ======-->
+<script src="{% static 'landing/js/main.js' %}"></script>
+
 </body>
 
 </html>
