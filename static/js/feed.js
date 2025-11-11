@@ -29,7 +29,6 @@ function mediaFeed(
         showReportForm: false,
         reportDescription: "",
         reportTarget: null, // store the media being reported,
-        currentActiveIndex: 0,
         isAuthenticated,
 
 
@@ -183,9 +182,7 @@ function mediaFeed(
                 const index = parseInt(best.target.getAttribute('data-index'));
                 const mediaElement = best.target;
                 const mediaData = this.mediaList[index];
-                if (best.intersectionRatio >= 0.8 && this.currentActiveIndex !== best.target.dataset.index) {
-                    this.currentActiveIndex = best.target.dataset.index;
-
+                if (best.isIntersecting && best.intersectionRatio >= 0.5) {
                     // pause other videos, play this one
                     this.currentIndex = index;
 
@@ -196,19 +193,16 @@ function mediaFeed(
                     this.trackMediaView(mediaElement, mediaData);
 
                     // Play video
+                    this.pauseAll();
                     this.playAtIndex(index);
 
                     // if we are 5th before end, load more
                     if (this.mediaList.length - index < 5) {
                         this.loadMore();
                     }
-                } else {
-                    // not enough visible
-                    // optional: pause
-                    this.pauseAtIndex(index)
                 }
             }, {
-                threshold: [0, 0.25, 0.5, 0.6, 0.75, 1]
+                 threshold: Array.from({ length: 21 }, (_, i) => i / 20), // 0 → 1 in 0.05 steps
             });
 
             // observe all current media nodes
