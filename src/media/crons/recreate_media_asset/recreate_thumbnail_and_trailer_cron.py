@@ -16,7 +16,7 @@ class RecreateThumbnailAndTrailerCron:
 
         for single_media in media:
             task_process_media.delay(
-                media_id=media.id,
+                media_id=single_media.id,
                 media_type=ProcessMediaTask.MEDIA_TYPE_MEDIA,
                 create_thumbnail=True if single_media.file_thumbnail is None else False,
                 create_trailer=True if single_media.file_trailer is None else False,

@@ -53,6 +53,7 @@ class PublishScheduledMediaCron:
             if not next_creators.exists():
                 continue
 
+            print(f'Publishing {next_creators.count()} for {scheduled_media.timezone}')
             self._start_publishing(next_creators, scheduled_media)
 
     def _start_publishing(
