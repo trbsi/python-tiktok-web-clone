@@ -16,6 +16,7 @@ services:
       - ./nginx/vhost.d:/etc/nginx/vhost.d
       - ./nginx/html:/usr/share/nginx/html
       - my_app_static_volume:/app/staticfiles:ro
+      - my_app_media_volume:/app/uploads
 
   my-app-nginx-proxy-acme:
     image: nginxproxy/acme-companion
