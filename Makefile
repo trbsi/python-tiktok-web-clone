@@ -7,7 +7,7 @@ migrate:
 	docker exec -it my-app-web python manage.py migrate
 
 collectstatic:
-	docker exec -it my-app-web python manage.py collectstatic
+	docker exec -it my-app-web python manage.py collectstatic --clear --noinput
 
 seeddatabase:
 	docker exec -it my-app-web python manage.py seed_database_command local --truncate
