@@ -90,7 +90,7 @@ function mediaFeed(
             var $feed = $('#feed');
             var $containers = $feed.find('.media-container');
             var total = $containers.length;
-            var index = 0;
+            var index = this.currentIndex;
             var isAnimating = false;
             var threshold = 50;
             var duration = 150; // animation duration in ms
@@ -147,9 +147,6 @@ function mediaFeed(
             $(window).on('resize', function() {
                 $feed.scrollTop(index * $containers.first().outerHeight());
             });
-
-            // Initial position
-            $feed.scrollTop(0);
         },
 
         getMedia() {
