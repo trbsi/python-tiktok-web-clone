@@ -182,7 +182,7 @@ function mediaFeed(
                 const index = parseInt(best.target.getAttribute('data-index'));
                 const mediaElement = best.target;
                 const mediaData = this.mediaList[index];
-                if (best.isIntersecting && best.intersectionRatio >= 0.5) {
+                if (best.isIntersecting && best.intersectionRatio >= 0.5 && this.currentIndex !== index) {
                     // pause other videos, play this one
                     this.currentIndex = index;
 
