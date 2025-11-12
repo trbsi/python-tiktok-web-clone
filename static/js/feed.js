@@ -225,10 +225,6 @@ function mediaFeed(
                                 console.log(e)
                             });
                             media.loop = true;
-                        } else {
-                            media.pause();
-                            media.currentTime = 0; // optional: rewind off-screen videos
-                            this.progressBar[i] = 0;
                         }
                     } catch (e) {
                         console.error(e);
@@ -407,7 +403,7 @@ function mediaFeed(
             const text = this.commentInput.trim();
             if (!text) return;
 
-            result = await this.$utils.canSpend('comment');
+            result = await canSpend('comment');
             if (result['ok'] === false) {
                 toastr.warning(result['error']);
                 return;
@@ -544,7 +540,7 @@ function mediaFeed(
                     type = 'media_video';
                     break;
             }
-            result = await this.$utils.canSpend(type);
+            result = await canSpend(type);
             if (result['ok'] === false) {
                 toastr.warning(result['error']);
                 return;
@@ -575,11 +571,9 @@ function mediaFeed(
                 // Replace the media file (video or image)
                 const el = this.getSingleMedia(index);
                 if (el) {
+                    el.src = data.full_url;
                     if (el.tagName.toLowerCase() === 'video') {
-                        el.src = data.full_url;
                         el.play();
-                    } else if (el.tagName.toLowerCase() === 'img') {
-                        el.src = data.full_url;
                     }
                 }
 

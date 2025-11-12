@@ -41,18 +41,6 @@ def my_spendings(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 @login_required
-def api_get_balance(request: HttpRequest) -> JsonResponse:
-    user: User = request.user
-    balance: Balance = Balance.objects.get(user=user)
-    status = 'ok'
-    if balance.balance < 100:
-        status = 'low_balance'
-
-    return JsonResponse({'balance': balance.balance, 'status': status})
-
-
-@require_GET
-@login_required
 def list_packages(request: HttpRequest) -> HttpResponse:
     context = {
         'packages': Package.objects.all(),
@@ -82,6 +70,21 @@ def payment_webhook(request: HttpRequest) -> JsonResponse:
     return JsonResponse({})
 
 
+@require_GET
+@login_required
+def api_get_balance(request: HttpRequest) -> JsonResponse:
+    try:
+        user: User = request.user
+        balance: Balance = Balance.objects.get(user=user)
+        status = 'ok'
+        if balance.balance < 100:
+            status = 'low_balance'
+
+        return JsonResponse({'balance': balance.balance, 'status': status})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=404)
+
+
 @require_POST
 def api_can_purchase(request: HttpRequest) -> JsonResponse:
     user: User | AnonymousUser = request.user
@@ -100,4 +103,6 @@ def api_can_purchase(request: HttpRequest) -> JsonResponse:
             status=402
         )
 
-    return JsonResponse({})
+    return JsonResponse({
+        'balance': Balance.get_user_balance(user).balance
+    })

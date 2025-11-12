@@ -82,3 +82,66 @@ function balanceChecker(balanceEndpoint, isAuthenticated) {
         }
     }
 }
+
+async function canSpend(type) {
+    try {
+        const response = await fetch('/payment/api/can-purchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': this.getCsrfToken()
+                },
+                body: JSON.stringify({type: type})
+            }
+        );
+
+        const json = await response.json()
+        if (!response.ok) {
+            throw json;
+        }
+
+        let oldBalance = json.balance
+        const intervalId = setInterval(async () => {
+            const response = await fetch('/payment/api/balance');
+            const json = await response.json();
+            const newBalance = json.balance;
+            console.log('new', newBalance)
+            console.log('old', oldBalance)
+            if (newBalance != oldBalance) {
+                showBalanceNotification(newBalance);
+                clearInterval(intervalId);
+            }
+        }, 5000);
+
+        return {'ok': true}
+
+    } catch (error) {
+        return {'ok': false, 'error': error.error}
+    }
+}
+
+function showBalanceNotification(change) {
+    var notification = $("#balance-notification");
+
+    // Update the text dynamically
+    notification.text(change + " coins left");
+
+    // Change color depending on positive or negative
+    notification.removeClass("bg-green-500/90 bg-red-500/90")
+        .addClass(change > 0 ? "bg-green-500/90" : "bg-red-500/90");
+
+    // Show the div
+    notification.removeClass("hidden");
+
+    // Trigger reflow to restart animation
+    void notification[0].offsetWidth;
+
+    // Add animation class
+    notification.addClass("animate-fadeUp");
+
+    // Hide after animation duration (5s)
+    setTimeout(function () {
+        notification.addClass("hidden");
+        notification.removeClass("animate-fadeUp");
+    }, 5000);
+}

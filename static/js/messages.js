@@ -100,7 +100,7 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
             } else {
                 type = 'text_message'
             }
-            result = await this.$utils.canSpend(type);
+            result = await canSpend(type);
             if (result['ok'] === false) {
                 toastr.warning(result['error']);
                 return;
