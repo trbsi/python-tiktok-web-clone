@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.models import AnonymousUser
 from django.core.paginator import Paginator, Page
 from django.db.models import QuerySet, OuterRef, Exists, Case, Value, When, IntegerField
@@ -91,12 +93,12 @@ class LoadFeedService:
         ids = page.object_list.values_list('id', flat=True)
         unlocked_media_set = self.unlocked_media_service.get_unlocked_media(user=user, media_ids=ids)
 
-        result = self._prepare_result(page, unlocked_media_set)
+        result = self._prepare_result(page, unlocked_media_set, feed_type)
         next_page = page.next_page_number() if page.has_next() else None
 
         return {'result': result, 'next_page': next_page}
 
-    def _prepare_result(self, page: Page, unlocked_media_set: set) -> list:
+    def _prepare_result(self, page: Page, unlocked_media_set: set, feed_type: str) -> list:
         result = []
         for item in page.object_list:
             is_locked = (item.id in unlocked_media_set) == False
@@ -107,7 +109,7 @@ class LoadFeedService:
                 'src': source,
                 'like_count': item.like_count,
                 'comments_count': item.comment_count,
-                'description': item.description,
+                'description': self._apply_hashtags(item.description, feed_type),
                 'liked': item.liked,
                 'followed': item.followed,
                 'user': {
@@ -123,6 +125,20 @@ class LoadFeedService:
             })
 
         return result
+
+    def _apply_hashtags(self, description: str, feed_type: str) -> str:
+        # Pattern: match a '#' followed by one or more word chars (letters, digits, underscore)
+        pattern = r'(?<!\w)#(\w+)'
+        if feed_type == self.FEED_TYPE_DISCOVER:
+            route = reverse_lazy('feed.discover')
+        else:
+            route = reverse_lazy('feed.following')
+
+        def replace(match):
+            tag = match.group(1)
+            return f'<a href="{route}?hashtag={tag}" class="bg-white/50 px-1.5 py-0.5 rounded cursor-pointer underline">#{tag}</a>'
+
+        return re.sub(pattern, replace, description)
 
     def _apply_filters(self, items: QuerySet, filters: str | None = None):
         # filters: uid,12,mid,55 -> comma separated
@@ -140,5 +156,7 @@ class LoadFeedService:
                     default=Value(1),
                     output_field=IntegerField()
                 )).order_by('is_target_media')
+            elif value == 'hashtag':
+                items = items.filter(hashtags__hashtag=filters[index + 1])
 
         return items

@@ -8,11 +8,13 @@ from src.feed.services.load_feed_service import LoadFeedService
 
 @require_GET
 def discover(request: HttpRequest) -> HttpResponse:
+    filters = _get_filters(request)
     return render(
         request,
         'feed_home.html',
         {
             'type': 'discover',
+            'filters': ','.join(filters),
             'media_api_url': reverse_lazy('feed.api.get_media'),
             'follow_unfollow_api': reverse_lazy('follow.api.follow_unfollow'),
             'create_comment_api': reverse_lazy('engagement.api.create_comment'),
@@ -28,16 +30,7 @@ def discover(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def following(request: HttpRequest) -> HttpResponse:
-    get = request.GET
-    user_id = get.get('uid')
-    media_id = get.get('mid')
-    filters = []
-    if user_id:
-        filters.extend(['uid', user_id])
-
-    if media_id:
-        filters.extend(['mid', media_id])
-
+    filters = _get_filters(request)
     return render(
         request,
         'feed_home.html',
@@ -56,6 +49,25 @@ def following(request: HttpRequest) -> HttpResponse:
             'is_authenticated': 1 if request.user.is_authenticated else 0,
         }
     )
+
+
+def _get_filters(request: HttpRequest) -> list:
+    get = request.GET
+    user_id = get.get('uid')
+    media_id = get.get('mid')
+    hashtag = get.get('hashtag')
+    filters = []
+
+    if user_id:
+        filters.extend(['uid', user_id])
+
+    if media_id:
+        filters.extend(['mid', media_id])
+
+    if hashtag:
+        filters.extend(['hashtag', hashtag])
+
+    return filters
 
 
 @require_GET

@@ -1,5 +1,26 @@
 <div id="chat_footer"
-     class="fixed bottom-0 left-0 w-full p-4 border-t border-gray-800 bg-black flex items-center justify-center">
+     class="fixed bottom-0 left-0 w-full p-4 border-t border-gray-800 bg-black flex flex-col items-center justify-center">
+
+    <!-- Preview Section -->
+    <template x-if="previewUrl">
+        <div class="relative w-full">
+            <!-- Image Preview -->
+            <img x-show="isAttachmentImage" :src="previewUrl" alt="Attachment preview"
+                 class="rounded-lg max-h-60 w-auto mx-auto object-contain"/>
+
+
+            <!-- Video Preview -->
+            <video x-show="isAttachmentVideo" :src="previewUrl" controls
+                   class="rounded-lg max-h-60 w-auto mx-auto object-contain">
+            </video>
+
+            <!-- Remove button -->
+            <button @click="removeAttachment"
+                    class="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1.5">
+                <i class="ri-close-line text-lg"></i>
+            </button>
+        </div>
+    </template>
 
     <!-- Show loader while sending -->
     <div x-show="isSending" x-cloak class="flex items-center justify-center w-full">
@@ -15,11 +36,6 @@
         <template x-if="!attachment">
             <button class="text-gray-400 hover:text-white" @click="$refs.fileInput.click()">
                 <i class="ri-attachment-2 ri-xl"></i>
-            </button>
-        </template>
-        <template x-if="attachment">
-            <button class="text-red-500 hover:text-red-700" @click="removeAttachment">
-                <i class="ri-close-circle-line ri-xl"></i>
             </button>
         </template>
 

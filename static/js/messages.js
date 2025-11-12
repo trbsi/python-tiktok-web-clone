@@ -10,6 +10,7 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
         currentUserId: currentUserId,
         isSending: false,
         highestMessageId: null,
+        previewUrl: null,
 
         async initChat() {
             await this.loadMessages();
@@ -134,9 +135,8 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
 
                 // Reset input
                 this.newMessage = "";
-                this.attachment = null;
                 this.$refs.messageInput.style.height = "auto"; // reset textarea
-                this.$refs.fileInput.value = null;
+                this.removeAttachment()
 
                 this.scrollToBottom();
             } catch (e) {
@@ -146,14 +146,29 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
             }
         },
 
+        isAttachmentImage() {
+            return this.attachment && this.attachment.type.startsWith('image/');
+        },
+
+        isAttachmentVideo() {
+            return this.attachment && this.attachment.type.startsWith('video/');
+        },
+
         handleFileUpload(event) {
             if (event.target.files.length > 0) {
                 this.attachment = event.target.files[0];
+                if (!this.attachment.type.startsWith('video/') && !this.attachment.type.startsWith('image/')) {
+                    this.attachment = null;
+                    return;
+                }
+                this.previewUrl = URL.createObjectURL(this.attachment);
             }
         },
 
         removeAttachment() {
             this.attachment = null;
+            this.previewUrl && URL.revokeObjectURL(this.previewUrl);
+            this.previewUrl = null;
             this.$refs.fileInput.value = null; // reset input so the same file can be chosen again
         },
 
