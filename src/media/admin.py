@@ -3,7 +3,6 @@ from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
-from unfold.decorators import action
 
 from src.media.enums import MediaEnum
 from src.media.models import Media
@@ -25,8 +24,8 @@ class AdminMedia(ModelAdmin):
     )
     readonly_fields = ('created_at', 'file_preview', 'trailer', 'thumbnail')
     search_fields = ('user__username',)
-    actions = ['mark_as_approved', 'mark_as_deleted']
-    actions_submit_line = ['mark_as_deleted']
+    actions = ['mark_as_approved_multiple', 'mark_as_deleted_multiple']
+    actions_submit_line = ['mark_as_deleted_single']
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -38,10 +37,21 @@ class AdminMedia(ModelAdmin):
 
         return actions
 
-    @admin.action(description='Mark as approved')
-    def mark_as_approved(self, request: HttpRequest, queryset: QuerySet):
+    @admin.action(description='Mark as approved multiple')
+    def mark_as_approved_multiple(self, request: HttpRequest, queryset: QuerySet):
         queryset.update(is_approved=True)
         self.message_user(request, 'Approved', messages.SUCCESS)
+
+    @admin.action(description='Mark as deleted multiple')
+    def mark_as_deleted_multiple(self, request: HttpRequest, queryset: QuerySet):
+        queryset.update(status=MediaEnum.STATUS_DELETED.value)
+        self.message_user(request, 'Deleted', messages.SUCCESS)
+
+    @admin.action(description="Mark as deleted", )
+    def mark_as_deleted_single(self, request: HttpRequest, media):
+        media.status = MediaEnum.STATUS_DELETED.value
+        media.save()
+        messages.success(request, "Media deleted")
 
     @admin.display(description="File")
     def file_preview(self, media: Media) -> str | None:
@@ -77,9 +87,3 @@ class AdminMedia(ModelAdmin):
             '<video controls><source src="{media}"></video>',
             media=media.get_trailer_url()
         )
-
-    @action(description="Mark as deleted", )
-    def mark_as_deleted(self, request: HttpRequest, media: Media):
-        media.status = MediaEnum.STATUS_DELETED.value
-        media.save()
-        messages.success(request, "Media deleted")
