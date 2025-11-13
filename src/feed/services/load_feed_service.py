@@ -76,6 +76,7 @@ class LoadFeedService:
             .order_by('-created_at')
             .annotate(liked=Exists(likes), followed=Exists(is_following))
             .filter(status=MediaEnum.STATUS_PAID.value)
+            .filter(is_approved=True)
         )
 
         if include_following_list:

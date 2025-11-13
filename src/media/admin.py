@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
@@ -10,32 +11,49 @@ from src.media.models import Media
 
 @admin.register(Media)
 class AdminMedia(ModelAdmin):
-    list_filter = ['created_at', 'status']
-    list_display = ('id', 'user', 'file_type', 'status', 'created_at')
+    list_filter = ['created_at', 'status', 'is_approved']
+    list_display = ('id', 'is_approved', 'user', 'file_preview', 'status', 'created_at')
     fields = (
         'user',
         'file_type',
         'status',
         'description',
         'is_processed',
-        'file',
+        'file_preview',
         'trailer',
         'thumbnail',
     )
     readonly_fields = ('created_at', 'file', 'trailer', 'thumbnail')
     search_fields = ('user__username',)
+    actions = ['mark_as_approved']
+    actions_submit_line = ['mark_as_deleted']
 
-    actions_submit_line = ["mark_as_deleted"]
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+
+        return actions
+
+    @admin.action(description='Mark as approved')
+    def mark_as_approved(self, request: HttpRequest, queryset: QuerySet):
+        queryset.update(is_approved=True)
+        self.message_user(request, 'Approved', messages.SUCCESS)
 
     @admin.display(description="File")
-    def file(self, media: Media) -> str | None:
+    def file_preview(self, media: Media) -> str | None:
         if media.is_image():
             return format_html(
-                f'<img src="{media.get_file_url()}">'
+                '<img style="max-width: 300px" src="{media}">',
+                media=media.get_file_url()
             )
         if media.is_video():
             return format_html(
-                f'<video controls><source src="{media.get_file_url()}"></video>'
+                '<video style="max-width: 300px" controls><source src="{media}"></video>',
+                media=media.get_file_url()
             )
 
         return None
@@ -46,7 +64,8 @@ class AdminMedia(ModelAdmin):
             return None
 
         return format_html(
-            f'<img src="{media.get_thumbnail_url()}">'
+            '<img src="{media}">',
+            media=media.get_thumbnail_url()
         )
 
     @admin.display(description="Trailer")
@@ -55,7 +74,8 @@ class AdminMedia(ModelAdmin):
             return None
 
         return format_html(
-            f'<video controls><source src="{media.get_trailer_url()}"></video>'
+            '<video controls><source src="{media}"></video>',
+            media=media.get_trailer_url()
         )
 
     @action(description="Mark as deleted", )

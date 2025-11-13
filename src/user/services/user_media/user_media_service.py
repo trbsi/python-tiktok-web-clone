@@ -16,6 +16,7 @@ class UserMediaService:
         media: QuerySet[Media] = (
             Media.objects
             .filter(status=MediaEnum.STATUS_PAID.value)
+            .filter(is_approved=True)
             .filter(user=user).order_by('-created_at')
         )
 

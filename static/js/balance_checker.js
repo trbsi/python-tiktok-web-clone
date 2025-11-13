@@ -100,48 +100,61 @@ async function canSpend(type) {
             throw json;
         }
 
-        let oldBalance = json.balance
+        let oldBalance = parseFloat(json.balance)
         const intervalId = setInterval(async () => {
             const response = await fetch('/payment/api/balance');
             const json = await response.json();
-            const newBalance = json.balance;
-            console.log('new', newBalance)
-            console.log('old', oldBalance)
+            const newBalance = parseFloat(json.balance);
             if (newBalance != oldBalance) {
-                showBalanceNotification(newBalance);
+                showBalanceNotification(oldBalance, newBalance);
                 clearInterval(intervalId);
             }
-        }, 5000);
+        }, 2000);
 
         return {'ok': true}
 
-    } catch (error) {
-        return {'ok': false, 'error': error.error}
+    } catch (exception) {
+        toastr.warning(exception.error);
+        return {'ok': false, 'error': exception.error}
     }
 }
 
-function showBalanceNotification(change) {
-    var notification = $("#balance-notification");
+function showBalanceNotification(oldBalance, newBalance) {
+    const notification = $("#balance-notification");
 
-    // Update the text dynamically
-    notification.text(change + " coins left");
+    // Calculate change
+    const isNegative = (newBalance < oldBalance);
+    const change = newBalance - oldBalance;
 
-    // Change color depending on positive or negative
-    notification.removeClass("bg-green-500/90 bg-red-500/90")
-        .addClass(change > 0 ? "bg-green-500/90" : "bg-red-500/90");
+    // Prepare starting text
+    notification.text(`${oldBalance} coins`);
 
     // Show the div
     notification.removeClass("hidden");
 
-    // Trigger reflow to restart animation
-    void notification[0].offsetWidth;
+    // Animate number from old → new
+    let start = oldBalance;
+    const end = newBalance;
+    const duration = 500; // 1 seconds
+    const startTime = performance.now();
 
-    // Add animation class
-    notification.addClass("animate-fadeUp");
+    function animateBalance(timestamp) {
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const current = Math.floor(start + (end - start) * progress).toFixed(2);
+        notification.text(`${current} coins`);
 
-    // Hide after animation duration (5s)
-    setTimeout(function () {
+        if (progress < 1) {
+            requestAnimationFrame(animateBalance);
+        } else {
+            // show final text with delta for clarity
+            notification.text(`${newBalance} coins (${change})`);
+        }
+    }
+
+    requestAnimationFrame(animateBalance);
+
+    // Hide after animation duration (5s total)
+    setTimeout(() => {
         notification.addClass("hidden");
-        notification.removeClass("animate-fadeUp");
-    }, 5000);
+    }, 3000);
 }

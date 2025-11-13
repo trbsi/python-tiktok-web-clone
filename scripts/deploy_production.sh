@@ -41,18 +41,18 @@ echo "🖼 Collecting static files..."
 docker exec -it "$CONTAINER_NAME" python manage.py collectstatic --clear --noinput
 
 # ------------------------------
-# Run custom commands
-# ------------------------------
-echo "🌍 Downloading GeoIP data..."
-docker exec -it "$CONTAINER_NAME" python manage.py download_geoip_command
-
-# ------------------------------
 # Restart celery
 # ------------------------------
 cd docker &&
 docker compose --env-file ../.env restart $CELERY_WORKER_CONTAINER_NAME  &&
 docker compose --env-file ../.env restart $CELERY_BEAT_CONTAINER_NAME &&
 docker compose --env-file ../.env restart $CONTAINER_NAME
+
+# ------------------------------
+# Run custom commands
+# ------------------------------
+echo "🌍 Downloading GeoIP data..."
+docker exec -it "$CONTAINER_NAME" python manage.py download_geoip_command
 
 # ------------------------------
 # Deployment finished

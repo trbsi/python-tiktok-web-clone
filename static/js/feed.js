@@ -402,7 +402,6 @@ function mediaFeed(
 
             result = await canSpend('comment');
             if (result['ok'] === false) {
-                toastr.warning(result['error']);
                 return;
             }
 
@@ -539,7 +538,6 @@ function mediaFeed(
             }
             result = await canSpend(type);
             if (result['ok'] === false) {
-                toastr.warning(result['error']);
                 return;
             }
 

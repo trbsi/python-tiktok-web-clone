@@ -31,6 +31,7 @@ class Media(models.Model):
     share_count = models.PositiveIntegerField(default=0)
     view_count = models.PositiveIntegerField(default=0)
     is_processed = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     hashtags = models.ManyToManyField(Hashtag, through='MediaHashtag', related_name='media_hashtags')
 
@@ -40,7 +41,7 @@ class Media(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=['status'], name='idx_media_status'),
+            models.Index(fields=['status', 'is_approved', 'user_id'], name='idx_load_media_feed'),
         ]
 
     def get_file_url(self) -> str:

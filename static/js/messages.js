@@ -102,7 +102,6 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
             }
             result = await canSpend(type);
             if (result['ok'] === false) {
-                toastr.warning(result['error']);
                 return;
             }
 
