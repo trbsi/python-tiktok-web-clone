@@ -1,6 +1,5 @@
 import os
 import tempfile
-import uuid
 from pathlib import Path
 
 from django.core.files.storage import default_storage
@@ -26,7 +25,6 @@ class LocalStorageService:
 
     def temp_upload_file(self, uploaded_file: UploadedFile) -> dict:
         extension = Path(uploaded_file.name).suffix  # .jpg or .mp4
-        remote_file_name = f'{uuid.uuid4()}{extension}'
         file_type = self.get_file_type(uploaded_file=uploaded_file)
 
         if isinstance(uploaded_file, TemporaryUploadedFile):
@@ -40,7 +38,7 @@ class LocalStorageService:
         return {
             'file_type': file_type,
             'local_file_path': local_file_path,
-            'remote_file_name': remote_file_name,
+            'extension': extension
         }
 
     def delete_file(self, file_path: str) -> None:

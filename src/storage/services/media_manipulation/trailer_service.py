@@ -116,8 +116,7 @@ class TrailerService:
         subprocess.run(command, check=True)
 
         # upload to remote
-        remote_file_name = f'{media.__class__.__name__}_{media.id}_trailer_{uuid.uuid4()}.mp4'
-        remote_file_path = remote_file_path_for_media(media, remote_file_name)
+        remote_file_path = remote_file_path_for_media(media, 'mp4', 'trailer')
 
         file_info = remote_storage_service.upload_file(
             local_file_type=local_file_type,

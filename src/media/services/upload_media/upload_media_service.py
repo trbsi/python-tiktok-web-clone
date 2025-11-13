@@ -9,6 +9,7 @@ from src.storage.crons.compress_media_task.process_media_task import ProcessMedi
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
 from src.storage.tasks import task_process_media
+from src.storage.utils import remote_file_path_for_media
 from src.user.models import User, UserProfile
 
 
@@ -34,18 +35,6 @@ class UploadMediaService:
         post_type: post_now|schedule
         """
 
-        # upload to temp local storage
-        file_data = self.local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
-        remote_file_name = file_data.get('remote_file_name')
-        file_type = file_data.get('file_type')
-        remote_file_path = f'{file_type}/media/{user.id}/{remote_file_name}'
-
-        remote_file_info = self.remote_storage_service.upload_file(
-            local_file_type=file_type,
-            local_file_path=file_data.get('local_file_path'),
-            remote_file_path=remote_file_path
-        )
-
         match post_type:
             case 'post_now':
                 status = MediaEnum.STATUS_PENDING
@@ -55,12 +44,27 @@ class UploadMediaService:
                 status = MediaEnum.STATUS_PENDING
 
         media = Media.objects.create(
-            file_info=remote_file_info,
-            file_type=file_data.get('file_type'),
+            file_info='{}',  # temporary
+            file_type='video',  # temporary
             status=status.value,
             description=description,
             user=user,
         )
+
+        # upload to temp local storage
+        file_data = self.local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
+        file_type = file_data.get('file_type')
+        remote_file_path = remote_file_path_for_media(media, file_data.get('extension'), file_type)
+
+        remote_file_info: dict = self.remote_storage_service.upload_file(
+            local_file_type=file_type,
+            local_file_path=file_data.get('local_file_path'),
+            remote_file_path=remote_file_path
+        )
+
+        media.file_info = remote_file_info
+        media.file_type = file_type
+        media.save()
 
         profile: UserProfile = user.profile
 

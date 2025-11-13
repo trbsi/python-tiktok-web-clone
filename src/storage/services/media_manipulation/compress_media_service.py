@@ -1,4 +1,3 @@
-import uuid
 from pathlib import Path
 
 from src.inbox.models import Message
@@ -21,7 +20,7 @@ class CompressMediaService:
 
         original_file_info = media.file_info
         extension = Path(original_file_info.get('file_path')).suffix  # example: .jpg or .mp4
-        new_file_name = f'{media.__class__.__name__}_{media.id}_media_{uuid.uuid4()}{extension}'
+        new_file_name = remote_file_path_for_media(media, extension, media.file_type)
 
         if isinstance(media, Message):
             new_file_path = remote_file_path_for_conversation(media.conversation, new_file_name)
