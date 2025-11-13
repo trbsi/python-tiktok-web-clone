@@ -25,7 +25,7 @@ class AdminMedia(ModelAdmin):
     )
     readonly_fields = ('created_at', 'file_preview', 'trailer', 'thumbnail')
     search_fields = ('user__username',)
-    actions = ['mark_as_approved']
+    actions = ['mark_as_approved', 'mark_as_deleted']
     actions_submit_line = ['mark_as_deleted']
 
     def has_delete_permission(self, request, obj=None):
