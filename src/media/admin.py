@@ -23,7 +23,7 @@ class AdminMedia(ModelAdmin):
         'trailer',
         'thumbnail',
     )
-    readonly_fields = ('created_at', 'file', 'trailer', 'thumbnail')
+    readonly_fields = ('created_at', 'file_preview', 'trailer', 'thumbnail')
     search_fields = ('user__username',)
     actions = ['mark_as_approved']
     actions_submit_line = ['mark_as_deleted']
