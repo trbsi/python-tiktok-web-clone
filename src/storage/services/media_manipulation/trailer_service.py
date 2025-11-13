@@ -8,6 +8,9 @@ from src.storage.utils import remote_file_path_for_media
 
 class TrailerService:
 
+    def __init__(self, remote_storage_service: RemoteStorageService | None = None):
+        self.remote_storage_service = remote_storage_service or RemoteStorageService()
+
     def make_trailer(
             self,
             media: Media,
@@ -55,7 +58,6 @@ class TrailerService:
         :param max_length: Maximum trailer length in seconds
         :param percentage: Fraction of video duration to use for trailer
         """
-        remote_storage_service = RemoteStorageService()
 
         # Get video duration with ffprobe
         command = [
@@ -118,7 +120,7 @@ class TrailerService:
         # upload to remote
         remote_file_path = remote_file_path_for_media(media, 'mp4', 'trailer')
 
-        file_info = remote_storage_service.upload_file(
+        file_info = self.remote_storage_service.upload_file(
             local_file_type=local_file_type,
             local_file_path=output_trailer_file_path,
             remote_file_path=remote_file_path,
