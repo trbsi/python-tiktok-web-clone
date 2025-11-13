@@ -44,7 +44,7 @@ class UploadMediaService:
                 status = MediaEnum.STATUS_PENDING
 
         media = Media.objects.create(
-            file_info='{}',  # temporary
+            file_info='',  # temporary
             file_type='video',  # temporary
             status=status.value,
             description=description,
