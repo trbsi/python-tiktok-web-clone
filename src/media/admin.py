@@ -52,7 +52,7 @@ class AdminMedia(ModelAdmin):
             )
         if media.is_video():
             return format_html(
-                '<video style="max-width: 300px" controls><source src="{media}"></video>',
+                '<video style="max-width: 300px" controls  preload="none"><source src="{media}"></video>',
                 media=media.get_file_url()
             )
 
