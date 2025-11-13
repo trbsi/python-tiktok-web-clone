@@ -5,6 +5,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 
 from app import settings
 from src.core.utils import reverse_lazy_with_query
@@ -50,7 +52,7 @@ def privacy_policy(request: HttpRequest) -> HttpResponse:
 
 
 @require_GET
-def send_test_email(request: HttpRequest) -> HttpResponse:
+def test_notifications(request: HttpRequest) -> HttpResponse:
     email = EmailValueObject(
         subject='Test Email',
         template_path='emails/test_email.html',

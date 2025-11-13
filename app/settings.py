@@ -299,6 +299,10 @@ CCBILL_SETTINGS = {
     'flex_form_id': env('CCBILL_FLEX_FORM_ID'),
 }
 
+# Slack
+SLACK_BOT_TOKEN = env('SLACK_BOT_TOKEN')
+SLACK_CHANNEL_ID = env('SLACK_CHANNEL_ID')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # Keep Django’s default loggers
