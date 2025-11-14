@@ -3,6 +3,7 @@
     // Used in install_app.js, push_notifications.js
     const serviceWorkerFile = '{% static 'js/service_worker.js' %}';
     const saveWebPushSubscriptionApi = '{% url 'notification.web_push_subscribe' %}';
+    const webPushKeysApi = '{% url 'notification.web_push_keys' %}';
 </script>
 <script src="{% static 'js/core.js' %}"></script>
 <script src="{% static 'js/install_app.js' %}"></script>

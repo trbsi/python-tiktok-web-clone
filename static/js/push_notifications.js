@@ -46,16 +46,20 @@ $(document).ready(function() {
             return;
         }
 
+        alert(permission)
+
         // Register service worker
         const sw = await navigator.serviceWorker.register(serviceWorkerFile);
 
         // Fetch VAPID public key from backend
         //serviceWorkerFile is defined in js.html
-        const vapidPublicKey = await $.get(serviceWorkerFile);
+        const vapidPublicKey = await $.get(webPushKeysApi);
+        const vapidPublicKeyResponse = await vapidPublicKey.json()
+        alert(vapidPublicKeyResponse)
 
         const subscription = await sw.pushManager.subscribe({
             userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+            applicationServerKey: urlBase64ToUint8Array(vapidPublicKey.public_key)
         });
 
         // Send subscription to backend
@@ -65,6 +69,8 @@ $(document).ready(function() {
             contentType: "application/json",
             data: JSON.stringify(subscription)
         });
+
+        alert('push subscribed')
 
         console.log("Push subscribed:", subscription);
     });
