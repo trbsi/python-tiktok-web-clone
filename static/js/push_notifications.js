@@ -71,6 +71,7 @@ $(document).ready(function () {
         });
 
         console.log("Push subscribed:", subscription);
+        alert('Push notifications enabled!')
     });
 
     // Utility function to convert base64 VAPID key
