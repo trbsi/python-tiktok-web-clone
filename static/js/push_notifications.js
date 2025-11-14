@@ -46,28 +46,24 @@ $(document).ready(function() {
             return;
         }
 
-        alert(permission)
-        alert(serviceWorkerFile)
+        // Register service worker
+        const sw = await navigator.serviceWorker.register(serviceWorkerFile);
 
-        try {
-            // Register service worker
-            const sw = await navigator.serviceWorker.register(serviceWorkerFile);
-        } catch(e) {
-            alert(e);
-        }
-
-        alert('passed service worker')
         alert(webPushKeysApi)
 
-        // Fetch VAPID public key from backend
-        //serviceWorkerFile is defined in js.html
-        const vapidPublicKey = await $.get(webPushKeysApi);
-        const vapidPublicKeyResponse = await vapidPublicKey.json()
-        alert(vapidPublicKeyResponse)
+        try {
+            // Fetch VAPID public key from backend
+            //serviceWorkerFile is defined in js.html
+            const vapidPublicKey = await $.get(webPushKeysApi);
+            const vapidPublicKeyJson = await vapidPublicKey.json()
+            alert(vapidPublicKeyJson)
+        } catch (e) {
+            alert(e)
+        }
 
         const subscription = await sw.pushManager.subscribe({
             userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(vapidPublicKey.public_key)
+            applicationServerKey: urlBase64ToUint8Array(vapidPublicKeyJson.public_key)
         });
 
         // Send subscription to backend
