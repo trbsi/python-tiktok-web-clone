@@ -1,6 +1,7 @@
 import json
 
 import bugsnag
+from django.templatetags.static import static
 from pywebpush import webpush
 
 from app import settings
@@ -23,7 +24,9 @@ class BrowserService:
                 payload = {
                     "title": notification.title,
                     "body": notification.body,
-                    "url": notification.url
+                    "url": notification.url,
+                    "icon": static('images/icon-192.png'),
+                    "badge": static('images/icon-192.png'),
                 }
                 claims = {
                     "sub": settings.WEB_PUSH_SUBJECT
