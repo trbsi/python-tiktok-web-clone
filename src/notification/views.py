@@ -2,12 +2,9 @@ import json
 import random
 
 import bugsnag
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.http import JsonResponse
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 
@@ -45,7 +42,7 @@ def api_web_push_subscribe(request: HttpRequest) -> JsonResponse:
 
 
 @require_GET
-def test_notifications(request: HttpRequest) -> HttpResponse:
+def test_notifications(request: HttpRequest) -> JsonResponse:
     only = request.GET.get('only')
     for_user = request.GET.get('for_user')
     push = []
@@ -86,5 +83,4 @@ def test_notifications(request: HttpRequest) -> HttpResponse:
 
     NotificationService.send_notification(*push)
 
-    messages.success(request, 'Thank you for sending an email')
-    return redirect(reverse_lazy('home'))
+    return JsonResponse({'success': True})

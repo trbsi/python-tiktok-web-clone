@@ -15,7 +15,7 @@ class BrowserService:
             return
 
         web_push_notification = WebPushSubscription.objects.filter(user_id=notification.user_id).all()
-        if web_push_notification is None:
+        if web_push_notification.count() == 0:
             return
 
         try:
