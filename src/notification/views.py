@@ -18,6 +18,10 @@ def api_web_push_keys(request: HttpRequest) -> JsonResponse:
 @require_POST
 @login_required
 def api_web_push_subscribe(request: HttpRequest) -> JsonResponse:
+    """
+    body example:
+    {'endpoint': 'https://web.push.apple.com/QDWQpghdBE...', 'keys': {'p256dh': 'BKSeSkq..., 'auth': '7LdJ...'}}
+    """
     body = json.loads(request.body)
 
     print(body)

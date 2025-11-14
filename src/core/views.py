@@ -56,21 +56,43 @@ def privacy_policy(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def test_notifications(request: HttpRequest) -> HttpResponse:
-    user = User.objects.get(username='dinamo')
-    url = reverse_lazy_admin(object=Media(), action='changelist', is_full_url=True)
-    email = EmailValueObject(
-        subject='Test Email',
-        template_path='emails/test_email.html',
-        template_variables={'anchor_href': 'www.test.com', 'anchor_label': 'Click here to confirm your new email'},
-        to=['admins']
-    )
-    push_notification = PushNotificationValueObject(
-        user_id=user.id,
-        body=f'This is test push notification {random.randint(1, 100000)}. {url}'
-    )
+    only = request.GET.get('only')
+    for_user = request.GET.get('for_user')
+    push = []
 
-    NotificationService.send_notification(email, push_notification)
-    bugsnag.notify(Exception(f'This is test error {random.randint(1, 100000)}'))
+    if for_user:
+        user = User.objects.get(username=for_user)
+    else:
+        user = User.objects.get(username='dinamo')
+
+    if only == 'push':
+        push.append(PushNotificationValueObject(
+            user_id=user.id,
+            body=f'This is test push notification {random.randint(1, 100000)}'
+        ))
+    elif only == 'email':
+        push.append(EmailValueObject(
+            subject='Test Email',
+            template_path='emails/test_email.html',
+            template_variables={'anchor_href': 'www.test.com', 'anchor_label': 'Click here to confirm your new email'},
+            to=['admins']
+        ))
+    else:
+        url = reverse_lazy_admin(object=Media(), action='changelist', is_full_url=True)
+        push.append(EmailValueObject(
+            subject='Test Email',
+            template_path='emails/test_email.html',
+            template_variables={'anchor_href': 'www.test.com', 'anchor_label': 'Click here to confirm your new email'},
+            to=['admins']
+        ))
+        push.append(PushNotificationValueObject(
+            user_id=user.id,
+            body=f'This is test push notification {random.randint(1, 100000)}. {url}'
+        ))
+
+        bugsnag.notify(Exception(f'This is test error {random.randint(1, 100000)}'))
+
+    NotificationService.send_notification(*push)
 
     messages.success(request, 'Thank you for sending an email')
     return redirect(reverse_lazy('home'))
