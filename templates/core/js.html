@@ -1,3 +1,10 @@
+{% load static %}
+<script>
+    // Used in core.js
+    const serviceWorkerFile = '{% static 'js/service-worker.js' %}';
+</script>
+<script src="{% static 'js/core.js' %}"></script>
+
 <script>
     toastr.options.closeDuration = 10000;
     toastr.options.progressBar = true;

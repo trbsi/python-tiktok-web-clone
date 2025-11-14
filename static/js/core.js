@@ -3,6 +3,10 @@ function getCsrfToken() {
 }
 
 /* ------------- PWA site - install website on phone -------------  */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register(serviceWorkerFile);
+}
+
 let deferredPrompt = null;
 
 // =========================
@@ -82,6 +86,7 @@ $("#installBtn").on("click", async function () {
 // ===============================
 
 $("#closeInstallBanner").on("click", function () {
+alert(35345345);
     $("#installBanner").addClass("hidden");
     localStorage.setItem("installPopupClosedAt", Date.now());
 });
