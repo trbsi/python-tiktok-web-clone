@@ -2,7 +2,7 @@ import json
 
 import bugsnag
 from django.templatetags.static import static
-from pywebpush import webpush
+from pywebpush import webpush, WebPushException
 
 from app import settings
 from src.notification.models import WebPushSubscription
@@ -37,5 +37,9 @@ class BrowserService:
                     vapid_private_key=settings.WEB_PUSH_PRIVATE_KEY,
                     vapid_claims=claims,
                 )
+            except WebPushException as e:
+                if e.response.status_code == 410:
+                    single_notification.delete()
+                bugsnag.notify(e)
             except Exception as e:
                 bugsnag.notify(e)
