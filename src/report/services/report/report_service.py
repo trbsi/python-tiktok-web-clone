@@ -45,5 +45,5 @@ class ReportService:
             template_variables=template_vars,
             to=['admins']
         )
-        push = PushNotificationValueObject(f'New content reported! Check here: {url}')
+        push = PushNotificationValueObject(body=f'New content reported! Check here: {url}')
         NotificationService.send_notification(admin_email, push)

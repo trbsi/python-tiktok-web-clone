@@ -1,9 +1,11 @@
 {% load static %}
 <script>
-    // Used in core.js
+    // Used in install_app.js
     const serviceWorkerFile = '{% static 'js/service-worker.js' %}';
 </script>
 <script src="{% static 'js/core.js' %}"></script>
+<script src="{% static 'js/install_app.js' %}"></script>
+<script src="{% static 'js/push_notifications.js' %}"></script>
 
 <script>
     toastr.options.closeDuration = 10000;

@@ -304,6 +304,11 @@ CCBILL_SETTINGS = {
 SLACK_BOT_TOKEN = env('SLACK_BOT_TOKEN')
 SLACK_CHANNEL_ID = env('SLACK_CHANNEL_ID')
 
+# Web push notifications
+WEB_PUSH_SUBJECT = env('WEB_PUSH_SUBJECT')
+WEB_PUSH_PUBLIC_KEY = env('WEB_PUSH_PUBLIC_KEY')
+WEB_PUSH_PRIVATE_KEY = env('WEB_PUSH_PRIVATE_KEY')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # Keep Django’s default loggers

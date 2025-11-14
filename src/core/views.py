@@ -14,6 +14,7 @@ from src.media.models import Media
 from src.notification.services.notification_service import NotificationService
 from src.notification.value_objects.email_value_object import EmailValueObject
 from src.notification.value_objects.push_notification_value_object import PushNotificationValueObject
+from src.user.models import User
 
 
 @require_GET
@@ -55,6 +56,7 @@ def privacy_policy(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def test_notifications(request: HttpRequest) -> HttpResponse:
+    user = User.objects.get(username='dinamo')
     url = reverse_lazy_admin(object=Media(), action='changelist', is_full_url=True)
     email = EmailValueObject(
         subject='Test Email',
@@ -63,7 +65,9 @@ def test_notifications(request: HttpRequest) -> HttpResponse:
         to=['admins']
     )
     push_notification = PushNotificationValueObject(
-        f'This is test push notification {random.randint(1, 100000)}. {url}')
+        user_id=user.id,
+        body=f'This is test push notification {random.randint(1, 100000)}. {url}'
+    )
 
     NotificationService.send_notification(email, push_notification)
     bugsnag.notify(Exception(f'This is test error {random.randint(1, 100000)}'))
