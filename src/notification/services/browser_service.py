@@ -19,8 +19,8 @@ class BrowserService:
         if web_push_notification.count() == 0:
             return
 
-        try:
-            for single_notification in web_push_notification:
+        for single_notification in web_push_notification:
+            try:
                 payload = {
                     "title": notification.title,
                     "body": notification.body,
@@ -37,5 +37,5 @@ class BrowserService:
                     vapid_private_key=settings.WEB_PUSH_PRIVATE_KEY,
                     vapid_claims=claims,
                 )
-        except Exception as e:
-            bugsnag.notify(e)
+            except Exception as e:
+                bugsnag.notify(e)
