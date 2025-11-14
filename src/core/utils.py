@@ -40,12 +40,19 @@ def get_ip_data(ip: str) -> IpData:
         return IpData()
 
 
-def full_url(route_name, kwargs=None, query_params=None):
+def full_url_for_route(route_name, kwargs=None, query_params=None):
     url = reverse_lazy(route_name, kwargs=kwargs)
     if query_params:
         url = url + f'?{urlencode(query_params)}'
 
     return f'{settings.APP_URL}{url}'
+
+
+def full_url_for_path(path: str, query_params=None):
+    if query_params:
+        path = path + f'?{urlencode(query_params)}'
+
+    return f'{settings.APP_URL}{path}'
 
 
 def reverse_lazy_with_query(route_name, kwargs=None, query_params: dict | None = None):

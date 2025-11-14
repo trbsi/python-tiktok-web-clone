@@ -5,6 +5,7 @@ from django.templatetags.static import static
 from pywebpush import webpush, WebPushException
 
 from app import settings
+from src.core.utils import full_url_for_path
 from src.notification.models import WebPushSubscription
 from src.notification.value_objects.push_notification_value_object import PushNotificationValueObject
 
@@ -25,8 +26,8 @@ class BrowserService:
                     "title": notification.title,
                     "body": notification.body,
                     "url": notification.url,
-                    "icon": static('images/icon-192.png'),
-                    "badge": static('images/icon-192.png'),
+                    "icon": full_url_for_path(static('images/icon-192.png')),
+                    "badge": full_url_for_path(static('images/icon-192.png')),
                 }
                 claims = {
                     "sub": settings.WEB_PUSH_SUBJECT
