@@ -57,6 +57,9 @@ class Media(models.Model):
         return f'{settings.STORAGE_CDN_URL}/{self.file_trailer.get('file_path')}'
 
     def get_thumbnail_url(self) -> str | None:
+        if self.is_image():
+            return self.get_file_url()
+
         if self.file_thumbnail is None:
             return None
         return f'{settings.STORAGE_CDN_URL}/{self.file_thumbnail.get('file_path')}'
