@@ -62,14 +62,31 @@ $(document).ready(function() {
         });
 
         // Send subscription to backend
-        await $.ajax({
-            url: saveWebPushSubscriptionApi,
+        await fetch(saveWebPushSubscriptionApi, {
             method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(subscription)
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken(),
+            },
+            body: JSON.stringify(subscription),
+            credentials: 'include'
         });
-        } catch (e) {
-        alert(e);
+        } catch (err) {
+              // Convert the error to a readable string
+            let message;
+
+            if (err instanceof Error) {
+                // Standard Error object
+                message = err.message;
+            } else if (typeof err === 'object') {
+                // Plain object → stringify it
+                message = JSON.stringify(err);
+            } else {
+                // Fallback for string, number, etc.
+                message = String(err);
+            }
+
+            alert("Error: " + message);
         }
 
 
