@@ -317,7 +317,7 @@ function mediaFeed(
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': this.$utils.getCsrfToken(),
+                        'X-CSRFToken': getCsrfToken(),
                     },
                     credentials: 'include'
                 });
@@ -349,7 +349,7 @@ function mediaFeed(
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': this.$utils.getCsrfToken(),
+                        'X-CSRFToken': getCsrfToken(),
                     },
                     credentials: 'include',
                     body: JSON.stringify({
@@ -431,7 +431,7 @@ function mediaFeed(
                     credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': this.$utils.getCsrfToken()
+                        'X-CSRFToken': getCsrfToken()
                     },
                     body: JSON.stringify(body)
                 });
@@ -496,7 +496,7 @@ function mediaFeed(
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': this.$utils.getCsrfToken(),
+                        'X-CSRFToken': getCsrfToken(),
                     },
                     body: JSON.stringify({
                         type: 'media',
@@ -552,7 +552,7 @@ function mediaFeed(
                     body: JSON.stringify({'media_id': media.id}),
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': this.$utils.getCsrfToken(),
+                        'X-CSRFToken': getCsrfToken(),
                     },
                     credentials: 'include',
                 });
@@ -635,7 +635,7 @@ function mediaFeed(
                     try {
                         await fetch(recordViewsApi, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.$utils.getCsrfToken() },
+                            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
                             credentials: 'include',
                             body: JSON.stringify({ media_id: media.id })
                         });
@@ -664,7 +664,7 @@ function mediaFeed(
                         try {
                             await fetch(recordViewsApi, {
                                 method: 'POST',
-                                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.$utils.getCsrfToken() },
+                                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
                                 credentials: 'include',
                                 body: JSON.stringify({ media_id: media.id })
                             });

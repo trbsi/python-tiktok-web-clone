@@ -45,6 +45,7 @@ urlpatterns = [
     path('report/', include('src.report.urls')),
     path('age-verification/', include('src.age_verification.urls')),
     path('payment/', include('src.payment.urls')),
+    path('activity/', include('src.activity.urls')),
 ]
 
 if settings.DEBUG == True:

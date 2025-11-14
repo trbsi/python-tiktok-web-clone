@@ -8,13 +8,9 @@ from src.notification.value_objects.push_notification_value_object import PushNo
 class NotificationService():
     @staticmethod
     def send_notification(*notifications) -> None:
-        email_service = EmailService()
-        browser_service = BrowserService()
-        slack_service = SlackService()
-
         for notification in notifications:
             if isinstance(notification, EmailValueObject):
-                email_service.send(notification)
+                EmailService.send(notification)
             if isinstance(notification, PushNotificationValueObject):
-                browser_service.send(notification)
-                slack_service.send(notification)
+                BrowserService.send(notification)
+                SlackService.send(notification)

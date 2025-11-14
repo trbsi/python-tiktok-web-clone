@@ -56,7 +56,7 @@ def reverse_lazy_with_query(route_name, kwargs=None, query_params: dict | None =
     return url
 
 
-def reverse_lazy_admin(object: Model, action: str, args: list = None):
+def reverse_lazy_admin(object: Model, action: str, args: list = None, is_full_url: bool = False):
     """
     # In general:
     admin:appname_modelname_adminroute
@@ -77,7 +77,10 @@ def reverse_lazy_admin(object: Model, action: str, args: list = None):
     reverse_lazy("admin:library_book_history", args=[1])
     """
     route = f'admin:{object._meta.app_label}_{object._meta.model_name}_{action}'
-    return reverse_lazy(route, args=args)
+    url = reverse_lazy(route, args=args)
+    if is_full_url:
+        url = f'{settings.APP_URL}{url}'
+    return url
 
 
 def format_datetime(date: datetime):

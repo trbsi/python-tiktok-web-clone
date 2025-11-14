@@ -119,7 +119,7 @@ function chatComponent(listMessagesApi, sendMessageApi, conversationId, currentU
                     method: "POST",
                     body: formData,
                     headers: {
-                        'X-CSRFToken': this.$utils.getCsrfToken(),
+                        'X-CSRFToken': getCsrfToken(),
                         'Accept': 'application/json'
                     }
                 });

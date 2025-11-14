@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'src.notification.apps.NotificationConfig',
     'src.storage.apps.StorageConfig',
     'src.age_verification.apps.AgeVerificationConfig',
+    'src.activity.apps.ActivityConfig',
 
     "unfold",  # before django.contrib.admin
     "unfold.contrib.filters",  # optional, if special filters are needed

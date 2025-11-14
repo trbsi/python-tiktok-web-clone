@@ -30,7 +30,7 @@ function userProfile(reportContentApi) {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': this.$utils.getCsrfToken(),
+                        'X-CSRFToken': getCsrfToken(),
                     },
                     body: JSON.stringify({
                         type: 'user',

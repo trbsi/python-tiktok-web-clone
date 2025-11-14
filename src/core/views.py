@@ -1,17 +1,19 @@
+import random
 from pathlib import Path
 
+import bugsnag
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_GET
-from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
 
 from app import settings
-from src.core.utils import reverse_lazy_with_query
+from src.core.utils import reverse_lazy_with_query, reverse_lazy_admin
+from src.media.models import Media
 from src.notification.services.notification_service import NotificationService
 from src.notification.value_objects.email_value_object import EmailValueObject
+from src.notification.value_objects.push_notification_value_object import PushNotificationValueObject
 
 
 @require_GET
@@ -53,13 +55,19 @@ def privacy_policy(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def test_notifications(request: HttpRequest) -> HttpResponse:
+    url = reverse_lazy_admin(object=Media(), action='changelist', is_full_url=True)
     email = EmailValueObject(
         subject='Test Email',
         template_path='emails/test_email.html',
         template_variables={'anchor_href': 'www.test.com', 'anchor_label': 'Click here to confirm your new email'},
         to=['admins']
     )
-    NotificationService.send_notification(email)
+    push_notification = PushNotificationValueObject(
+        f'This is test push notification {random.randint(1, 100000)}. {url}')
+
+    NotificationService.send_notification(email, push_notification)
+    bugsnag.notify(Exception(f'This is test error {random.randint(1, 100000)}'))
+
     messages.success(request, 'Thank you for sending an email')
     return redirect(reverse_lazy('home'))
 

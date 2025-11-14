@@ -2,6 +2,7 @@ from src.notification.value_objects.push_notification_value_object import PushNo
 
 
 class BrowserService:
-    def send(self, notification: PushNotificationValueObject) -> None:
+    @staticmethod
+    def send(notification: PushNotificationValueObject) -> None:
         # @TODO add browser push notification
         return

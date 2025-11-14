@@ -9,5 +9,5 @@ urlpatterns = [
     path('payment-webhook', views.payment_webhook),
 
     path('api/balance', views.api_get_balance, name='payment.api.get_balance'),
-    path('api/can-purchase', views.api_can_purchase, name='payment.can_purchase'),
+    path('api/can-spend', views.api_can_spend),
 ]

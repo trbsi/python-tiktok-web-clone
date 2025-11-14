@@ -85,11 +85,11 @@ function balanceChecker(balanceEndpoint, isAuthenticated) {
 
 async function canSpend(type) {
     try {
-        const response = await fetch('/payment/api/can-purchase', {
+        const response = await fetch('/payment/api/can-spend', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': this.getCsrfToken()
+                    'X-CSRFToken': getCsrfToken()
                 },
                 body: JSON.stringify({type: type})
             }

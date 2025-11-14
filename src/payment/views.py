@@ -86,7 +86,7 @@ def api_get_balance(request: HttpRequest) -> JsonResponse:
 
 
 @require_POST
-def api_can_purchase(request: HttpRequest) -> JsonResponse:
+def api_can_spend(request: HttpRequest) -> JsonResponse:
     user: User | AnonymousUser = request.user
     if user.is_anonymous:
         return JsonResponse({'error': 'You are not authorized'}, status=401)

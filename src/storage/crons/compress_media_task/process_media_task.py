@@ -3,9 +3,12 @@ import os
 import bugsnag
 
 from app import settings
+from src.core.utils import reverse_lazy_admin
 from src.inbox.models import Message
 from src.media.enums import MediaEnum
 from src.media.models import Media
+from src.notification.services.notification_service import NotificationService
+from src.notification.value_objects.push_notification_value_object import PushNotificationValueObject
 from src.storage.services.media_manipulation.compress_media_service import CompressMediaService
 from src.storage.services.media_manipulation.thumbnail_service import ThumbnailService
 from src.storage.services.media_manipulation.trailer_service import TrailerService
@@ -118,3 +121,7 @@ class ProcessMediaTask:
         elif isinstance(media, Message):
             media.is_ready = True
             media.save()
+
+        url = reverse_lazy_admin(object=media, action='changelist', is_full_url=True)
+        push_notification = PushNotificationValueObject(f'New content uploaded. Check here: {url}')
+        NotificationService.send_notification(push_notification)

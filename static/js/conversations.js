@@ -42,7 +42,7 @@ function conversationsComponent(listConversationsApi, deleteConversationApi) {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRFToken": this.$utils.getCsrfToken()
+                        "X-CSRFToken": getCsrfToken()
                     },
                     body: JSON.stringify({conversation_ids: this.selectedIds})
                 });

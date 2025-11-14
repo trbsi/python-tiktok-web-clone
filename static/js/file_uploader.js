@@ -42,7 +42,7 @@ function fileUploader(uploadApi) {
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", uploadApi);
-            xhr.setRequestHeader("X-CSRFToken", this.$utils.getCsrfToken());
+            xhr.setRequestHeader("X-CSRFToken", getCsrfToken());
 
             xhr.upload.addEventListener("progress", (e) => {
                 if (e.lengthComputable) {
