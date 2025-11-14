@@ -47,9 +47,14 @@ $(document).ready(function() {
         }
 
         alert(permission)
+        alert(serviceWorkerFile)
 
-        // Register service worker
-        const sw = await navigator.serviceWorker.register(serviceWorkerFile);
+        try {
+            // Register service worker
+            const sw = await navigator.serviceWorker.register(serviceWorkerFile);
+        } catch(e) {
+            alert(e);
+        }
 
         // Fetch VAPID public key from backend
         //serviceWorkerFile is defined in js.html
