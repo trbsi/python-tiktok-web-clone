@@ -27,7 +27,7 @@ class BrowserService:
                     "body": notification.body,
                     "url": notification.url,
                     "icon": full_url_for_path(static('images/icon-192.png')),
-                    "badge": full_url_for_path(static('images/icon-192.png')),
+                    "badge": full_url_for_path(static('images/push_badge.png')),
                 }
                 claims = {
                     "sub": settings.WEB_PUSH_SUBJECT
