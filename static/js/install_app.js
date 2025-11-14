@@ -83,7 +83,6 @@ $("#installBtn").on("click", async function () {
 // ===============================
 
 $("#closeInstallBanner").on("click", function () {
-    alert(35345345);
     $("#installBanner").addClass("hidden");
     localStorage.setItem("installPopupClosedAt", Date.now());
 });

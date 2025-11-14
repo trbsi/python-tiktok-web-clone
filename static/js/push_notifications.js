@@ -53,7 +53,6 @@ $(document).ready(function () {
         //serviceWorkerFile is defined in js.html
         const vapidPublicKeyResponse = await fetch(webPushKeysApi);
         const vapidPublicKeyJson = await vapidPublicKeyResponse.json()
-        alert(vapidPublicKeyJson.public_key)
 
         const subscription = await sw.pushManager.subscribe({
             userVisibleOnly: true,
@@ -70,8 +69,6 @@ $(document).ready(function () {
             body: JSON.stringify(subscription),
             credentials: 'include'
         });
-
-        alert('push subscribed')
 
         console.log("Push subscribed:", subscription);
     });
