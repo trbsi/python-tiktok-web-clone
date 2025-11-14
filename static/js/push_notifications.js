@@ -56,6 +56,9 @@ $(document).ready(function() {
             alert(e);
         }
 
+        alert('passed service worker')
+        alert(webPushKeysApi)
+
         // Fetch VAPID public key from backend
         //serviceWorkerFile is defined in js.html
         const vapidPublicKey = await $.get(webPushKeysApi);
