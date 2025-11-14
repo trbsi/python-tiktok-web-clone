@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     const LATER_COOLDOWN_HOURS = 1;
 
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -7,12 +7,12 @@ $(document).ready(function() {
     const isAppInstalled = isInStandaloneMode || isInStandaloneAndroid;
 
     function shouldShowPopup() {
-//        if (!isAppInstalled) return false;   // Only show if app is installed
+        if (!isAppInstalled) return false;   // Only show if app is installed
         if (localStorage.getItem("pushAccepted") === "true") return false;
 
         const lastDenied = localStorage.getItem("pushDeniedAt");
         if (lastDenied) {
-            const diffHours = (Date.now() - Number(lastDenied)) / (1000*60*60);
+            const diffHours = (Date.now() - Number(lastDenied)) / (1000 * 60 * 60);
             if (diffHours < LATER_COOLDOWN_HOURS) return false;
         }
 
@@ -30,13 +30,13 @@ $(document).ready(function() {
 
 
     // "Maybe Later" button
-    $("#pushDeny, #closePushPopup").click(function() {
+    $("#pushDeny, #closePushPopup").click(function () {
         $("#pushPopup").addClass("hidden");
         localStorage.setItem("pushDeniedAt", Date.now());
     });
 
     // "Allow" button
-    $("#pushAllow").click(async function() {
+    $("#pushAllow").click(async function () {
         $("#pushPopup").addClass("hidden");
         localStorage.setItem("pushAccepted", "true");
 
@@ -55,8 +55,7 @@ $(document).ready(function() {
         const vapidPublicKeyJson = await vapidPublicKeyResponse.json()
         alert(vapidPublicKeyJson.public_key)
 
-        try {
-           const subscription = await sw.pushManager.subscribe({
+        const subscription = await sw.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(vapidPublicKeyJson.public_key)
         });
@@ -71,24 +70,6 @@ $(document).ready(function() {
             body: JSON.stringify(subscription),
             credentials: 'include'
         });
-        } catch (err) {
-              // Convert the error to a readable string
-            let message;
-
-            if (err instanceof Error) {
-                // Standard Error object
-                message = err.message;
-            } else if (typeof err === 'object') {
-                // Plain object → stringify it
-                message = JSON.stringify(err);
-            } else {
-                // Fallback for string, number, etc.
-                message = String(err);
-            }
-
-            alert("Error: " + message);
-        }
-
 
         alert('push subscribed')
 

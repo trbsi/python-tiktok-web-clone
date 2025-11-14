@@ -68,7 +68,8 @@ def test_notifications(request: HttpRequest) -> HttpResponse:
     if only == 'push':
         push.append(PushNotificationValueObject(
             user_id=user.id,
-            body=f'This is test push notification {random.randint(1, 100000)}'
+            body=f'This is test push notification {random.randint(1, 100000)}',
+            title='Some cool title'
         ))
     elif only == 'email':
         push.append(EmailValueObject(
@@ -87,7 +88,8 @@ def test_notifications(request: HttpRequest) -> HttpResponse:
         ))
         push.append(PushNotificationValueObject(
             user_id=user.id,
-            body=f'This is test push notification {random.randint(1, 100000)}. {url}'
+            body=f'This is test push notification {random.randint(1, 100000)}. {url}',
+            title='Some cool title'
         ))
 
         bugsnag.notify(Exception(f'This is test error {random.randint(1, 100000)}'))

@@ -1,9 +1,9 @@
 self.addEventListener("install", e => {
-  console.log("Service Worker Installed.");
+    console.log("Service Worker Installed.");
 });
 
 self.addEventListener("activate", e => {
-  console.log("Service Worker Activated.");
+    console.log("Service Worker Activated.");
 });
 
 self.addEventListener("push", event => {
@@ -13,7 +13,7 @@ self.addEventListener("push", event => {
             body: data.body,
             icon: "/static/images/icon-192.png",
             badge: "/static/images/icon-192.png",
-            data: { url: data.url }
+            data: {url: data.url}
         })
     );
 });
