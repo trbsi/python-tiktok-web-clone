@@ -18,7 +18,7 @@ def api_web_push_keys(request: HttpRequest) -> JsonResponse:
 @require_POST
 @login_required
 def api_web_push_subscribe(request: HttpRequest) -> JsonResponse:
-    body = json.load(request.body)
+    body = json.loads(request.body)
 
     print(body)
     web_service = WebPushSubscribeService()
