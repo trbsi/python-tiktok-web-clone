@@ -9,6 +9,9 @@ from src.notification.value_objects.push_notification_value_object import PushNo
 class SlackService:
     @staticmethod
     def send(notification: PushNotificationValueObject) -> None:
+        if notification.user_id is not None:
+            return
+        
         client = WebClient(token=settings.SLACK_BOT_TOKEN)
         try:
             client.chat_postMessage(
