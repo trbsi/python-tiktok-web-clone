@@ -1,6 +1,12 @@
 <div id="installBanner"
      class="hidden z-1000 fixed bottom-4 inset-x-0 mx-auto w-[90%] bg-white shadow-lg p-4 rounded-xl text-center text-black">
+
+    <button id="closeInstallBanner" class="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl">
+        &times;
+    </button>
+
     <p class="mb-2 font-medium">Install {{TEMPLATE_APP_NAME}} on your phone for a better experience</p>
+
     <button id="installBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
         Install App
     </button>
@@ -8,7 +14,12 @@
 
 
 <div id="iosInstallHint"
-     class="hidden z-1000 fixed bottom-20 inset-x-0 mx-auto w-[92%] bg-white shadow-lg p-4 text-center rounded-xl z-50 text-black">
+     class="hidden z-1000 fixed bottom-20 inset-x-0 mx-auto w-[92%] bg-white shadow-lg p-4 text-center rounded-xl text-black">
+
+    <button id="closeIosHint" class="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl">
+        &times;
+    </button>
+
     <p>
         To install {{TEMPLATE_APP_NAME}} on your phone:<br>
         Tap the Share icon (<i class="ri-share-2-line"></i>) →
@@ -18,7 +29,6 @@
     <!-- Down arrow pointing to iOS share icon -->
     <div class="flex justify-center mt-3">
         <div class="animate-bounce text-gray-600">
-            <!-- arrow icon -->
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8"
                  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
