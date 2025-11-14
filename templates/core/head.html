@@ -5,6 +5,7 @@
 
 <title>{{TEMPLATE_APP_NAME}}</title>
 
+<link rel="manifest" href="{% static 'manifest.json' %}">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
@@ -34,4 +35,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
 
+<script>
+    // Used in core.js
+    const serviceWorkerFile = '{% static 'js/service-worker.js' %}';
+</script>
 <script src="{% static 'js/core.js' %}"></script>

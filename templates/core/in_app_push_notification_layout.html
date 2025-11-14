@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>iOS-Style Notification</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body class="bg-gray-100 h-screen">
+
+<button id="demoBtn"
+        class="px-4 py-2 mt-10 ml-10 bg-blue-600 text-white rounded-lg">
+    Show Notification
+</button>
+
+<!-- Notification wrapper -->
+<div id="notif-wrapper"
+     class="fixed top-0 inset-x-0 z-50 flex justify-center pointer-events-none">
+</div>
+
+<script>
+    /* ============================================
+       jQuery iOS-like Notification
+       showNotification({ title, message, icon, timeout })
+       ============================================ */
+
+    function showNotification({ title = "", message = "", icon = "", timeout = 4000 } = {}) {
+
+        // Remove existing notification (optional)
+        $("#notif-wrapper").empty();
+
+        const notif = $(`
+      <div class="w-[90%] max-w-sm mt-4 pointer-events-auto
+                   opacity-0 -translate-y-10 transition-all duration-300">
+        <div class="bg-white/80 backdrop-blur-md border border-white/30
+                    shadow-lg rounded-xl overflow-hidden ring-1 ring-black/5">
+          <div class="flex p-3 gap-3">
+            <div class="flex-shrink-0">
+              ${
+            icon
+                ? `${icon}`
+                : `<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center
+                             justify-center text-gray-600 text-sm">✪</div>`
+        }
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start">
+                <h4 class="text-sm font-semibold text-gray-900 truncate">${title}</h4>
+
+                <button class="closeBtn text-gray-500 hover:text-gray-700">
+                  ✕
+                </button>
+              </div>
+              <p class="text-xs text-gray-700 leading-5 break-words">${message}</p>
+            </div>
+          </div>
+
+          <!-- progress -->
+          <div class="h-1 bg-transparent">
+            <div class="progress w-0 h-1 bg-blue-500"></div>
+          </div>
+        </div>
+      </div>
+    `);
+
+        $("#notif-wrapper").append(notif);
+
+        // Animate in
+        setTimeout(() => {
+            notif.removeClass("opacity-0 -translate-y-10")
+                .addClass("opacity-100 translate-y-0");
+            notif.find(".progress").css({
+                width: "100%",
+                transition: `width ${timeout}ms linear`
+            });
+        }, 20);
+
+        // Auto-dismiss
+        let timer = setTimeout(() => dismiss(), timeout);
+
+        // Pause on hover
+        notif.hover(
+            function () {
+                clearTimeout(timer);
+                notif.find(".progress").css("transition", "none");
+            },
+            function () {
+                const pb = notif.find(".progress");
+                const width = pb.width() / pb.parent().width(); // current %
+                const remaining = timeout * (1 - width);
+                pb.css("transition", `width ${remaining}ms linear`);
+                pb.css("width", "100%");
+                timer = setTimeout(() => dismiss(), remaining);
+            }
+        );
+
+        // Close button
+        notif.find(".closeBtn").on("click", () => dismiss());
+
+        // Dismiss animation
+        function dismiss() {
+            notif.addClass("-translate-y-10 opacity-0");
+            setTimeout(() => notif.remove(), 300);
+        }
+    }
+
+    $("#demoBtn").on("click", function () {
+        showNotification({
+            title: "New Message",
+            message: "You've received a new DM — open it now.",
+            icon: "",
+            timeout: 5000
+        });
+    });
+</script>
+</body>
+</html>
