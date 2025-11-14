@@ -9,5 +9,4 @@ urlpatterns = [
     path('terms-of-use', views.terms_of_use, name='terms_of_use'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
     path('legal-documents', views.legal_documents, name='legal_documents'),
-    path('test-notifications', views.test_notifications),
 ]
