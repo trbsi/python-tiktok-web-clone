@@ -54,8 +54,8 @@ $(document).ready(function() {
         try {
             // Fetch VAPID public key from backend
             //serviceWorkerFile is defined in js.html
-            const vapidPublicKeyJson = await fetch(webPushKeysApi);
-            const vapidPublicKeyJson = await vapidPublicKey.json()
+            const vapidPublicKeyResponse = await fetch(webPushKeysApi);
+            const vapidPublicKeyJson = await vapidPublicKeyResponse.json()
             alert(vapidPublicKeyJson)
         } catch (e) {
             alert(e)
