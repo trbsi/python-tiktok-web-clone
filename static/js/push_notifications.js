@@ -1,7 +1,13 @@
 $(document).ready(function() {
     const LATER_COOLDOWN_HOURS = 1;
 
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+    const isInStandaloneAndroid = window.matchMedia('(display-mode: standalone)').matches;
+    const isAppInstalled = isInStandaloneMode || isInStandaloneAndroid;
+
     function shouldShowPopup() {
+//        if (!isAppInstalled) return false;   // Only show if app is installed
         if (localStorage.getItem("pushAccepted") === "true") return false;
 
         const lastDenied = localStorage.getItem("pushDeniedAt");
@@ -18,10 +24,10 @@ $(document).ready(function() {
         return true;
     }
 
-    // Show popup if needed
     if (shouldShowPopup()) {
         $("#pushPopup").removeClass("hidden");
     }
+
 
     // "Maybe Later" button
     $("#pushDeny, #closePushPopup").click(function() {
@@ -41,7 +47,7 @@ $(document).ready(function() {
         }
 
         // Register service worker
-        const sw = await navigator.serviceWorker.register("/service-worker.js");
+        const sw = await navigator.serviceWorker.register(serviceWorkerFile);
 
         // Fetch VAPID public key from backend
         //serviceWorkerFile is defined in js.html
@@ -54,7 +60,7 @@ $(document).ready(function() {
 
         // Send subscription to backend
         await $.ajax({
-            url: "/save-subscription",
+            url: saveWebPushSubscriptionApi,
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(subscription)
@@ -71,3 +77,4 @@ $(document).ready(function() {
         return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
     }
 });
+

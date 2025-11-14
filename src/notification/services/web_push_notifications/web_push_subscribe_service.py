@@ -2,6 +2,6 @@ from src.notification.models import WebPushSubscription
 from src.user.models import User
 
 
-class PushSubscribeService:
+class WebPushSubscribeService:
     def push_subscribe(self, user: User, subscription: dict) -> None:
         WebPushSubscription.objects.create(user=user, subscription=subscription)

@@ -5,7 +5,7 @@ from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 
 from app import settings
-from src.notification.services.subscribe.push_subscribe_service import PushSubscribeService
+from src.notification.services.web_push_notifications.web_push_subscribe_service import WebPushSubscribeService
 
 
 @require_GET
@@ -17,10 +17,11 @@ def api_web_push_keys(request: HttpRequest) -> JsonResponse:
 
 @require_POST
 @login_required
-def api_subscribe(request: HttpRequest) -> JsonResponse:
+def api_web_push_subscribe(request: HttpRequest) -> JsonResponse:
     body = json.load(request.body)
-    
-    service = PushSubscribeService()
-    service.push_subscribe(request.user, body)
+
+    print(body)
+    web_service = WebPushSubscribeService()
+    web_service.push_subscribe(request.user, body)
 
     return JsonResponse({})
