@@ -168,6 +168,6 @@ class LoadFeedService:
                 items = items.filter(hashtags__hashtag=filters[index + 1])
             elif value == 'query':
                 items = items.filter(
-                    Q(description__contains=filters[index + 1]) | Q(user__username__contains=filters[index + 1]))
+                    Q(description__icontains=filters[index + 1]) | Q(user__username__icontains=filters[index + 1]))
 
         return items
