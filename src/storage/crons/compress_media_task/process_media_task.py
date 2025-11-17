@@ -64,6 +64,7 @@ class ProcessMediaTask:
             output_compressed_file_path = downloaded_local_file_path
         except Exception as e:
             bugsnag.notify(e)
+            return  # no point of going further if file cannot be downloaded
 
         if should_compress_media:
             try:
