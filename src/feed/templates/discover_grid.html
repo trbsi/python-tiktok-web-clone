@@ -1,0 +1,75 @@
+{% extends "core/layout.html" %}
+{% load static %}
+
+{% block javascript %}
+<script src="{% static 'js/discover.js' %}"></script>
+{% endblock javascript %}
+
+{% block content %}
+<div class="p-4" x-data="discoverFeed('{{discover_feed_url}}', '{{media_api_url}}', '{{query}}', '{{filters}}')"
+     x-init="init()">
+    <!-- Search Bar -->
+    <div class="w-full mb-4 flex gap-2">
+        <div class="relative w-full">
+            <input
+                    type="text"
+                    placeholder="Search creators or content..."
+                    class="flex-1 w-full p-3 pr-10 rounded-xl border border-gray-700 focus:ring focus:ring-blue-300 bg-white text-gray-800"
+                    x-model="filterQuery"
+            />
+
+            <!-- Clear (X) Button -->
+            <button
+                    type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    x-show="filterQuery"
+                    @click="resetFilter"
+            >
+                ✕
+            </button>
+        </div>
+        <button
+                class="px-3 py-3 text-gray-200 rounded-xl"
+                @click="filterDiscover"
+        ><i class="ri-search-line ri-xl"></i></button>
+    </div>
+
+    <!-- Grid Container -->
+    <div
+            class="grid grid-cols-3 gap-3"
+    >
+        <template x-for="item in mediaList" :key="item.id">
+
+            <div class="relative bg-gray-900 rounded-xl overflow-hidden shadow h-40">
+                <a :href="`{% url 'feed.discover.scroll' %}?mid=${item.id}`">
+                    <!-- MEDIA -->
+                    <template x-if="item.type === 'image'">
+                        <img :src="item.src" class="w-full h-full object-cover"/>
+                    </template>
+
+                    <template x-if="item.type === 'video'">
+                        <video
+                                :src="item.src"
+                                class="w-full h-full object-cover"
+                                autoplay
+                                muted
+                                loop
+                                playsinline
+                        ></video>
+                    </template>
+                </a>
+
+                <!-- BOTTOM INFO -->
+                <a href="javascript:;" @click="openProfile(item.user)"
+                   class="absolute z-10 bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-2 text-white text-sm">
+                    <span x-text="'@' + item.user.username"></span>
+                </a>
+            </div>
+
+        </template>
+
+        <!-- SENTINEL → triggers loadMore() when visible -->
+        <div x-ref="sentinel" class="h-10 w-full"></div>
+    </div>
+</div>
+{% endblock content %}

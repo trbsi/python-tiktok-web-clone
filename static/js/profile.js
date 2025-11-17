@@ -1,9 +1,10 @@
-function userProfile(reportContentApi) {
+function userProfile(reportContentApi, followUnfollowApi, isFollowing) {
     return {
         menuOpen: false,
         showReportForm: false,
         reportDescription: "",
         reportTarget: null,
+        followUnfollowText: isFollowing ? "Unfollow" : "Follow",
 
         openReportForm(reportTarget) {
             this.reportTarget = reportTarget;
@@ -49,6 +50,31 @@ function userProfile(reportContentApi) {
                 this.reportTarget = null;
             } catch (e) {
                 console.error(e);
+            }
+        },
+
+        async followUnfollow(userId) {
+            const response = await fetch(followUnfollowApi, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({
+                    'following': userId
+                }),
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Following failed');
+            }
+
+            const result = await response.json();
+            if (result.status == 'followed') {
+                this.followUnfollowText = 'Unfollow';
+            } else {
+                this.followUnfollowText = 'Follow';
             }
         }
     };

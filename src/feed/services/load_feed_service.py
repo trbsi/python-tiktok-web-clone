@@ -2,7 +2,7 @@ import re
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.paginator import Paginator, Page
-from django.db.models import QuerySet, OuterRef, Exists, Case, Value, When, IntegerField
+from django.db.models import QuerySet, OuterRef, Exists, Case, Value, When, IntegerField, Q
 from django.urls import reverse_lazy
 
 from src.engagement.models import Like
@@ -15,7 +15,8 @@ from src.user.models import User
 
 
 class LoadFeedService:
-    PER_PAGE = 10
+    PER_PAGE_FOLLOW = 10
+    PER_PAGE_DISCOVER = 20
     FEED_TYPE_FOLLOW = 'follow'
     FEED_TYPE_DISCOVER = 'discover'
 
@@ -34,16 +35,19 @@ class LoadFeedService:
             user=user,
             include_following_list=include_following_list,
             filters=filters,
-            feed_type=self.FEED_TYPE_FOLLOW
+            feed_type=self.FEED_TYPE_FOLLOW,
+            per_page=self.PER_PAGE_FOLLOW,
         )
 
-    def get_discover_feed(self, page: int, user: User | AnonymousUser) -> dict:
+    def get_discover_feed(self, page: int, user: User | AnonymousUser, filters: str | None) -> dict:
         exclude_following_list = self._get_followings(user=user)
         return self._get_feed_items(
             current_page=page,
             user=user,
             exclude_following_list=exclude_following_list,
-            feed_type=self.FEED_TYPE_DISCOVER
+            filters=filters,
+            feed_type=self.FEED_TYPE_DISCOVER,
+            per_page=self.PER_PAGE_DISCOVER,
         )
 
     def _get_followings(self, user: User | AnonymousUser) -> list | None:
@@ -57,6 +61,7 @@ class LoadFeedService:
             current_page: int,
             user: User | AnonymousUser,
             feed_type: str,
+            per_page: int,
             include_following_list: list | None = None,
             exclude_following_list: list | None = None,
             filters: str | None = None,
@@ -79,15 +84,17 @@ class LoadFeedService:
             .filter(is_approved=True)
         )
 
-        if include_following_list:
-            items = items.filter(user_id__in=include_following_list)
+        if include_following_list and feed_type == self.FEED_TYPE_FOLLOW:
+            items = items.filter(user_id__in=list(include_following_list))
 
-        if exclude_following_list:
-            items = items.exclude(user_id__in=exclude_following_list)
+        # @TODO enable this once there are more creators and content
+        if exclude_following_list and feed_type == self.FEED_TYPE_DISCOVER:
+            # items = items.exclude(user_id__in=list(exclude_following_list))
+            pass
 
         items = self._apply_filters(items, filters)
 
-        paginator = Paginator(object_list=items, per_page=self.PER_PAGE)
+        paginator = Paginator(object_list=items, per_page=per_page)
         page: Page = paginator.page(current_page)
 
         # Handle unlocked media
@@ -131,7 +138,7 @@ class LoadFeedService:
         # Pattern: match a '#' followed by one or more word chars (letters, digits, underscore)
         pattern = r'(?<!\w)#(\w+)'
         if feed_type == self.FEED_TYPE_DISCOVER:
-            route = reverse_lazy('feed.discover')
+            route = reverse_lazy('feed.discover.grid')
         else:
             route = reverse_lazy('feed.following')
 
@@ -159,5 +166,8 @@ class LoadFeedService:
                 )).order_by('is_target_media')
             elif value == 'hashtag':
                 items = items.filter(hashtags__hashtag=filters[index + 1])
+            elif value == 'query':
+                items = items.filter(
+                    Q(description__contains=filters[index + 1]) | Q(user__username__contains=filters[index + 1]))
 
         return items

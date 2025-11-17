@@ -32,9 +32,10 @@ function mediaFeed(
         isAuthenticated,
 
 
-        init() {
+        async init() {
             // initial load
-            this.loadMore();
+            await this.loadMore();
+            this.playAtIndex(0);
 
             // pause all media on page load, then play the top-most after a tiny delay for autoplay to work consistently
             window.addEventListener('visibilitychange', () => {
@@ -452,9 +453,8 @@ function mediaFeed(
         },
 
         openProfile(user) {
-            // open user profile - replace with your routing
-            // If you use client-side routing, navigate there instead.
-            window.location.href = `/user/${encodeURIComponent(user.username)}`;
+            // userProfileUrl comes from js.html
+            window.location = userProfileUrl.replace('__PLACEHOLDER__', user.username);
         },
 
         async shareMedia(video) {

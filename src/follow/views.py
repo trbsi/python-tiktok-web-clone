@@ -9,10 +9,10 @@ from src.follow.services.follow.follow_service import FollowService
 
 @require_POST
 @login_required
-def follow_unfollow(request: HttpRequest) -> JsonResponse:
+def api_follow_unfollow(request: HttpRequest) -> JsonResponse:
     post = json.loads(request.body)
 
     service = FollowService()
-    service.follow_unfollow(follower=request.user, following=int(post.get('following')))
+    result = service.follow_unfollow(follower=request.user, following=int(post.get('following')))
 
-    return JsonResponse({})
+    return JsonResponse({'status': result})

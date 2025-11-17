@@ -7,13 +7,13 @@ from src.feed.services.load_feed_service import LoadFeedService
 
 
 @require_GET
-def discover(request: HttpRequest) -> HttpResponse:
+def discover_scroll(request: HttpRequest) -> HttpResponse:
     filters = _get_filters(request)
     return render(
         request,
-        'feed_home.html',
+        'feed.html',
         {
-            'type': 'discover',
+            'type': LoadFeedService.FEED_TYPE_DISCOVER,
             'filters': ','.join(filters),
             'media_api_url': reverse_lazy('feed.api.get_media'),
             'follow_unfollow_api': reverse_lazy('follow.api.follow_unfollow'),
@@ -29,13 +29,29 @@ def discover(request: HttpRequest) -> HttpResponse:
 
 
 @require_GET
+def discover_grid(request: HttpRequest) -> HttpResponse:
+    get = request.GET
+    filters = _get_filters(request)
+    return render(
+        request,
+        'discover_grid.html',
+        {
+            'discover_feed_url': reverse_lazy('feed.discover.grid'),
+            'media_api_url': reverse_lazy('feed.api.get_media'),
+            'filters': ','.join(filters),
+            'query': get.get('query', ''),
+        }
+    )
+
+
+@require_GET
 def following(request: HttpRequest) -> HttpResponse:
     filters = _get_filters(request)
     return render(
         request,
-        'feed_home.html',
+        'feed.html',
         {
-            'type': 'following',
+            'type': LoadFeedService.FEED_TYPE_FOLLOW,
             'filters': ','.join(filters),
             'user': request.user,
             'media_api_url': reverse_lazy('feed.api.get_media'),
@@ -51,11 +67,32 @@ def following(request: HttpRequest) -> HttpResponse:
     )
 
 
+@require_GET
+def api_get_feed(request: HttpRequest) -> JsonResponse:
+    requestData = request.GET
+    page = int(requestData.get('page'))
+    type = requestData.get('type')
+    filters = requestData.get('filters')
+
+    service: LoadFeedService = LoadFeedService()
+
+    if type == LoadFeedService.FEED_TYPE_FOLLOW:
+        data: dict = service.get_following_feed(page=page, user=request.user, filters=filters)
+    else:
+        data: dict = service.get_discover_feed(page=page, user=request.user, filters=filters)
+
+    return JsonResponse({
+        'results': data['result'],
+        'next_page': data['next_page'],
+    })
+
+
 def _get_filters(request: HttpRequest) -> list:
     get = request.GET
     user_id = get.get('uid')
     media_id = get.get('mid')
     hashtag = get.get('hashtag')
+    query = get.get('query')
     filters = []
 
     if user_id:
@@ -67,24 +104,7 @@ def _get_filters(request: HttpRequest) -> list:
     if hashtag:
         filters.extend(['hashtag', hashtag])
 
+    if query:
+        filters.extend(['query', query])
+
     return filters
-
-
-@require_GET
-def api_get_feed(request: HttpRequest) -> JsonResponse:
-    requestData = request.GET
-    page = int(requestData.get('page'))
-    type = requestData.get('type')
-    filters = requestData.get('filters')
-
-    service: LoadFeedService = LoadFeedService()
-
-    if type == 'following':
-        data: dict = service.get_following_feed(page=page, user=request.user, filters=filters)
-    else:
-        data: dict = service.get_discover_feed(page=page, user=request.user)
-
-    return JsonResponse({
-        'results': data['result'],
-        'next_page': data['next_page'],
-    })

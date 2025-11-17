@@ -11,7 +11,7 @@
 <div
         id="profile-view"
         class="bg-black h-full overflow-y-auto pb-16"
-        x-data="userProfile('{{report_content_api}}')"
+        x-data="userProfile('{{report_content_api}}', '{{follow_unfollow_api}}', {{is_following}})"
 >
     {% if TEMPLATE_IS_AUTHENTICATED == 1 %}
     <!-- Trigger button -->

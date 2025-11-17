@@ -56,20 +56,28 @@
 
     {% if current_user.is_creator and is_the_same_user == False %}
     <div class="flex flex-row">
+        <div class="ml-2">
+            <a
+                    @click="followUnfollow({{current_user.id}})"
+                    x-text="followUnfollowText"
+                    class="bg-primary text-white p-2 rounded-full !rounded-button font-medium">
+            </a>
+        </div>
+        <div class="ml-2">
+            <a
+                    href="{% url 'inbox.create_conversations' username=current_user.username %}"
+                    class="bg-cyan-500 text-white p-2 rounded-full !rounded-button font-medium">
+                Message
+            </a>
+        </div>
+    </div>
+    <div class="flex flex-row mt-5">
         <div>
             <button
                     @click="openReportForm({{current_user.id}})"
                     class="font-medium">
                 <i class="ri-flag-line"></i> Report
             </button>
-        </div>
-        <div class="ml-2">
-            <a
-                    href="{% url 'inbox.create_conversations' username=current_user.username %}"
-                    class="bg-primary text-white p-2 rounded-full !rounded-button font-medium">
-                <i class="ri-chat-1-line"></i>
-                Send message
-            </a>
         </div>
     </div>
     {% endif %}

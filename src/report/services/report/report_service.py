@@ -39,11 +39,12 @@ class ReportService:
         }
 
         url = reverse_lazy_admin(object=report, action='changelist', is_full_url=True)
-        admin_email = EmailValueObject(
+        notification = []
+        notification.append(EmailValueObject(
             subject='Content Reported!',
             template_path='emails/admin/content_reported.html',
             template_variables=template_vars,
             to=['admins']
-        )
-        push = PushNotificationValueObject(body=f'New content reported! Check here: {url}')
-        NotificationService.send_notification(admin_email, push)
+        ))
+        notification.append(PushNotificationValueObject(body=f'New content reported! Check here: {url}. {description}'))
+        NotificationService.send_notification(*notification)

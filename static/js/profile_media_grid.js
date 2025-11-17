@@ -19,6 +19,7 @@ function profileGrid(username, mediaApiUrl) {
                     }
                 });
             }, {rootMargin: '200px'});
+
             observer.observe(this.$refs.sentinel)
         },
 
