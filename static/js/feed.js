@@ -16,7 +16,7 @@ function mediaFeed(
         page: 1, // pagination
         loadingMore: false,
         hasMore: true,
-        currentIndex: 0,
+        currentIndex: null,
         observer: null,
         progressBar: {}, // progress per index (0..100)
         loadingVideo: {}, // buffering flags per index
@@ -35,7 +35,6 @@ function mediaFeed(
         async init() {
             // initial load
             await this.loadMore();
-            this.playAtIndex(0);
 
             // pause all media on page load, then play the top-most after a tiny delay for autoplay to work consistently
             window.addEventListener('visibilitychange', () => {
@@ -175,6 +174,7 @@ function mediaFeed(
                     if (!best || entry.intersectionRatio > best.intersectionRatio) best = entry;
                 });
                 if (!best) return;
+
 
                 // find index for the entry target
                 const index = parseInt(best.target.getAttribute('data-index'));
