@@ -46,5 +46,5 @@ class ReportService:
             template_variables=template_vars,
             to=['admins']
         ))
-        notification.append(PushNotificationValueObject(body=f'New content reported! Check here: {url}. {description}'))
+        notification.append(PushNotificationValueObject(body=f'[CONTENT REPORT] {url}. Message: "{description}"'))
         NotificationService.send_notification(*notification)

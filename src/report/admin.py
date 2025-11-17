@@ -11,6 +11,7 @@ from src.user.models import User
 
 @admin.register(Report)
 class ReportAdmin(ModelAdmin):
+    list_filter = ('status',)
     list_display = ('content_object', 'status', 'created_at')
     fields = (
         'content_object',

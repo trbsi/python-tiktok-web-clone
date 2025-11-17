@@ -123,5 +123,5 @@ class ProcessMediaTask:
             media.save()
 
         url = reverse_lazy_admin(object=media, action='changelist', is_full_url=True)
-        push_notification = PushNotificationValueObject(body=f'New content uploaded. Check here: {url}')
+        push_notification = PushNotificationValueObject(body=f'[CONTENT UPLOADED] {url}')
         NotificationService.send_notification(push_notification)
