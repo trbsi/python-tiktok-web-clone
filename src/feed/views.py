@@ -8,13 +8,18 @@ from src.feed.services.load_feed_service import LoadFeedService
 
 @require_GET
 def discover_scroll(request: HttpRequest) -> HttpResponse:
+    get = request.GET
+    # When user comes from main discover page to scroll page
+    go_back = bool(get.get('go_back', False))
     filters = _get_filters(request)
+
     return render(
         request,
         'feed.html',
         {
             'type': LoadFeedService.FEED_TYPE_DISCOVER,
             'filters': ','.join(filters),
+            'go_back_button': go_back,
             'media_api_url': reverse_lazy('feed.api.get_media'),
             'follow_unfollow_api': reverse_lazy('follow.api.follow_unfollow'),
             'create_comment_api': reverse_lazy('engagement.api.create_comment'),
@@ -54,6 +59,7 @@ def following(request: HttpRequest) -> HttpResponse:
             'type': LoadFeedService.FEED_TYPE_FOLLOW,
             'filters': ','.join(filters),
             'user': request.user,
+            'go_back_button': False,  # When user comes from main discover page to scroll page
             'media_api_url': reverse_lazy('feed.api.get_media'),
             'follow_unfollow_api': reverse_lazy('follow.api.follow_unfollow'),
             'create_comment_api': reverse_lazy('engagement.api.create_comment'),

@@ -41,7 +41,7 @@
         <template x-for="item in mediaList" :key="item.id">
 
             <div class="relative bg-gray-900 rounded-xl overflow-hidden shadow h-40">
-                <a :href="`{% url 'feed.discover.scroll' %}?mid=${item.id}`">
+                <a :href="`{% url 'feed.discover.scroll' %}?mid=${item.id}&go_back=1`">
                     <!-- MEDIA -->
                     <template x-if="item.type === 'image'">
                         <img :src="item.src" class="w-full h-full object-cover"/>
