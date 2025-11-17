@@ -12,7 +12,7 @@
         <span class="text-xs">Follow</span>
 
     </a>
-    <a href="{% url 'feed.discover' %}"
+    <a href="{% url 'feed.discover.grid' %}"
        id="discover-btn"
        class="flex flex-col items-center justify-center py-1 {% if 'feed.discover' in request.resolver_match.url_name %}text-primary{% else %}text-gray-400{% endif %}"
     >

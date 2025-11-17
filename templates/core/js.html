@@ -4,6 +4,7 @@
     const serviceWorkerFile = '{% static 'js/service_worker.js' %}';
     const saveWebPushSubscriptionApi = '{% url 'notification.web_push_subscribe' %}';
     const webPushKeysApi = '{% url 'notification.web_push_keys' %}';
+    const userProfileUrl = '{% url 'user.profile' username='__PLACEHOLDER__' %}';
 </script>
 <script src="{% static 'js/core.js' %}"></script>
 <script src="{% static 'js/install_app.js' %}"></script>
