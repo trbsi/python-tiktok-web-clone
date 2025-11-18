@@ -17,10 +17,11 @@ class TrailerService:
             local_file_type: str,
             local_file_path: str,
             local_file_path_directory: str,
-            clip_count=3,
-            min_length=7,
-            max_length=60,
-            percentage=0.15
+            clip_count: int,
+            min_length: int = 7,
+            max_length: int = 15,
+            percentage: float | None = None,
+            trailer_length: int | None = None,
     ):
         """
         Video Processing Overview:
@@ -57,6 +58,7 @@ class TrailerService:
         :param min_length: Minimum trailer length in seconds
         :param max_length: Maximum trailer length in seconds
         :param percentage: Fraction of video duration to use for trailer
+        :param trailer_length: Set your own fixed trailer length
         """
 
         # Get video duration with ffprobe
@@ -75,14 +77,28 @@ class TrailerService:
         duration = float(result.stdout.strip())
 
         # Cap-based trailer length
-        target_length = duration * percentage
-        trailer_length = max(min_length, min(max_length, target_length))
+        if not trailer_length:
+            if not min_length or not max_length or not percentage:
+                raise Exception('percentage, min_length and max_length are required if trailer length not set')
+            target_length = duration * percentage
+            trailer_length = max(min_length, min(max_length, target_length))
+        else:
+            trailer_length = min(trailer_length, duration)
 
         # Length of each clip
         clip_length = trailer_length / clip_count
 
         # Pick positions evenly spaced across the video
-        positions = [duration * (i + 1) / (clip_count + 1) for i in range(clip_count)]
+        positions = []
+        # We want to place clip_count positions evenly spaced within "duration".
+        # Example: if duration=10 and clip_count=3 → positions at 2.5, 5.0, 7.5
+        for i in range(clip_count):
+            # i starts at 0, so use (i + 1) to avoid starting at 0
+            step_index = i + 1
+            # Compute the position as a fraction of the total duration
+            position = duration * step_index / (clip_count + 1)
+            # Store the computed position
+            positions.append(position)
 
         parts = []
         part_uuid = uuid.uuid4()

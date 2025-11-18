@@ -100,6 +100,8 @@ class ProcessMediaTask:
                     local_file_type=media.file_type,
                     local_file_path=output_compressed_file_path,
                     local_file_path_directory=local_file_path_directory,
+                    clip_count=4,
+                    trailer_length=6,
                 )
                 files_to_remove.append(trailer_result.get('output_trailer_file_path'))
                 files_to_remove = files_to_remove + trailer_result.get('parts')
