@@ -24,11 +24,24 @@
         <template x-for="(media, index) in mediaList" :key="media.id">
             <a :href="media.destination_url">
                 <div class="aspect-[9/16] relative">
-                    <img
-                            :src="media.thumbnail"
-                            :alt="media.title || 'Media'"
-                            class="w-full h-full object-cover"
-                    />
+                    <div class="relative w-full h-full">
+                        <!-- The Image -->
+                        <img
+                                :src="media.thumbnail"
+                                :alt="media.title || 'Media'"
+                                class="w-full h-full object-cover"
+                        />
+
+                        <!-- Overlay -->
+                        <template x-if="!media.is_approved">
+                            <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                <span class="text-white text-center text-xl font-semibold">
+                                    Under Review
+                                </span>
+                            </div>
+                        </template>
+
+                    </div>
                     <div class="absolute bottom-0 flex items-center text-white drop-shadow w-full">
                         <div x-show="media.item_type == 'video'" class="text-sm p-[2px] w-full">
                             <i class="ri-video-on-line ri-lg"></i>

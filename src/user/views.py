@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest, HttpResponse, JsonResponse, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -51,8 +52,13 @@ def api_get_user_media(request: HttpRequest) -> JsonResponse:
     get = request.GET
     page = int(get.get('page'))
     username = get.get('username')
+    user: User | AnonymousUser = request.user
     user_media_service = UserMediaService()
-    data: dict = user_media_service.get_user_media(username=username, current_page=page)
+    data: dict = user_media_service.get_user_media(
+        current_user=user,
+        username=username,
+        current_page=page
+    )
 
     return JsonResponse({'results': data['result'], 'next_page': data['next_page']})
 
