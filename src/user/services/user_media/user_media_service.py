@@ -17,10 +17,11 @@ class UserMediaService:
         media: QuerySet[Media] = (
             Media.objects
             .filter(status=MediaEnum.STATUS_PAID.value)
-            .filter(user=user).order_by('-created_at')
+            .filter(user=user)
+            .order_by('-created_at')
         )
 
-        # Show only approved media for anyone who visits user profile
+        # Show only APPROVED media for anyone who visits user profile
         # For current user show non-approved media also
         if current_user != user:
             media = media.filter(is_approved=True)

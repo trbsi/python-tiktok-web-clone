@@ -53,6 +53,7 @@ def api_get_user_media(request: HttpRequest) -> JsonResponse:
     page = int(get.get('page'))
     username = get.get('username')
     user: User | AnonymousUser = request.user
+
     user_media_service = UserMediaService()
     data: dict = user_media_service.get_user_media(
         current_user=user,
