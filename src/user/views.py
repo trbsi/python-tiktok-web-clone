@@ -69,6 +69,7 @@ def api_get_user_media(request: HttpRequest) -> JsonResponse:
 def api_get_following(request: HttpRequest) -> JsonResponse:
     get = request.GET
     page = int(get.get('page'))
+
     service = UserFollowingService()
     result = service.get_following(user=request.user, current_page=page)
 

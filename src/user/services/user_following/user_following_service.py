@@ -15,12 +15,14 @@ class UserFollowingService:
 
         result = []
         for user_data in page.object_list:
+            # Update UserMediaService also
             result.append({
                 'id': user_data.id,
                 'title': user_data.username,
                 'thumbnail': str(user_data.get_profile_picture()),
                 'item_type': 'creator_profile',
                 'destination_url': reverse_lazy('user.profile', kwargs={'username': user_data.username}),
+                'is_approved': 1,
             })
 
         next_page = page.next_page_number() if page.has_next() else None

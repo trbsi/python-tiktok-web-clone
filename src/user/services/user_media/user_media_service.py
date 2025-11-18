@@ -44,6 +44,7 @@ class UserMediaService:
             else:
                 thumbnail = media_item.get_file_url()
 
+            # Update get_user_liked_media() and UserFollowingService also
             result.append({
                 'id': media_item.id,
                 'title': '',
@@ -69,6 +70,7 @@ class UserMediaService:
 
         result = []
         for media_item in media:
+            # Update get_user_media() and UserFollowingService also
             result.append({
                 'id': media_item.id,
                 'title': media_item.user.username,
@@ -79,6 +81,7 @@ class UserMediaService:
                     kwargs=None,
                     query_params={'uid': media_item.user.id, 'mid': media_item.id},
                 ),
+                'is_approved': 1,
             })
 
         next_page = page.next_page_number() if page.has_next() else None
