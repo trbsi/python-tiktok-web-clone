@@ -36,7 +36,7 @@ class UserMediaService:
                 destination_url = reverse_lazy_with_query(
                     route_name='feed.following',
                     kwargs=None,
-                    query_params={'uid': user.id, 'mid': media_item.id},
+                    query_params={'uid': user.id, 'mid': media_item.id, 'go_back': 1},
                 )
 
             if media_item.is_video():

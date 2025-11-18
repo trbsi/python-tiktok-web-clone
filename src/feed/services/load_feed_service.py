@@ -5,6 +5,7 @@ from django.core.paginator import Paginator, Page
 from django.db.models import QuerySet, OuterRef, Exists, Case, Value, When, IntegerField, Q
 from django.urls import reverse_lazy
 
+from src.core.utils import reverse_lazy_with_query
 from src.engagement.models import Like
 from src.feed.services.unlocked_media_service import UnlockedMediaService
 from src.follow.models import Follow
@@ -111,6 +112,14 @@ class LoadFeedService:
         for item in page.object_list:
             is_locked = (item.id in unlocked_media_set) == False
             source = item.get_trailer_url() if is_locked else item.get_file_url()
+            redirect_url = '#'
+            
+            if feed_type == self.FEED_TYPE_DISCOVER:
+                redirect_url = reverse_lazy_with_query(
+                    route_name='feed.discover.scroll',
+                    query_params={'mid': item.id, 'go_back': 1},
+                )
+
             result.append({
                 'id': item.id,
                 'type': item.file_type,
@@ -120,6 +129,7 @@ class LoadFeedService:
                 'description': self._apply_hashtags(item.description, feed_type),
                 'liked': item.liked,
                 'followed': item.followed,
+                'redirect_url': redirect_url,
                 'user': {
                     'id': item.user.id,
                     'username': item.user.username,
