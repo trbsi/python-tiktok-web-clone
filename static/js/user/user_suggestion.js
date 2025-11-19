@@ -1,4 +1,4 @@
-function userSuggestion(userSuggestionApi, updateDescriptionCallback) {
+function userSuggestionComponent(userSuggestionApi, updateDescriptionCallback) {
     return {
         openUserSuggestion: false,
         suggestions: [],

@@ -3,11 +3,11 @@ function fileUploader(uploadApi, userSuggestionApi) {
         files: [],           // all files in the UI (including uploaded)
         uploadedFiles: [],   // track files already uploaded
         isUploading: false,
-        userSuggestion: null,
+        userSuggestionComponent: null,
 
         init() {
             // call after Alpine has initialized this component
-            this.userSuggestion = userSuggestion(userSuggestionApi, (fileIndex, descriptionValue) => {
+            this.userSuggestionComponent = userSuggestionComponent(userSuggestionApi, (fileIndex, descriptionValue) => {
                 this.files[fileIndex]['description'] = descriptionValue;
             })
         },
