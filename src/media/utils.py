@@ -22,9 +22,13 @@ def load_tags(description: str) -> str:
     user_tags = regex.findall(r'@\w+', description)
     for user_tag in user_tags:
         id = user_tag.replace('@', '')
+        if not id.isdigit():
+            continue
+
         user = User.objects.filter(id=id).first()
         if not user:
             continue
+
         description = description.replace(user_tag, f'@{user.username}')
 
     return description

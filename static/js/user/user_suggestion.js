@@ -1,4 +1,4 @@
-function userSuggestion(userSuggestionApi) {
+function userSuggestion(userSuggestionApi, updateDescriptionCallback) {
     return {
         openUserSuggestion: false,
         suggestions: [],
@@ -49,7 +49,7 @@ function userSuggestion(userSuggestionApi) {
             if (!textarea) return;
 
             const cursor = textarea.selectionStart;
-            const textValue = textarea.value;
+            var textValue = textarea.value;
 
             const lastAtIndex = textValue.lastIndexOf("@", cursor - 1);
             if (lastAtIndex === -1) return;
@@ -58,13 +58,14 @@ function userSuggestion(userSuggestionApi) {
             const afterCursor = textValue.substring(cursor);
 
             // insert chosen username
-            textarea.value = `${beforeAt}@${username} ${afterCursor}`;
+            textValue = `${beforeAt}@${username} ${afterCursor}`;
 
             // move cursor after inserted username
             const newCursorPos = beforeAt.length + username.length + 2;
             textarea.setSelectionRange(newCursorPos, newCursorPos);
 
             this.openUserSuggestion = false;
+            updateDescriptionCallback(index, textValue);
         },
 
         selectNext() {
