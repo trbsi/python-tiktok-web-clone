@@ -1,7 +1,6 @@
 import os
 import shutil
 import tempfile
-import uuid
 from pathlib import Path
 
 from django.core.files.storage import default_storage
@@ -26,6 +25,7 @@ class LocalStorageService:
         }
 
     def temp_upload_file(self, uploaded_file: UploadedFile) -> dict:
+        name = uploaded_file.name
         extension = Path(uploaded_file.name).suffix  # .jpg or .mp4
         file_type = self.get_file_type(uploaded_file=uploaded_file)
 
@@ -37,13 +37,13 @@ class LocalStorageService:
                     local_file.write(chunk)
                 local_file_path = local_file.name
 
-        new_file_path = os.path.join(settings.MEDIA_ROOT, 'temp', f'{uuid.uuid4()}{extension}')
+        new_file_path = os.path.join(settings.MEDIA_ROOT, 'temp')
         os.makedirs(new_file_path, exist_ok=True)
         shutil.move(local_file_path, new_file_path)
 
         return {
             'file_type': file_type,
-            'local_file_path': new_file_path,
+            'local_file_path': f'{new_file_path}/{name}',
             'extension': extension
         }
 
