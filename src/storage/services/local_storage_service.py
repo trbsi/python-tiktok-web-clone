@@ -1,5 +1,7 @@
 import os
+import shutil
 import tempfile
+import uuid
 from pathlib import Path
 
 from django.core.files.storage import default_storage
@@ -35,9 +37,13 @@ class LocalStorageService:
                     local_file.write(chunk)
                 local_file_path = local_file.name
 
+        new_file_path = os.path.join(settings.MEDIA_ROOT, 'temp', f'{uuid.uuid4()}{extension}')
+        os.makedirs(new_file_path, exist_ok=True)
+        shutil.move(local_file_path, new_file_path)
+
         return {
             'file_type': file_type,
-            'local_file_path': local_file_path,
+            'local_file_path': new_file_path,
             'extension': extension
         }
 
