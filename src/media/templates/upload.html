@@ -2,12 +2,14 @@
 {% load static %}
 
 {% block javascript %}
-<script src="{% static 'js/file_uploader.js' %}"></script>
+<script src="{% static 'js/user/user_suggestion.js' %}"></script>
+<script src="{% static 'js/media/file_uploader.js' %}"></script>
 {% endblock javascript %}
 
 {% block content %}
 <!-- Upload View -->
-<div id="upload-view" class="bg-black min-h-[100dvh] text-white p-4" x-data="fileUploader('{{upload_api}}')">
+<div id="upload-view" class="bg-black min-h-[100dvh] text-white p-4"
+     x-data="fileUploader('{{upload_api}}', '{{user_suggestion_api}}')">
     <div x-show="files.length == 0"
          class="flex flex-col h-full items-center justify-center bg-black text-white px-4">
         <!-- Icon -->

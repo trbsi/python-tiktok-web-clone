@@ -23,7 +23,7 @@ class RemoteStorageService:
             local_file_path: str,
             remote_file_path: str,
             bucket_name: str = '',
-            additional_file_info: dict = {}
+            additional_file_info: dict = {},
     ) -> dict:
         if is_backblaze():
             if bucket_name == '':

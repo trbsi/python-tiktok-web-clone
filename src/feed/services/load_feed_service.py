@@ -1,4 +1,4 @@
-import re
+import re as regex
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.paginator import Paginator, Page
@@ -111,9 +111,10 @@ class LoadFeedService:
         result = []
         for item in page.object_list:
             is_locked = (item.id in unlocked_media_set) == False
+            description = self._load_hashtags(item.get_description(), feed_type)
             source = item.get_trailer_url() if is_locked else item.get_file_url()
             redirect_url = '#'
-            
+
             if feed_type == self.FEED_TYPE_DISCOVER:
                 redirect_url = reverse_lazy_with_query(
                     route_name='feed.discover.scroll',
@@ -126,7 +127,7 @@ class LoadFeedService:
                 'src': source,
                 'like_count': item.like_count,
                 'comments_count': item.comment_count,
-                'description': self._apply_hashtags(item.description, feed_type),
+                'description': description,
                 'liked': item.liked,
                 'followed': item.followed,
                 'redirect_url': redirect_url,
@@ -144,7 +145,7 @@ class LoadFeedService:
 
         return result
 
-    def _apply_hashtags(self, description: str, feed_type: str) -> str:
+    def _load_hashtags(self, description: str, feed_type: str) -> str:
         # Pattern: match a '#' followed by one or more word chars (letters, digits, underscore)
         pattern = r'(?<!\w)#(\w+)'
         if feed_type == self.FEED_TYPE_DISCOVER:
@@ -156,7 +157,7 @@ class LoadFeedService:
             tag = match.group(1)
             return f'<a href="{route}?hashtag={tag}" class="bg-white/50 px-1.5 py-0.5 rounded cursor-pointer underline">#{tag}</a>'
 
-        return re.sub(pattern, replace, description)
+        return regex.sub(pattern, replace, description)
 
     def _apply_filters(self, items: QuerySet, filters: str | None = None):
         # filters: uid,12,mid,55 -> comma separated

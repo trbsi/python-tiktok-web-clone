@@ -5,6 +5,7 @@ from django.utils import timezone
 from src.media.enums import MediaEnum
 from src.media.models import Media, MediaScheduler
 from src.media.services.hashtag.hashtag_service import HashtagService
+from src.media.utils import replace_tags
 from src.storage.crons.compress_media_task.process_media_task import ProcessMediaTask
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
@@ -43,6 +44,7 @@ class UploadMediaService:
             case _:
                 status = MediaEnum.STATUS_PENDING
 
+        description = replace_tags(description)
         media = Media.objects.create(
             file_info='',  # temporary
             file_type='video',  # temporary
@@ -55,10 +57,11 @@ class UploadMediaService:
         file_data = self.local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
         file_type = file_data.get('file_type')
         remote_file_path = remote_file_path_for_media(media, file_data.get('extension'), file_type)
+        local_file_path = file_data.get('local_file_path')
 
         remote_file_info: dict = self.remote_storage_service.upload_file(
             local_file_type=file_type,
-            local_file_path=file_data.get('local_file_path'),
+            local_file_path=local_file_path,
             remote_file_path=remote_file_path
         )
 
@@ -93,8 +96,10 @@ class UploadMediaService:
             task_process_media.delay(
                 media_id=media.id,
                 media_type=ProcessMediaTask.MEDIA_TYPE_MEDIA,
+                local_file_path=local_file_path,
                 create_thumbnail=True,
                 create_trailer=True,
-                should_compress_media=False
+                should_compress_media=False,
+                download_from_remote=False,
             )
         )

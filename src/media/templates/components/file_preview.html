@@ -25,9 +25,28 @@
             <!-- Textarea for file description -->
             <textarea
                     x-model="file.description"
-                    placeholder="Add a description and hashtags for better categorization"
+                    :id="`description_field_${index}`"
+                    @input="userSuggestion.fetchSuggestions($event.target)"
+                    placeholder="Add a description and hashtags. Tag another creator here."
                     class="w-full p-2 rounded bg-gray-700 text-white text-sm"
             ></textarea>
+            <!-- Textarea for file description -->
+            <div class="relative w-full">
+                <!-- Suggestions dropdown -->
+                <div
+                        x-show="userSuggestion.openUserSuggestion"
+                        class="absolute left-0 top-full mt-1 w-full bg-white border rounded shadow z-100"
+                >
+                    <template x-for="(item, i) in userSuggestion.suggestions" :key="i">
+                        <div
+                                @click="userSuggestion.chooseUsername(item, index)"
+                                :class="{'bg-gray-100': userSuggestion.highlightedIndex === i}"
+                                class="p-2 cursor-pointer hover:bg-gray-200 text-black"
+                                x-text="item"
+                        ></div>
+                    </template>
+                </div>
+            </div>
 
             <!-- Progress bar -->
             <div class="w-full bg-gray-600 rounded-full h-2 mt-2">

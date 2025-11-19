@@ -31,9 +31,9 @@
                 <textarea
                         name="descriptions"
                         rows="5"
-                        placeholder="Add a description and hashtags for better categorization"
+                        placeholder="Add a description and hashtags. Tag another creator here."
                         class="w-full p-2 rounded bg-gray-700 text-white text-sm"
-                >{{ media.description }}</textarea>
+                >{{ media.get_description }}</textarea>
             </div>
             {% endfor %}
 

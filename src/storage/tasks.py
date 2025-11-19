@@ -7,20 +7,24 @@ from src.storage.crons.compress_media_task.process_media_task import ProcessMedi
 
 @shared_task
 def task_process_media(
-        media_type: str,
         media_id: int,
-        create_thumbnail: bool = False,
-        create_trailer: bool = False,
-        should_compress_media: bool = False
+        media_type: str,
+        local_file_path: str | None,
+        create_thumbnail: bool,
+        create_trailer: bool,
+        should_compress_media: bool,
+        download_from_remote: bool,
 ) -> None:
     try:
         task = ProcessMediaTask()
         task.process_media(
             media_type=media_type,
             media_id=media_id,
+            local_file_path=local_file_path,
             create_thumbnail=create_thumbnail,
             create_trailer=create_trailer,
-            should_compress_media=should_compress_media
+            should_compress_media=should_compress_media,
+            download_from_remote=download_from_remote
         )
     except Exception as e:
         bugsnag.notify(e)

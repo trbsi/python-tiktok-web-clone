@@ -1,14 +1,14 @@
 {% load static %}
 <script>
     // Used in install_app.js, push_notifications.js
-    const serviceWorkerFile = '{% static 'js/service_worker.js' %}';
+    const serviceWorkerFile = '{% static 'js/push_notifications/service_worker.js' %}';
     const saveWebPushSubscriptionApi = '{% url 'notification.web_push_subscribe' %}';
     const webPushKeysApi = '{% url 'notification.web_push_keys' %}';
     const userProfileUrl = '{% url 'user.profile' username='__PLACEHOLDER__' %}';
 </script>
-<script src="{% static 'js/core.js' %}"></script>
-<script src="{% static 'js/install_app.js' %}"></script>
-<script src="{% static 'js/push_notifications.js' %}"></script>
+<script src="{% static 'js/core/core.js' %}"></script>
+<script src="{% static 'js/core/install_app.js' %}"></script>
+<script src="{% static 'js/push_notifications/push_notifications.js' %}"></script>
 
 <script>
     toastr.options.closeDuration = 10000;

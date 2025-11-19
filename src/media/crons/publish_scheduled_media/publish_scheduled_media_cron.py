@@ -64,8 +64,9 @@ class PublishScheduledMediaCron:
         for next_creator in next_creators:
             media: Media = (
                 Media.objects
-                .filter(user=next_creator.user)
                 .filter(status=MediaEnum.STATUS_SCHEDULE.value)
+                .filter(is_approved=True)
+                .filter(user=next_creator.user)
                 .order_by('id')
                 .first()
             )

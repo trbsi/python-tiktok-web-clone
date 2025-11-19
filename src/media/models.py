@@ -3,6 +3,7 @@ from django.db import models
 
 from app import settings
 from src.media.enums import MediaEnum
+from src.media.utils import replace_tags, load_tags
 from src.user.models import User as User
 
 
@@ -69,6 +70,9 @@ class Media(models.Model):
 
     def is_video(self):
         return self.file_type == MediaEnum.FILE_TYPE_VIDEO.value
+
+    def get_description(self) -> str:
+        return load_tags(self.description)
 
 
 class MediaHashtag(models.Model):

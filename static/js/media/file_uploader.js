@@ -1,8 +1,9 @@
-function fileUploader(uploadApi) {
+function fileUploader(uploadApi, userSuggestionApi) {
     return {
         files: [],           // all files in the UI (including uploaded)
         uploadedFiles: [],   // track files already uploaded
         isUploading: false,
+        userSuggestion: userSuggestion(userSuggestionApi), // embed userSuggestion as a nested object
 
         handleFiles(event) {
             const selectedFiles = Array.from(event.target.files);

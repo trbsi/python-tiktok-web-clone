@@ -35,9 +35,11 @@ class ProcessMediaTask:
             self,
             media_type: str,
             media_id: int,
-            create_thumbnail: bool = False,
-            create_trailer: bool = False,
-            should_compress_media: bool = True,
+            local_file_path: str,
+            create_thumbnail: bool,
+            create_trailer: bool,
+            should_compress_media: bool,
+            download_from_remote: bool,
     ) -> None:
         media = None
         if media_type == self.MEDIA_TYPE_INBOX:
@@ -52,19 +54,21 @@ class ProcessMediaTask:
         os.makedirs(local_file_path_directory, exist_ok=True)
 
         files_to_remove = []
-        files_to_remove.append(media.file_info.get('file_path'))
+        files_to_remove.append(local_file_path)
 
-        try:
-            # download file from remote
-            downloaded_local_file_path = self.remote_storage_service.download_file(
-                file_id=media.file_info.get('file_id'),
-                file_path=media.file_info.get('file_path'),
-                local_file_path_directory=local_file_path_directory
-            )
-            output_compressed_file_path = downloaded_local_file_path
-        except Exception as e:
-            bugsnag.notify(e)
-            return  # no point of going further if file cannot be downloaded
+        if download_from_remote:
+            try:
+                # download file from remote
+                downloaded_local_file_path = self.remote_storage_service.download_file(
+                    file_id=media.file_info.get('file_id'),
+                    file_path=media.file_info.get('file_path'),
+                    local_file_path_directory=local_file_path_directory
+                )
+                local_file_path = downloaded_local_file_path
+                files_to_remove.append(local_file_path)
+            except Exception as e:
+                bugsnag.notify(e)
+                return  # no point of going further if file cannot be downloaded
 
         if should_compress_media:
             try:
@@ -72,10 +76,11 @@ class ProcessMediaTask:
                 compression_result = self.compress_service.handle_compression(
                     media=media,
                     local_file_type=media.file_type,
-                    local_file_path=downloaded_local_file_path,
+                    local_file_path=local_file_path,
                     local_file_path_directory=local_file_path_directory
                 )
-                output_compressed_file_path = compression_result.get('output_compressed_file_path')
+                local_file_path = compression_result.get('output_compressed_file_path')
+                files_to_remove.append(local_file_path)
             except Exception as e:
                 bugsnag.notify(e)
 
@@ -85,7 +90,7 @@ class ProcessMediaTask:
                 thumbnail_result = self.thumbnail_service.snap_thumbnail(
                     media=media,
                     local_file_type=media.file_type,
-                    local_file_path=output_compressed_file_path,
+                    local_file_path=local_file_path,
                     local_file_path_directory=local_file_path_directory,
                 )
                 files_to_remove.append(thumbnail_result.get('output_thumbnail_path'))
@@ -98,7 +103,7 @@ class ProcessMediaTask:
                 trailer_result = self.trailer_service.make_trailer(
                     media=media,
                     local_file_type=media.file_type,
-                    local_file_path=output_compressed_file_path,
+                    local_file_path=local_file_path,
                     local_file_path_directory=local_file_path_directory,
                     clip_count=4,
                     trailer_length=6,
@@ -109,8 +114,6 @@ class ProcessMediaTask:
                 bugsnag.notify(e)
 
         # remove local files
-        files_to_remove.append(output_compressed_file_path)
-        files_to_remove.append(downloaded_local_file_path)
         for file in files_to_remove:
             if os.path.exists(file):
                 os.remove(file)
@@ -121,10 +124,10 @@ class ProcessMediaTask:
             if media.status != MediaEnum.STATUS_SCHEDULE.value:
                 media.status = MediaEnum.STATUS_PAID.value
             media.save()
+
+            url = reverse_lazy_admin(object=media, action='changelist', is_full_url=True)
+            push_notification = PushNotificationValueObject(body=f'[CONTENT UPLOADED] {url}')
+            NotificationService.send_notification(push_notification)
         elif isinstance(media, Message):
             media.is_ready = True
             media.save()
-
-        url = reverse_lazy_admin(object=media, action='changelist', is_full_url=True)
-        push_notification = PushNotificationValueObject(body=f'[CONTENT UPLOADED] {url}')
-        NotificationService.send_notification(push_notification)

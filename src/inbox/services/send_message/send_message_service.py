@@ -1,4 +1,4 @@
-import time
+import uuid
 
 from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
@@ -35,21 +35,17 @@ class SendMessageService:
             local_storage_service = LocalStorageService()
             file_upload_service = RemoteStorageService()
 
-            time1 = time.time()
             file_data = local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
             file_type = file_data.get('file_type')
-            remote_file_path = remote_file_path_for_conversation(conversation, file_data.get('remote_file_name'))
-            time2 = time.time()
-            print(f'time in seconds for local upload: {time2 - time1}')
+            local_file_path = file_data.get('local_file_path')
+            extension = file_data.get('extension')
+            remote_file_path = remote_file_path_for_conversation(conversation, str(uuid.uuid4()), extension)
 
-            time1 = time.time()
             file_info = file_upload_service.upload_file(
                 local_file_type=file_type,
-                local_file_path=file_data.get('local_file_path'),
+                local_file_path=local_file_path,
                 remote_file_path=remote_file_path
             )
-            time2 = time.time()
-            print(f'time in seconds for remote upload: {time2 - time1}')
 
         message = Message.objects.create(
             sender=user,
@@ -71,7 +67,15 @@ class SendMessageService:
         self.spend_service.spend_message(user, message)
 
         transaction.on_commit(
-            lambda: task_process_media.delay(media_id=message.id, media_type=ProcessMediaTask.MEDIA_TYPE_INBOX)
+            lambda: task_process_media.delay(
+                media_id=message.id,
+                media_type=ProcessMediaTask.MEDIA_TYPE_INBOX,
+                local_file_path=local_file_path,
+                create_thumbnail=False,
+                create_trailer=False,
+                should_compress_media=False,
+                download_from_remote=False,
+            )
         )
         transaction.on_commit(lambda: task_auto_reply.delay(message_id=message.id))
 

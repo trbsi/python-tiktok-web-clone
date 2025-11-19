@@ -13,6 +13,7 @@ from src.user.forms.update_profile_form import UpdateProfileForm
 from src.user.models import User
 from src.user.services.change_email.email_change_service import EmailChangeService
 from src.user.services.delete_user.delete_user_service import DeleteUserService
+from src.user.services.search.user_search_service import UserSearchService
 from src.user.services.update_profile.update_profile_service import UpdateProfileService
 from src.user.services.user_following.user_following_service import UserFollowingService
 from src.user.services.user_media.user_media_service import UserMediaService
@@ -169,3 +170,14 @@ def confirm_email_change(request, token):
     service.change_email(change=change)
     messages.success(request=request, message='Email changed successfully')
     return redirect('user.update_email')
+
+
+# ------------------- GENERAL ------------------------
+@require_GET
+@login_required
+def api_user_search(request: HttpRequest) -> JsonResponse:
+    get = request.GET
+    service = UserSearchService()
+    result = service.search_user(get.get('query'))
+
+    return JsonResponse(result, safe=False)

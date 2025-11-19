@@ -31,7 +31,13 @@ def upload(request: HttpRequest) -> HttpResponse:
         if not _can_access_upload(request):
             return redirect(reverse_lazy('age_verification.become_creator'))
 
-    return render(request, 'upload.html', {'upload_api': reverse_lazy('media.api.upload')})
+    return render(
+        request,
+        'upload.html',
+        {
+            'upload_api': reverse_lazy('media.api.upload'),
+            'user_suggestion_api': reverse_lazy('user.api.user_search')
+        })
 
 
 @require_POST

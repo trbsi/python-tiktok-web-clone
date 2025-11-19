@@ -3,6 +3,7 @@ from django.db import transaction
 from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.media.services.hashtag.hashtag_service import HashtagService
+from src.media.utils import replace_tags
 from src.user.models import User, UserProfile
 from src.user.tasks import task_delete_user_media
 
@@ -26,6 +27,7 @@ class UpdateMyContentService:
         else:
             for (index, id) in enumerate(ids):
                 description = descriptions[index]
+                description = replace_tags(description)
                 media = Media.objects.filter(user=user, id=id).first()
                 if media:
                     media.description = description

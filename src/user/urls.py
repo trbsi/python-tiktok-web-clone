@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/get-media', views.api_get_user_media, name='user.api.get_media'),
     path('api/get-liked-media', views.api_get_user_liked_media, name='user.api.get_liked_media'),
     path('api/get-following', views.api_get_following, name='user.api.get_following'),
+    path('api/search', views.api_user_search, name='user.api.user_search'),
 
     path('<str:username>', views.profile, name='user.profile'),
     path('<str:username>/liked', views.profile_liked_media, name='user.profile.liked_media'),

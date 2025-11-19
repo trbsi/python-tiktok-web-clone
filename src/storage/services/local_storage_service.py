@@ -27,9 +27,9 @@ class LocalStorageService:
         extension = Path(uploaded_file.name).suffix  # .jpg or .mp4
         file_type = self.get_file_type(uploaded_file=uploaded_file)
 
-        if isinstance(uploaded_file, TemporaryUploadedFile):
+        if isinstance(uploaded_file, TemporaryUploadedFile):  # upload large files stored directly on disk
             local_file_path = uploaded_file.temporary_file_path()
-        else:
+        else:  # upload small file, stored in memory
             with tempfile.NamedTemporaryFile(delete=False, suffix=extension) as local_file:
                 for chunk in uploaded_file.chunks():
                     local_file.write(chunk)
