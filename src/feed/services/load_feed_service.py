@@ -111,7 +111,7 @@ class LoadFeedService:
         result = []
         for item in page.object_list:
             is_locked = (item.id in unlocked_media_set) == False
-            description = self._load_hashtags(item.get_description(), feed_type)
+            description = self._format_hashtags(item.get_description(), feed_type)
             source = item.get_trailer_url() if is_locked else item.get_file_url()
             redirect_url = '#'
 
@@ -145,19 +145,30 @@ class LoadFeedService:
 
         return result
 
-    def _load_hashtags(self, description: str, feed_type: str) -> str:
+    def _format_hashtags(self, description: str, feed_type: str) -> str:
+        if feed_type == self.FEED_TYPE_DISCOVER:
+            feed_route = reverse_lazy('feed.discover.grid')
+        else:
+            feed_route = reverse_lazy('feed.following')
+
+        def replace_hashtags(match):
+            tag = match.group(1)
+            return f'<a href="{feed_route}?hashtag={tag}" class="bg-white/50 px-1.5 py-0.5 rounded cursor-pointer underline">#{tag}</a>'
+
+        def replace_mention_tags(match):
+            username = match.group(1)
+            user_route = reverse_lazy('user.profile', kwargs={'username': username})
+            return f'<a href="{user_route}" class="underline">@{username}</a>'
+
         # Pattern: match a '#' followed by one or more word chars (letters, digits, underscore)
         pattern = r'(?<!\w)#(\w+)'
-        if feed_type == self.FEED_TYPE_DISCOVER:
-            route = reverse_lazy('feed.discover.grid')
-        else:
-            route = reverse_lazy('feed.following')
+        description = regex.sub(pattern, replace_hashtags, description)
 
-        def replace(match):
-            tag = match.group(1)
-            return f'<a href="{route}?hashtag={tag}" class="bg-white/50 px-1.5 py-0.5 rounded cursor-pointer underline">#{tag}</a>'
+        # Pattern: match a '@' followed by one or more word chars (letters, digits, underscore)
+        pattern = r'(?<!\w)@(\w+)'
+        description = regex.sub(pattern, replace_mention_tags, description)
 
-        return regex.sub(pattern, replace, description)
+        return description
 
     def _apply_filters(self, items: QuerySet, filters: str | None = None):
         # filters: uid,12,mid,55 -> comma separated

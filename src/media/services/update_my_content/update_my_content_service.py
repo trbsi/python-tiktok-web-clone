@@ -26,8 +26,7 @@ class UpdateMyContentService:
             profile.save()
         else:
             for (index, id) in enumerate(ids):
-                description = descriptions[index]
-                description = replace_tags(description)
+                description = replace_tags(descriptions[index])
                 media = Media.objects.filter(user=user, id=id).first()
                 if media:
                     media.description = description
