@@ -1,4 +1,4 @@
-function userSuggestionComponent(userSuggestionApi, updateDescriptionCallback) {
+function userSuggestionComponent(userSuggestionApi, updateDescriptionCallable) {
     return {
         openUserSuggestion: false,
         suggestions: [],
@@ -6,10 +6,10 @@ function userSuggestionComponent(userSuggestionApi, updateDescriptionCallback) {
         lastAtIndex: -1,
 
         async fetchSuggestions(event) {
-            let query = event.value
-            const cursor = event.selectionStart;
+            let query = event.target.value
+            const cursor = event.target.selectionStart;
 
-             // find the last "@" before the cursor
+            // find the last "@" before the cursor
             this.lastAtIndex = query.lastIndexOf("@", cursor - 1);
             if (this.lastAtIndex === -1) {
                 this.openUserSuggestion = false;
@@ -43,9 +43,11 @@ function userSuggestionComponent(userSuggestionApi, updateDescriptionCallback) {
             }
         },
 
-        chooseUsername(username, index) {
+        chooseUsername(username, event) {
             // get textarea by id
-            const textarea = document.getElementById("description_field_"+index);
+            const root = event.target.closest('[data-suggestion-root]');
+            const textarea = root.querySelector('textarea');
+            fileId = textarea.dataset.fileId
             if (!textarea) return;
 
             const cursor = textarea.selectionStart;
@@ -65,7 +67,7 @@ function userSuggestionComponent(userSuggestionApi, updateDescriptionCallback) {
             textarea.setSelectionRange(newCursorPos, newCursorPos);
 
             this.openUserSuggestion = false;
-            updateDescriptionCallback(index, textValue);
+            updateDescriptionCallable(fileId, textValue);
         },
 
         selectNext() {

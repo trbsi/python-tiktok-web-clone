@@ -22,16 +22,17 @@
             <!-- File name -->
             <p class="text-sm font-medium" x-text="file.name"></p>
 
-            <!-- Textarea for file description -->
-            <textarea
-                    x-model="file.description"
-                    :id="`description_field_${index}`"
-                    @input="userSuggestionComponent.fetchSuggestions($event.target)"
-                    placeholder="Add a description and hashtags. Tag another creator here."
-                    class="w-full p-2 rounded bg-gray-700 text-white text-sm"
-            ></textarea>
-            {% include "components/user_suggestion_list.html" %}
-
+            <div data-suggestion-root>
+                <!-- Textarea for file description -->
+                <textarea
+                        x-model="file.description"
+                        :data-file-id="index"
+                        @input="userSuggestionComponent.fetchSuggestions($event)"
+                        placeholder="Add a description and hashtags. Tag another creator here."
+                        class="w-full p-2 rounded bg-gray-700 text-white text-sm"
+                ></textarea>
+                {% include "components/user_suggestion_list.html" %}
+            </div>
 
             <!-- Progress bar -->
             <div class="w-full bg-gray-600 rounded-full h-2 mt-2">

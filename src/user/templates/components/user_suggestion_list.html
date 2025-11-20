@@ -6,7 +6,7 @@
     >
         <template x-for="(item, i) in userSuggestionComponent.suggestions" :key="i">
             <div
-                    @click="userSuggestionComponent.chooseUsername(item, index)"
+                    @click="userSuggestionComponent.chooseUsername(item, $event)"
                     :class="{'bg-gray-100': userSuggestionComponent.highlightedIndex === i}"
                     class="p-2 cursor-pointer hover:bg-gray-200 text-black"
                     x-text="item"

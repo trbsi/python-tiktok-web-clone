@@ -1,4 +1,5 @@
 {% extends "core/layout.html" %}
+{% load static %}
 
 {% block content %}
 <div id="my-content-view" class="p-4">
@@ -27,13 +28,21 @@
                     {% endif %}
                 </div>
 
-                <!-- Textarea for file description -->
-                <textarea
-                        name="descriptions"
-                        rows="5"
-                        placeholder="Add a description and hashtags. Tag another creator here."
-                        class="w-full p-2 rounded bg-gray-700 text-white text-sm"
-                >{{ media.get_description }}</textarea>
+                <div x-data="myContentComponent('{{user_suggestion_api}}')" x-init="init()">
+                    <div data-suggestion-root>
+                        <!-- Textarea for file description -->
+                        <textarea
+                                id="description_field_{{media.id}}"
+                                name="descriptions"
+                                rows="5"
+                                data-file-id="{{media.id}}"
+                                placeholder="Add a description and hashtags. Tag another creator here."
+                                @input="userSuggestionComponent.fetchSuggestions($event)"
+                                class="w-full p-2 rounded bg-gray-700 text-white text-sm"
+                        >{{ media.get_description }}</textarea>
+                        {% include "components/user_suggestion_list.html" %}
+                    </div>
+                </div>
             </div>
             {% endfor %}
 
@@ -62,6 +71,9 @@
 
 
 {% block javascript %}
+<script src="{% static 'js/user/user_suggestion.js' %}"></script>
+<script src="{% static 'js/media/my_content.js' %}"></script>
+
 <script>
     $(document).ready(function() {
         $('.media-block input[type="checkbox"]').change(function() {

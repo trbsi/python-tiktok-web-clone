@@ -78,7 +78,8 @@ def my_content(request: HttpRequest) -> HttpResponse:
         request,
         'my_content.html', {
             'media_list': media,
-            'media_statuses': MediaEnum.creator_statuses()
+            'media_statuses': MediaEnum.creator_statuses(),
+            'user_suggestion_api': reverse_lazy('user.api.user_search'),
         })
 
 

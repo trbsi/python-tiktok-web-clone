@@ -22,7 +22,8 @@ class EmailService:
             subject=notification.subject,
             body=text,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            to=to_emails
+            to=to_emails,
+            reply_to=notification.get_reply_to()
         )
         msg.attach_alternative(html, "text/html")
         msg.send()

@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'src.storage.apps.StorageConfig',
     'src.age_verification.apps.AgeVerificationConfig',
     'src.activity.apps.ActivityConfig',
+    'src.consent.apps.ConsentConfig',
 
     "unfold",  # before django.contrib.admin
     "unfold.contrib.filters",  # optional, if special filters are needed
@@ -308,6 +309,14 @@ SLACK_CHANNEL_ID = env('SLACK_CHANNEL_ID')
 WEB_PUSH_SUBJECT = env('WEB_PUSH_SUBJECT')
 WEB_PUSH_PUBLIC_KEY = env('WEB_PUSH_PUBLIC_KEY')
 WEB_PUSH_PRIVATE_KEY = env('WEB_PUSH_PRIVATE_KEY')
+
+# Company data
+COMPANY = {
+    'name': env('COMPANY_NAME'),
+    'city': env('COMPANY_CITY'),
+    'country': env('COMPANY_COUNTRY'),
+    'address': env('COMPANY_ADDRESS'),
+}
 
 LOGGING = {
     'version': 1,

@@ -1,11 +1,15 @@
 from pathlib import Path
 
+from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_GET
 
 from app import settings
 from src.core.utils import reverse_lazy_with_query
+from src.notification.services.notification_service import NotificationService
+from src.notification.value_objects.email_value_object import EmailValueObject
+from src.notification.value_objects.push_notification_value_object import PushNotificationValueObject
 
 
 @require_GET
@@ -48,3 +52,21 @@ def privacy_policy(request: HttpRequest) -> HttpResponse:
 @require_GET
 def landing_page(request: HttpRequest) -> HttpResponse:
     return render(request, 'landing_page.html')
+
+
+def contact(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        post = request.POST
+        NotificationService.send_notification(
+            EmailValueObject(
+                subject='Support',
+                template_path='emails/core/contact.html',
+                template_variables={'body': post.get('message'), 'name': post.get('name')},
+                to=['admins'],
+                reply_to_email=post.get('email'),
+                reply_to_name=post.get('name'),
+            ),
+            PushNotificationValueObject(body='Check your email, there is new support email sent by someone')
+        )
+        messages.success(request, 'We will get back to you soon!')
+    return render(request, 'contact.html', {'company': settings.COMPANY})
