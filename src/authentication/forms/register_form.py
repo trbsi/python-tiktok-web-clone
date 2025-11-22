@@ -1,20 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.core.validators import RegexValidator
 
 from src.authentication.services.post_auth.post_registration_service import PostRegistrationService
 from src.core.utils import get_client_ip
 from src.user.models import User as User
 
-alphanumeric = RegexValidator(
-    r'^[0-9a-zA-Z]*$',
-    'Username must contain only letters and numbers.'
-)
-
 
 class RegisterForm(UserCreationForm):
-    username = forms.CharField(max_length=50, required=True, validators=[alphanumeric])
-    email = forms.EmailField()
     accept_tos = forms.BooleanField(required=True, label='I accept Terms Of Use')
 
     def __init__(self, *args, **kwargs):

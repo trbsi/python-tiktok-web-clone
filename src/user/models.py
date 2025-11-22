@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from auditlog.registry import auditlog
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.timezone import now
 
@@ -19,6 +20,11 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    username = models.CharField(max_length=50, unique=True, blank=False, null=False, validators=[RegexValidator(
+        r'^[0-9a-zA-Z]*$',
+        'Username must contain only letters and numbers.'
+    )])
+    email = models.EmailField(unique=True)
     objects = UserQueryManager()
     all_objects = models.Manager()
 
