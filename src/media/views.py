@@ -36,7 +36,8 @@ def upload(request: HttpRequest) -> HttpResponse:
         'upload.html',
         {
             'upload_api': reverse_lazy('media.api.upload'),
-            'user_suggestion_api': reverse_lazy('user.api.user_search')
+            'user_suggestion_api': reverse_lazy('user.api.user_search'),
+            'my_content_url': reverse_lazy('media.my_content'),
         })
 
 

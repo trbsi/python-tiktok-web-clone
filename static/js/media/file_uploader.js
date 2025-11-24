@@ -1,4 +1,4 @@
-function fileUploader(uploadApi, userSuggestionApi) {
+function fileUploaderComponent(uploadApi, userSuggestionApi, myContentUrl) {
     return {
         files: [],           // all files in the UI (including uploaded)
         uploadedFiles: [],   // track files already uploaded
@@ -67,7 +67,7 @@ function fileUploader(uploadApi, userSuggestionApi) {
 
             xhr.onload = () => {
                 if (xhr.status === 200) {
-                    fileData.statusMessage = "Upload complete ✅";
+                    fileData.statusMessage = "✅ Upload complete! Visit <a href ='"+myContentUrl+"' class='underline font-bold'>My Content</a> to make updates and send consent requests to other creators. ";
                     fileData.status = 'completed';
 
                     // add to uploadedFiles array to prevent re-upload

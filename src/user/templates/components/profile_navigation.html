@@ -3,7 +3,7 @@
     <aside
 
             id="slide-menu"
-            class="fixed top-0 right-0 h-full w-64 bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300 "
+            class="fixed overflow-y-auto overflow-x-hidden top-0 right-0 h-full w-64 bg-gray-800 shadow-2xl z-50 transform transition-transform duration-300 "
             :class="menuOpen ? 'translate-x-0' : 'translate-x-full'"
             x-cloak
     >
@@ -36,6 +36,10 @@
             <a href="{% url 'media.my_content' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
                 <i class="ri-multi-image-line"></i> My content
+            </a>
+            <a href="{% url 'consent.display_media_for_consent' %}"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
+                <i class="ri-contract-line"></i> Video consent requests
             </a>
             {% endif %}
             <a href="{% url 'user.update_email' %}"

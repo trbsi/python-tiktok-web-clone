@@ -47,6 +47,7 @@ urlpatterns = [
     path('payment/', include('src.payment.urls')),
     path('activity/', include('src.activity.urls')),
     path('notification/', include('src.notification.urls')),
+    path('consent/', include('src.consent.urls')),
 ]
 
 if settings.DEBUG == True:
