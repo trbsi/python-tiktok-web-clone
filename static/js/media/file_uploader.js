@@ -1,4 +1,4 @@
-function fileUploaderComponent(uploadApi, userSuggestionApi, myContentUrl) {
+function fileUploaderComponent(uploadApi, userSuggestionApi, myContentUrl, videoPriceInFiat, imagePriceInFiat) {
     return {
         files: [],           // all files in the UI (including uploaded)
         uploadedFiles: [],   // track files already uploaded
@@ -21,6 +21,8 @@ function fileUploaderComponent(uploadApi, userSuggestionApi, myContentUrl) {
             selectedFiles.forEach(file => {
                 // skip files that are already uploaded
                 if (this.uploadedFiles.some(f => f.name === file.name && f.size === file.size)) return;
+                const fileType = file.type.startsWith("image/") ? "image" : "video";
+                const unlockPriceInFiat = fileType === 'video' ? videoPriceInFiat : imagePriceInFiat;
 
                 const fileData = {
                     file: file,
@@ -31,7 +33,8 @@ function fileUploaderComponent(uploadApi, userSuggestionApi, myContentUrl) {
                     progress: 0,
                     description: null,
                     status: 'pending',          // pending | uploading | finalizing | completed | failed
-                    statusMessage: ''
+                    statusMessage: '',
+                    unlockPriceInFiat: unlockPriceInFiat
                 };
                 this.files.push(fileData);
             });
@@ -50,6 +53,7 @@ function fileUploaderComponent(uploadApi, userSuggestionApi, myContentUrl) {
             formData.append('postType', postType);
             formData.append('file', fileData.file);
             formData.append('description', fileData.description);
+            formData.append('unlockPriceInFiat', fileData.unlockPriceInFiat);
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", uploadApi);

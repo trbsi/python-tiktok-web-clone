@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from src.core.utils import full_url_for_path
 from src.media.enums import MediaEnum
 from src.media.models import Media
+from src.payment.utils import coin_to_fiat
 from src.user.models import User
 
 
@@ -24,5 +25,6 @@ class MyContentService:
             item.consent_url = full_url_for_path(
                 reverse_lazy('consent.request_consent', kwargs={'media_id': item.id})
             )
+            item.unlock_price = coin_to_fiat(item.unlock_price)
 
         return page

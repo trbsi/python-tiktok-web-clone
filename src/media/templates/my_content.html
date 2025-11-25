@@ -30,6 +30,7 @@
 
                 <div data-suggestion-root>
                     <!-- Textarea for file description -->
+                    <label class="text-sm">Description:</label>
                     <textarea
                             id="description_field_{{media.id}}"
                             name="descriptions"
@@ -40,30 +41,38 @@
                             class="w-full p-2 rounded bg-gray-700 text-white text-sm"
                     >{{ media.get_description|default:"" }}</textarea>
                     {% include "components/user_suggestion_list.html" %}
-                    <div>
-                        <hr>
-                        <!-- Instructional text -->
-                        <p class="mt-2 text-xs text-gray-400">
-                            Share this link with anyone who needs to give consent. Tap the link or the share button to
-                            open your device’s sharing options.
-                        </p>
-                        <!-- URL display -->
-                        <span class="break-all text-sm md:text-base italic">{{media.consent_url}}</span>
 
-                        <!-- Buttons -->
-                        <div class="flex gap-2">
-                            <button @click="copyLink('{{media.consent_url}}')" type="button"
-                                    class="w-full px-3 py-1 bg-gradient-to-r from-primary to-secondary rounded transition text-white text-sm">
-                                <i class="ri-file-copy-line"></i> Copy
-                            </button>
+                </div>
+                <div>
+                    <label for="unlockPrice" class="text-sm">Unlock price in $:</label>
+                    <input type="number"
+                           id="unlockPrice"
+                           name="unlockPrices"
+                           step="0.1"
+                           value="{{media.unlock_price}}"
+                           class="w-full p-2 rounded bg-gray-700 text-white text-sm">
+                </div>
+                <div>
+                    <hr>
+                    <!-- Instructional text -->
+                    <p class="mt-2 text-xs text-gray-400">
+                        Share this link with anyone who needs to give consent. Tap the link or the share button to
+                        open your device’s sharing options.
+                    </p>
+                    <!-- URL display -->
+                    <span class="break-all text-sm md:text-base italic text-gray-200">{{media.consent_url}}</span>
 
-                            <button @click="shareLink('{{media.consent_url}}')" type="button"
-                                    class="w-full px-3 py-1 bg-gradient-to-r from-primary to-secondary rounded transition text-white text-sm">
-                                <i class="ri-share-forward-line"></i> Share
-                            </button>
-                        </div>
+                    <!-- Buttons -->
+                    <div class="flex gap-2">
+                        <button @click="copyLink('{{media.consent_url}}')" type="button"
+                                class="w-full px-3 py-1 bg-gradient-to-r from-primary to-secondary rounded transition text-white text-sm">
+                            <i class="ri-file-copy-line"></i> Copy
+                        </button>
 
-
+                        <button @click="shareLink('{{media.consent_url}}')" type="button"
+                                class="w-full px-3 py-1 bg-gradient-to-r from-primary to-secondary rounded transition text-white text-sm">
+                            <i class="ri-share-forward-line"></i> Share
+                        </button>
                     </div>
                 </div>
             </div>

@@ -9,6 +9,14 @@ class SpendEnum(Enum):
     TEXT_MESSAGE_COINS = 10  # 0.1$
     MEDIA_MESSAGE_COINS = 100  # 1$
 
+    @staticmethod
+    def video_price_in_fiat():
+        return SpendEnum.VIDEO_COINS.value / PaymentEnum.COIN_TO_FIAT.value
+
+    @staticmethod
+    def image_price_in_fiat():
+        return SpendEnum.IMAGE_COINS.value / PaymentEnum.COIN_TO_FIAT.value
+
 
 class PaymentEnum(Enum):
     COIN_TO_FIAT = 100  # 100 coins = 1$

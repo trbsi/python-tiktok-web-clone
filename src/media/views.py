@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,7 @@ from src.media.services.unlock.unlock_service import UnlockService
 from src.media.services.update_my_content.update_my_content_service import UpdateMyContentService
 from src.media.services.upload_media.upload_media_service import UploadMediaService
 from src.media.services.views.views_service import ViewsService
+from src.payment.enums import SpendEnum
 from src.payment.exceptions import BalanceTooLowException
 from src.user.models import User
 
@@ -38,6 +40,8 @@ def upload(request: HttpRequest) -> HttpResponse:
             'upload_api': reverse_lazy('media.api.upload'),
             'user_suggestion_api': reverse_lazy('user.api.user_search'),
             'my_content_url': reverse_lazy('media.my_content'),
+            'video_price_in_fiat': SpendEnum.video_price_in_fiat(),
+            'image_price_in_fiat': SpendEnum.image_price_in_fiat(),
         })
 
 
@@ -60,7 +64,8 @@ def api_upload(request: HttpRequest) -> JsonResponse:
         user=request.user,
         uploaded_file=file,
         description=post.get('description'),
-        post_type=post.get('postType')
+        post_type=post.get('postType'),
+        unlock_price_in_fiat=Decimal(post.get('unlockPriceInFiat'))
     )
 
     return JsonResponse({})
@@ -91,6 +96,7 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
     delete = post.getlist('delete')
     ids = post.getlist('media_ids')
     descriptions = post.getlist('descriptions')
+    unlock_prices = post.getlist('unlockPrices')
 
     service = UpdateMyContentService()
     service.update_my_content(
@@ -98,6 +104,7 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
         delete_list=delete,
         ids=ids,
         descriptions=descriptions,
+        unlock_prices=unlock_prices
     )
 
     messages.success(request, 'Your content has been updated.')

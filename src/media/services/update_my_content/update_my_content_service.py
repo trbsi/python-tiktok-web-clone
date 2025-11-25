@@ -1,9 +1,12 @@
+from decimal import Decimal
+
 from django.db import transaction
 
 from src.media.enums import MediaEnum
 from src.media.models import Media
 from src.media.services.hashtag.hashtag_service import HashtagService
 from src.media.utils import replace_tags
+from src.payment.utils import fiat_to_coins
 from src.user.models import User, UserProfile
 from src.user.tasks import task_delete_user_media
 
@@ -18,6 +21,7 @@ class UpdateMyContentService:
             delete_list: list,
             ids: list,
             descriptions: list,
+            unlock_prices: list
     ):
         if delete_list:
             Media.objects.filter(user=user).filter(id__in=delete_list).update(status=MediaEnum.STATUS_DELETED.value)
@@ -27,9 +31,11 @@ class UpdateMyContentService:
         else:
             for (index, id) in enumerate(ids):
                 description = replace_tags(descriptions[index])
-                media = Media.objects.filter(user=user, id=id).first()
+                unlock_price = Decimal(unlock_prices[index])
+                media: Media = Media.objects.filter(user=user, id=id).first()
                 if media:
                     media.description = description
+                    media.unlock_price = fiat_to_coins(unlock_price)
                     media.save()
                     self.hashtag_service.save_hashtags(media=media, description=description)
 

@@ -12,10 +12,7 @@ from src.user.models import User
 class SpendService:
     def get_price_per_object(self, object: Media | Comment | Message):
         if isinstance(object, Media):
-            if object.is_image():
-                return SpendEnum.IMAGE_COINS.value
-            if object.is_video():
-                return SpendEnum.VIDEO_COINS.value
+            return object.unlock_price
 
         if isinstance(object, Comment):
             return SpendEnum.COMMENT_COINS.value

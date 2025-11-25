@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
 from django.utils import timezone
@@ -6,6 +8,7 @@ from src.media.enums import MediaEnum
 from src.media.models import Media, MediaScheduler
 from src.media.services.hashtag.hashtag_service import HashtagService
 from src.media.utils import replace_tags
+from src.payment.utils import fiat_to_coins
 from src.storage.crons.compress_media_task.process_media_task import ProcessMediaTask
 from src.storage.services.local_storage_service import LocalStorageService
 from src.storage.services.remote_storage_service import RemoteStorageService
@@ -30,7 +33,8 @@ class UploadMediaService:
             user: User,
             uploaded_file: UploadedFile,
             description: str,
-            post_type: str
+            post_type: str,
+            unlock_price_in_fiat: Decimal
     ) -> None:
         """
         post_type: post_now|schedule
@@ -51,6 +55,7 @@ class UploadMediaService:
             status=status.value,
             description=description,
             user=user,
+            unlock_price=fiat_to_coins(unlock_price_in_fiat),
         )
 
         # upload to temp local storage

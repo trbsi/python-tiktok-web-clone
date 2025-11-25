@@ -10,5 +10,8 @@ def get_creator_balance_in_fiat(coins: Decimal) -> UserBalanceValueObject:
 
 
 def coin_to_fiat(amount_in_coins: Decimal) -> Decimal:
-    coin_to_fiat = Decimal(PaymentEnum.COIN_TO_FIAT.value)
-    return amount_in_coins / coin_to_fiat
+    return amount_in_coins / Decimal(PaymentEnum.COIN_TO_FIAT.value)
+
+
+def fiat_to_coins(amount_in_fiat: Decimal) -> Decimal:
+    return amount_in_fiat * Decimal(PaymentEnum.COIN_TO_FIAT.value)
