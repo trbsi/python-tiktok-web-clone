@@ -32,7 +32,7 @@ class UploadMediaService:
             self,
             user: User,
             uploaded_file: UploadedFile,
-            description: str,
+            description: str | None,
             post_type: str,
             unlock_price_in_fiat: Decimal
     ) -> None:
