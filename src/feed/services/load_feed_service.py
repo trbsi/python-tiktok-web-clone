@@ -145,7 +145,10 @@ class LoadFeedService:
 
         return result
 
-    def _format_hashtags(self, description: str, feed_type: str) -> str:
+    def _format_hashtags(self, description: str | None, feed_type: str) -> str | None:
+        if not description:
+            return description
+        
         if feed_type == self.FEED_TYPE_DISCOVER:
             feed_route = reverse_lazy('feed.discover.grid')
         else:
