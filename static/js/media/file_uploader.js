@@ -52,8 +52,10 @@ function fileUploaderComponent(uploadApi, userSuggestionApi, myContentUrl, video
             const formData = new FormData();
             formData.append('postType', postType);
             formData.append('file', fileData.file);
-            formData.append('description', fileData.description);
             formData.append('unlockPriceInFiat', fileData.unlockPriceInFiat);
+            if (fileData.description !== null) {
+                formData.append('description', fileData.description);
+            }
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", uploadApi);

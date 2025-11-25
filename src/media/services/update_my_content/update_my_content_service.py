@@ -21,14 +21,16 @@ class UpdateMyContentService:
             delete_list: list,
             ids: list,
             descriptions: list,
-            unlock_prices: list
+            unlock_prices: list,
+            submit_type: str
     ):
-        if delete_list:
+        if submit_type == 'delete':
             Media.objects.filter(user=user).filter(id__in=delete_list).update(status=MediaEnum.STATUS_DELETED.value)
             profile: UserProfile = user.profile
             profile.media_count = profile.media_count - len(delete_list)
             profile.save()
-        else:
+
+        if submit_type == 'save':
             for (index, id) in enumerate(ids):
                 description = replace_tags(descriptions[index])
                 unlock_price = Decimal(unlock_prices[index])

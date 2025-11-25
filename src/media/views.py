@@ -97,6 +97,7 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
     ids = post.getlist('media_ids')
     descriptions = post.getlist('descriptions')
     unlock_prices = post.getlist('unlockPrices')
+    submit_type = post.get('submitType')
 
     service = UpdateMyContentService()
     service.update_my_content(
@@ -104,7 +105,8 @@ def update_my_media(request: HttpRequest) -> HttpResponse:
         delete_list=delete,
         ids=ids,
         descriptions=descriptions,
-        unlock_prices=unlock_prices
+        unlock_prices=unlock_prices,
+        submit_type=submit_type
     )
 
     messages.success(request, 'Your content has been updated.')
