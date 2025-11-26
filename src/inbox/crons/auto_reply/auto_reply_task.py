@@ -87,6 +87,7 @@ class AutoReplyTask:
                 user=creator,
                 conversation_id=conversation.id,
                 message_content=reply,
+                is_auto_reply=True
             )
 
     def _get_reply_from_ai(self, chat_history) -> str:
