@@ -13,7 +13,7 @@ celerybeat-schedule-shm
 celerybeat-schedule-wal
 db.sqlite3-shm
  db.sqlite3-wal
- 
+
 # Backup files #
 *.bak
 
