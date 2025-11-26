@@ -71,18 +71,7 @@ class SendMessageService:
         conversation.save()
         self.spend_service.spend_message(user, message)
 
-        if local_file_path is not None:
-            transaction.on_commit(
-                lambda: task_process_media.delay(
-                    media_id=message.id,
-                    media_type=ProcessMediaTask.MEDIA_TYPE_INBOX,
-                    local_file_path=local_file_path,
-                    create_thumbnail=False,
-                    create_trailer=False,
-                    should_compress_media=False,
-                    download_from_remote=False,
-                )
-            )
+        transaction.on_commit(lambda: self._task_process_media(local_file_path, message.id))
         transaction.on_commit(lambda: task_auto_reply.delay(message_id=message.id))
 
         if not message.is_ready:
@@ -101,3 +90,17 @@ class SendMessageService:
                 'username': message.sender.username,
             }
         }
+
+    def _task_process_media(self, local_file_path: str | None, message_id: int) -> None:
+        if not local_file_path:
+            return
+
+        task_process_media.delay(
+            media_id=message_id,
+            media_type=ProcessMediaTask.MEDIA_TYPE_INBOX,
+            local_file_path=local_file_path,
+            create_thumbnail=False,
+            create_trailer=False,
+            should_compress_media=False,
+            download_from_remote=False,
+        )
