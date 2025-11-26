@@ -38,6 +38,7 @@ class SendMessageService:
         file_type = None
         conversation = Conversation.objects.get(id=conversation_id)
 
+        local_file_path = None
         if uploaded_file is not None:
             file_data = self.local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
             file_type = file_data.get('file_type')
@@ -70,7 +71,7 @@ class SendMessageService:
         conversation.save()
         self.spend_service.spend_message(user, message)
 
-        if uploaded_file is not None:
+        if local_file_path is not None:
             transaction.on_commit(
                 lambda: task_process_media.delay(
                     media_id=message.id,
