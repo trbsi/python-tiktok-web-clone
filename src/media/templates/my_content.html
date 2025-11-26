@@ -125,7 +125,7 @@
         $('#delete_button').click(function(e) {
             e.preventDefault(); // prevent default behavior
             if (confirm("Are you sure you want to delete?")) {
-                $('#my_content_form').submit();
+                this.form.requestSubmit(this);
             }
         });
     });
