@@ -35,7 +35,7 @@ class ProcessMediaTask:
             self,
             media_type: str,
             media_id: int,
-            local_file_path: str,
+            local_file_path: str | None,
             create_thumbnail: bool,
             create_trailer: bool,
             should_compress_media: bool,

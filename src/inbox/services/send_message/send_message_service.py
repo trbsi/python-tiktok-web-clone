@@ -16,8 +16,15 @@ from src.user.models import User
 
 
 class SendMessageService:
-    def __init__(self, spend_service: SpendService | None = None):
+    def __init__(
+            self,
+            spend_service: SpendService | None = None,
+            local_storage_service: LocalStorageService | None = None,
+            remote_storage_service: RemoteStorageService | None = None,
+    ):
         self.spend_service = spend_service or SpendService()
+        self.local_storage_service = local_storage_service or LocalStorageService()
+        self.file_upload_service = remote_storage_service or RemoteStorageService()
 
     @transaction.atomic
     def send_message(
@@ -32,16 +39,13 @@ class SendMessageService:
         conversation = Conversation.objects.get(id=conversation_id)
 
         if uploaded_file is not None:
-            local_storage_service = LocalStorageService()
-            file_upload_service = RemoteStorageService()
-
-            file_data = local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
+            file_data = self.local_storage_service.temp_upload_file(uploaded_file=uploaded_file)
             file_type = file_data.get('file_type')
             local_file_path = file_data.get('local_file_path')
             extension = file_data.get('extension')
             remote_file_path = remote_file_path_for_conversation(conversation, str(uuid.uuid4()), extension)
 
-            file_info = file_upload_service.upload_file(
+            file_info = self.file_upload_service.upload_file(
                 local_file_type=file_type,
                 local_file_path=local_file_path,
                 remote_file_path=remote_file_path
@@ -66,17 +70,18 @@ class SendMessageService:
         conversation.save()
         self.spend_service.spend_message(user, message)
 
-        transaction.on_commit(
-            lambda: task_process_media.delay(
-                media_id=message.id,
-                media_type=ProcessMediaTask.MEDIA_TYPE_INBOX,
-                local_file_path=local_file_path,
-                create_thumbnail=False,
-                create_trailer=False,
-                should_compress_media=False,
-                download_from_remote=False,
+        if uploaded_file is not None:
+            transaction.on_commit(
+                lambda: task_process_media.delay(
+                    media_id=message.id,
+                    media_type=ProcessMediaTask.MEDIA_TYPE_INBOX,
+                    local_file_path=local_file_path,
+                    create_thumbnail=False,
+                    create_trailer=False,
+                    should_compress_media=False,
+                    download_from_remote=False,
+                )
             )
-        )
         transaction.on_commit(lambda: task_auto_reply.delay(message_id=message.id))
 
         if not message.is_ready:
