@@ -29,9 +29,9 @@ class PaymentProviderService():
 
         raise Exception('Payment provider is not supported for checkout.')
 
-    def handle_webook(self, body: dict) -> PaymentWebhookValueObject:
+    def handle_webook(self, body: dict, query_params: dict) -> PaymentWebhookValueObject:
         if self.default_payment_provider == PaymentEnum.PROVIDER_CCBILL.value:
-            return self.ccbill_webhook_service.handle_webhook(body)
+            return self.ccbill_webhook_service.handle_webhook(body, query_params)
 
         raise Exception('Payment provider is not supported for webhook.')
 

@@ -4,9 +4,9 @@ from src.payment.value_objects.payment_webhook_value_object import PaymentWebhoo
 
 class CCBillWebhookService():
     # https://ccbill.com/doc/webhooks-user-guide
-    def handle_webhook(self, data: dict):
+    def handle_webhook(self, data: dict, query_params: dict):
         payment_id = data.get("X-myapp-paymentid")
-        event_type = data.get("eventType")
+        event_type = query_params.get("eventType")
 
         if event_type == "NewSaleSuccess":
             status = PaymentEnum.STATUS_SUCCESS.value

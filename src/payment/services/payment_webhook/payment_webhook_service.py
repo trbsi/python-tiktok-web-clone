@@ -7,9 +7,11 @@ class PaymentWebhookService:
     def __init__(self, provider_service: PaymentProviderService | None = None):
         self.payment_provider_service = provider_service or PaymentProviderService()
 
-    # @TODO finish webhook
-    def handle_webook(self, body: dict):
-        payment_status: PaymentWebhookValueObject = self.payment_provider_service.handle_webook(body)
+    def handle_webook(self, body: dict, query_params: dict):
+        payment_status: PaymentWebhookValueObject = (
+            self.payment_provider_service
+            .handle_webook(body, query_params)
+        )
 
         payment_history: PaymentHistory = (
             PaymentHistory

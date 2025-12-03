@@ -10,7 +10,6 @@ from django.urls.base import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from app.log import log
 from src.payment.models import Balance, Package
 from src.payment.services.buy_package.buy_package_service import BuyPackageService
 from src.payment.services.my_payments.my_payments_service import MyPaymentsService
@@ -67,16 +66,16 @@ def buy_single_package(request: HttpRequest, package_id: int) -> HttpResponse:
 @require_POST
 @csrf_exempt
 def payment_webhook(request: HttpRequest) -> JsonResponse:
+    get = request.GET.dict()
     if request.content_type == 'application/json':
         data = json.loads(request.body)
     else:
         data = request.POST.dict()
 
-    log.info(data)  # @TODO remove log
-    bugsnag.notify(Exception(data))
+    bugsnag.notify(Exception(get))
 
     webhook_service = PaymentWebhookService()
-    webhook_service.handle_webook(data)
+    webhook_service.handle_webook(data, get)
     return JsonResponse({})
 
 
