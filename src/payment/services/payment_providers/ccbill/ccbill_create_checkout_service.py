@@ -37,12 +37,12 @@ class CCBillCreateCheckoutService:
             base_url = 'https://sandbox-api.ccbill.com'
         else:
             base_url = 'https://api.ccbill.com'
-            
+
         redirect_url = (
             f"{base_url}/wap-frontflex/flexforms/{flex_form_id}?"
             f"clientAccnum={client_account_number}&clientSubacc={client_subaccount_number}&"
             f"initialPrice={initial_price}&initialPeriod={initial_period}&"
-            f"currencyCode={currency_code}&formDigest={form_digest}&X-paymentid={payment_id}"
+            f"currencyCode={currency_code}&formDigest={form_digest}&myapp-paymentid={payment_id}"
         )
 
         return CheckoutValueObject(redirect_url, payment_id)
