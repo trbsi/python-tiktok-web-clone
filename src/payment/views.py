@@ -1,6 +1,5 @@
 import json
 
-import bugsnag
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
@@ -71,8 +70,6 @@ def payment_webhook(request: HttpRequest) -> JsonResponse:
         data = json.loads(request.body)
     else:
         data = request.POST.dict()
-
-    bugsnag.notify(Exception(get))
 
     webhook_service = PaymentWebhookService()
     webhook_service.handle_webook(data, get)

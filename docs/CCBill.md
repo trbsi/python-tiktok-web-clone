@@ -1,6 +1,21 @@
+# Test card
+
+JCB: 3555555555555552
+
 # CCBill webhook
 
-Example of webhook body
+## Example of query params
+
+```
+{
+  "clientAccnum": "955063",
+  "clientSubacc": "0000",
+  "eventType": "NewSaleFailure",
+  "eventGroupType": "Subscription"
+}
+```
+
+## Example of webhook body
 
 ``` 
 {
