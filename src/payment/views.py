@@ -1,5 +1,7 @@
 import json
 
+import bugsnag
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest, HttpResponse, JsonResponse
@@ -19,10 +21,16 @@ from src.user.models import User
 
 @require_GET
 @login_required
-def my_spendings(request: HttpRequest) -> HttpResponse:
+def my_spending(request: HttpRequest) -> HttpResponse:
     get = request.GET
     page = int(get.get('page', 1))
+    payment_status = get.get('payment_status', None)  # This is when user is redirected from payment provider
     user = request.user
+
+    if payment_status == 'cancel':
+        messages.warning(request, 'Payment cancelled')
+    elif payment_status == 'success':
+        messages.success(request, 'Payment successful. Processing now...')
 
     service = MyPaymentsService()
     spendings = service.get_my_spendings(user=user, current_page=page)
@@ -65,6 +73,8 @@ def payment_webhook(request: HttpRequest) -> JsonResponse:
         data = request.POST.dict()
 
     log.info(data)  # @TODO remove log
+    bugsnag.notify(Exception(data))
+
     webhook_service = PaymentWebhookService()
     webhook_service.handle_webook(data)
     return JsonResponse({})

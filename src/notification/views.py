@@ -34,7 +34,6 @@ def api_web_push_subscribe(request: HttpRequest) -> JsonResponse:
     """
     body = json.loads(request.body)
 
-    print(body)
     web_service = WebPushSubscribeService()
     web_service.push_subscribe(request.user, body)
 

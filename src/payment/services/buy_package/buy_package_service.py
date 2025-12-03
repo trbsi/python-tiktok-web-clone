@@ -2,7 +2,6 @@ from app import settings
 from src.payment.enums import PaymentEnum
 from src.payment.models import PaymentHistory, Package
 from src.payment.services.payment_providers.payment_provider_service import PaymentProviderService
-from src.payment.services.payment_webhook.payment_webhook_service import PaymentWebhookService
 from src.payment.value_objects.checkout_value_object import CheckoutValueObject
 from src.user.models import User
 
@@ -26,11 +25,5 @@ class BuyPackageService():
         value_object: CheckoutValueObject = self.payment_provider_service.create_checkout(payment_history)
         payment_history.provider_payment_id = value_object.provider_payment_id
         payment_history.save()
-
-        # @TODO remove payment_webhook call, this is just for debug
-        PaymentWebhookService().handle_webook({
-            'X-paymentid': value_object.provider_payment_id,
-            'eventType': 'NewSaleSuccess',
-        })
 
         return value_object.redirect_url

@@ -27,7 +27,7 @@
                 <i class="ri-id-card-line"></i> Buy coins
             </a>
             {% endif %}
-            <a href="{% url 'payment.my_spendings' %}"
+            <a href="{% url 'payment.my_spending' %}"
                class="flex items-center gap-3 px-4 py-3 hover:bg-indigo-600 hover:text-white transition-colors duration-200 shadow-sm">
                 <i class="ri-money-dollar-circle-line"></i>
                 {% if TEMPLATE_IS_CREATOR == 1 %} My earnings {% else %} My spendings {% endif %}

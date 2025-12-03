@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('my-spendings', views.my_spendings, name='payment.my_spendings'),
+    path('my-spending', views.my_spending, name='payment.my_spending'),
     path('list-packages', views.list_packages, name='payment.list_packages'),
     path('buy-package/<int:package_id>', views.buy_single_package, name='payment.buy_single_package'),
     path('payment-webhook', views.payment_webhook),

@@ -33,8 +33,13 @@ class CCBillCreateCheckoutService:
         to_hash = initial_price + initial_period + currency_code + salt
         form_digest = hashlib.md5(to_hash.encode("utf-8")).hexdigest()
 
+        if settings.DEBUG:
+            base_url = 'https://sandbox-api.ccbill.com'
+        else:
+            base_url = 'https://api.ccbill.com'
+            
         redirect_url = (
-            f"https://api.ccbill.com/wap-frontflex/flexforms/{flex_form_id}?"
+            f"{base_url}/wap-frontflex/flexforms/{flex_form_id}?"
             f"clientAccnum={client_account_number}&clientSubacc={client_subaccount_number}&"
             f"initialPrice={initial_price}&initialPeriod={initial_period}&"
             f"currencyCode={currency_code}&formDigest={form_digest}&X-paymentid={payment_id}"
