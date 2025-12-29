@@ -1,8 +1,6 @@
 # Screenshots
 
-![image info](./docs/images/Screenshot_1.png)
-![image info](./docs/images/Screenshot_2.png)
-![image info](./docs/images/Screenshot_3.png)
+![image info](./docs/images/Screenshot_x.png)
 
 # Predeployment
 
