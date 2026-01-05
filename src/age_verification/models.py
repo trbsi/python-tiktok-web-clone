@@ -38,7 +38,7 @@ class AgeVerificationCountry(models.Model):
     id = models.BigAutoField(primary_key=True)
     country_code = models.CharField(max_length=5)
     country_name = models.CharField(max_length=50)
-    state_code = models.CharField(max_length=5, null=True, blank=True)
+    state_code = models.CharField(max_length=10, null=True, blank=True)
     state_name = models.CharField(max_length=30, null=True, blank=True)
     is_age_verification_required = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -59,7 +59,7 @@ class UserProfile(models.Model):
     media_count = models.IntegerField(default=0)
     timezone = models.CharField(max_length=30, null=True, blank=True)
     country_code = models.CharField(max_length=2, null=True, blank=True)
-    state_code = models.CharField(max_length=2, null=True, blank=True)
+    state_code = models.CharField(max_length=10, null=True, blank=True)
 
     objects = models.Manager()
 
